@@ -50,7 +50,7 @@ Additional configuration properties are:
 - **--delta** / **-d** => time step (**0.001** by default)
 - **--steps** / **-o** => number of time steps to run simulation for (**100** by default)
 
-![Heat transfer simulation](heat.gif)
+![Heat transfer simulation](docs/heat.gif)
 
 
 #### Terrain mapping
