@@ -1,0 +1,44 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.10'
+    id "java"
+    id "idea"
+    id "application"
+}
+
+mainClassName = 'com.agh.iet.komplastech.solver.Main'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://maven.jzy3d.org/releases'
+    }
+}
+
+jar {
+    baseName = 'komplastechsolver'
+    version = '0.1.0'
+    manifest {
+        attributes 'Main-Class': 'com.agh.iet.komplastech.solver.Main'
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task packageToSource(type: Copy, dependsOn: ["distTar"]) {
+    from 'build/distributions'
+    into 'dist'
+}
+
+dependencies {
+    compile 'org.jzy3d:jzy3d-api:0.9.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile "org.jogamp.gluegen:gluegen-rt:2.2.4"
+    compile "org.jogamp.jogl:jogl-all:2.2.4"
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    compile group: 'com.beust', name: 'jcommander', version: '1.72'
+    compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
+
+    testCompile "junit:junit:4.12"
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.5.2'
+}
