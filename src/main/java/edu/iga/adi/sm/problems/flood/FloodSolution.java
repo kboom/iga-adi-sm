@@ -26,7 +26,7 @@ public class FloodSolution extends Solution {
 
         double diffUtZ = Math.max(Ut - Z, 0);
 
-        double K = Math.pow(diffUtZ, 5.0 / 3.0) / Math.sqrt(getMeanGradient(x, y));
+        double K = - Math.pow(diffUtZ, 5.0 / 3.0) / Math.sqrt(getMeanGradient(x, y));
 
         return K * (b1.getSecondDerivativeValueAt(localx) * b1.getValue(localy) * mRHS[ielemx][ielemy]
                 + b1.getSecondDerivativeValueAt(localx) * b2.getValue(localy) * mRHS[ielemx][ielemy + 1]

@@ -5,6 +5,10 @@ import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.support.Point;
 
+import java.util.function.ToDoubleBiFunction;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToLongBiFunction;
+
 import static edu.iga.adi.sm.core.SolutionGrid.solutionGrid;
 import static edu.iga.adi.sm.support.Point.solutionPoint;
 
@@ -16,6 +20,7 @@ public abstract class Solution {
 
     protected final Mesh mesh;
     protected final double[][] mRHS;
+    private ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
 
     public Solution(Mesh mesh, double[][] rhs) {
         this.mesh = mesh;
@@ -53,7 +58,7 @@ public abstract class Solution {
         int ielemy = (int) (y / mesh.getDy()) + 1;
         double localx = x - mesh.getDx() * (ielemx - 1);
         double localy = y - mesh.getDy() * (ielemy - 1);
-        return b1.getValue(localx) * b1.getValue(localy) * c[ielemx][ielemy]
+        return modifier.applyAsDouble(x, y) + b1.getValue(localx) * b1.getValue(localy) * c[ielemx][ielemy]
                 + b1.getValue(localx) * b2.getValue(localy) * c[ielemx][ielemy + 1]
                 + b1.getValue(localx) * b3.getValue(localy) * c[ielemx][ielemy + 2]
                 + b2.getValue(localx) * b1.getValue(localy) * c[ielemx + 1][ielemy]
@@ -80,6 +85,11 @@ public abstract class Solution {
             }
         }
         return Math.sqrt(difference);
+    }
+
+    public Solution withModifier(ToDoubleBiFunction<Double, Double> fn) {
+        this.modifier = fn;
+        return this;
     }
 
 }

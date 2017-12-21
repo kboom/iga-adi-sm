@@ -5,6 +5,7 @@ import edu.iga.adi.sm.Solver;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.SolverFactory;
 import edu.iga.adi.sm.core.Mesh;
+import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
@@ -45,10 +46,24 @@ public class FloodManager implements ProblemManager {
     public IterativeProblem getProblem() {
         final Mesh mesh = config.getMesh();
         return new FloodingProblem(config.getDelta(), terrainSolution, (x, y, time) ->
-                (double) (((x > mesh.getElementsX() - (mesh.getElementsX() / 5)) && (x < mesh.getElementsX() - 10)
-                        && (y > mesh.getElementsY() - (mesh.getElementsY() / 5)) && (y < mesh.getElementsY() - 10)
-                        && (time < 5 * config.getDelta()))
-                        ? 1000 : 0), config.getSteps());
+                (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
+                        && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)
+                ) ? 0 : 0), config.getSteps()) {
+
+            @Override
+            public Problem getInitialProblem() {
+                return (x, y) -> super.getInitialProblem ().getValue(x, y) +
+                        (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
+                        && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)) ? 100 : 0);
+            }
+
+        };
+
+
+//                new FloodingProblem(config.getDelta(), terrainSolution, (x, y, time) ->
+//                (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
+//                        && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)
+//                ) ? 0 : 0), config.getSteps());
     }
 
     @Override
@@ -71,8 +86,10 @@ public class FloodManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
-        ResultsSnapshot terrainView = new ResultsSnapshot("Original solution", terrainSolution);
+        ResultsSnapshot terrainView = new ResultsSnapshot("Original solution",
+                terrainSolution);
         terrainView.setVisible(true);
+        solutionSeries.addModifier((x, y) -> -terrainSolution.getValue(x, y));
         TimeLapseViewer timeLapseViewer = new TimeLapseViewer(solutionSeries);
         timeLapseViewer.setVisible(true);
     }
@@ -108,7 +125,7 @@ public class FloodManager implements ProblemManager {
         } else {
             return new MapTerrainStorage(FunctionTerrainBuilder.get()
                     .withMesh(config.getMesh())
-                    .withFunction((x, y) -> (double) 10 * (x + y))
+                    .withFunction((x, y) -> (double) (x + y))
                     .build());
         }
     }
