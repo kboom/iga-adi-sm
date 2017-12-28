@@ -11,6 +11,7 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvPrinter;
+import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -86,6 +87,14 @@ public class FloodManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
+        solutionSeries.addModifier((x, y) -> -terrainSolution.getValue(x, y));
+
+        TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
+                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .solutionSeries(solutionSeries)
+                .build();
+        bitmapAnimationViewer.setVisible(true);
+
 //        StaticViewer terrainView = StaticViewer.builder()
 //                .name("Original solution")
 //                .solution(terrainSolution)
@@ -94,14 +103,13 @@ public class FloodManager implements ProblemManager {
 //        terrainView.setVisible(true);
 
 
-        solutionSeries.addModifier((x, y) -> -terrainSolution.getValue(x, y));
-        TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .mesh(solutionSeries.getMesh())
-                        .build())
-                .solutionSeries(solutionSeries)
-                .build();
-        timeLapseViewer.setVisible(true);
+//        TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
+//                .solutionDrawer(SurfaceSolutionDrawer.builder()
+//                        .mesh(solutionSeries.getMesh())
+//                        .build())
+//                .solutionSeries(solutionSeries)
+//                .build();
+//        surfaceAnimationViewer.setVisible(true);
     }
 
     @Override
