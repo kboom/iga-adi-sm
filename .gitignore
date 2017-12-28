@@ -21,7 +21,7 @@
 *.rar
 
 .idea/*
-gradle/wrapper
+gradle/wrapper@
 !gradle/wrapper/*.jar
 !.idea/runConfigurations
 *.iml

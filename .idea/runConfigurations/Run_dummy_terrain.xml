@@ -1,6 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run dummy terrain" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <ENTRIES />
+    </extension>
     <option name="MAIN_CLASS_NAME" value="com.agh.iet.komplastech.solver.Main" />
     <option name="VM_PARAMETERS" value="-Xmx5000m -Xms256m" />
     <option name="PROGRAM_PARAMETERS" value="--problem-size 24 --plot --problem terrain-svd" />
