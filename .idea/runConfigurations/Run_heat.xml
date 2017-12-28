@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run heat" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <ENTRIES />
+    </extension>
+    <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
+    <option name="VM_PARAMETERS" value="-Xmx4048m -Xms256m" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 48 --plot --problem heat --steps 30" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="ENABLE_SWING_INSPECTOR" value="false" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <module name="iga-adi-sm_main" />
+    <envs />
+    <method />
+  </configuration>
+</component>
