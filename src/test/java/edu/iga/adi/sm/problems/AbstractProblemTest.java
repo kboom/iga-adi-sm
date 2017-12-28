@@ -6,7 +6,7 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.loggers.ConsoleSolutionLogger;
 import edu.iga.adi.sm.loggers.NoopSolutionLogger;
-import edu.iga.adi.sm.results.CsvPrinter;
+import edu.iga.adi.sm.results.CsvConverter;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -93,7 +93,7 @@ class AbstractProblemTest {
 
         @Override
         public String getResultAsCsvString() {
-            return new CsvPrinter().convertToCsv(results.getFinalSolution().getSolutionGrid());
+            return CsvConverter.builder().build().convertToCsv(results.getFinalSolution().getSolutionGrid());
         }
 
     }

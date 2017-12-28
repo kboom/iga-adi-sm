@@ -9,7 +9,7 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
-import edu.iga.adi.sm.results.CsvPrinter;
+import edu.iga.adi.sm.results.CsvConverter;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapFrame;
 import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -56,9 +56,9 @@ public class TerrainManager implements ProblemManager {
     }
 
     private void logResults(Solution finalSolution) {
-        CsvPrinter csvPrinter = new CsvPrinter();
+        CsvConverter csvConverter = CsvConverter.builder().build();
         System.out.println("------------------- TERRAIN SOLUTION --------------------");
-        System.out.println(csvPrinter.convertToCsv(finalSolution.getSolutionGrid()));
+        System.out.println(csvConverter.convertToCsv(finalSolution.getSolutionGrid()));
     }
 
     private void plotResults(Solution finalSolution) {

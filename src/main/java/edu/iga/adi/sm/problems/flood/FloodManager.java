@@ -10,9 +10,8 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
-import edu.iga.adi.sm.results.CsvPrinter;
+import edu.iga.adi.sm.results.CsvConverter;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
@@ -79,11 +78,11 @@ public class FloodManager implements ProblemManager {
 
     private void logResults(SolutionSeries solutionSeries) {
         Solution finalSolution = solutionSeries.getFinalSolution();
-        CsvPrinter csvPrinter = new CsvPrinter();
+        CsvConverter csvConverter = CsvConverter.builder().build();
         System.out.println("------------------- TERRAIN SOLUTION --------------------");
-        System.out.println(csvPrinter.convertToCsv(terrainSolution.getSolutionGrid()));
+        System.out.println(csvConverter.convertToCsv(terrainSolution.getSolutionGrid()));
         System.out.println("------------------- FINAL SIM SOLUTION --------------------");
-        System.out.println(csvPrinter.convertToCsv(finalSolution.getSolutionGrid()));
+        System.out.println(csvConverter.convertToCsv(finalSolution.getSolutionGrid()));
     }
 
     private void plotResults(SolutionSeries solutionSeries) {

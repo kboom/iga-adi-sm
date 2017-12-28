@@ -6,7 +6,7 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
-import edu.iga.adi.sm.results.CsvPrinter;
+import edu.iga.adi.sm.results.CsvConverter;
 import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
@@ -35,8 +35,8 @@ public class HeatManager implements ProblemManager {
     public void processResults(SolutionSeries solutionSeries) {
         if (config.isLogging()) {
             Solution finalSolution = solutionSeries.getFinalSolution();
-            CsvPrinter csvPrinter = new CsvPrinter();
-            System.out.println(csvPrinter.convertToCsv(finalSolution.getSolutionGrid()));
+            CsvConverter csvConverter = CsvConverter.builder().build();
+            System.out.println(csvConverter.convertToCsv(finalSolution.getSolutionGrid()));
         }
         if (config.isPlotting()) {
             displayResults(solutionSeries);
