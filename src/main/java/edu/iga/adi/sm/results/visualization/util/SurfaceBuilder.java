@@ -1,4 +1,4 @@
-package edu.iga.adi.sm.results.visualization;
+package edu.iga.adi.sm.results.visualization.util;
 
 import org.jzy3d.colors.Color;
 import org.jzy3d.colors.ColorMapper;

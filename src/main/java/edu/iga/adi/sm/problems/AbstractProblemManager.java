@@ -4,7 +4,7 @@ import edu.iga.adi.sm.SolutionSeries;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
-import edu.iga.adi.sm.results.visualization.ResultsSnapshot;
+import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -28,9 +28,9 @@ public abstract class AbstractProblemManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
-        final String title = String.format("%s results", config.getProblemType());
-        ResultsSnapshot results = new ResultsSnapshot(title, solutionSeries.getFinalSolution());
-        results.setVisible(true);
+//        final String title = String.format("%s results", config.getProblemType());
+//        StaticViewer results = new StaticViewer(title, solutionSeries.getFinalSolution());
+//        results.setVisible(true);
     }
 
     @Override

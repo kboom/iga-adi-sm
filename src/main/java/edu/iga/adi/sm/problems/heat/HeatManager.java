@@ -7,7 +7,8 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvPrinter;
-import edu.iga.adi.sm.results.visualization.TimeLapseViewer;
+import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -43,7 +44,12 @@ public class HeatManager implements ProblemManager {
     }
 
     private void displayResults(SolutionSeries solutionSeries) {
-        TimeLapseViewer timeLapseViewer = new TimeLapseViewer(solutionSeries);
+        TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh())
+                        .build())
+                .solutionSeries(solutionSeries)
+                .build();
         timeLapseViewer.setVisible(true);
     }
 

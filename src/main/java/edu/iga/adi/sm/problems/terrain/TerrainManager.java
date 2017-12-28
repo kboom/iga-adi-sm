@@ -10,8 +10,7 @@ import edu.iga.adi.sm.core.direction.IntermediateSolution;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvPrinter;
-import edu.iga.adi.sm.results.visualization.ResultsSnapshot;
-import edu.iga.adi.sm.results.visualization.SolutionAsBitmapSnapshot;
+import edu.iga.adi.sm.results.visualization.drawers.BitmapFrame;
 import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
@@ -70,12 +69,12 @@ public class TerrainManager implements ProblemManager {
     }
 
     private void displayOriginalSolution(Solution terrainSolution) {
-        ResultsSnapshot terrainView = new ResultsSnapshot("Original solution", terrainSolution);
-        terrainView.setVisible(true);
+//        StaticViewer terrainView = new StaticViewer("Original solution", terrainSolution);
+//        terrainView.setVisible(true);
     }
 
     private void displayOriginalSolutionBitmap(Solution terrainSolution) {
-        SolutionAsBitmapSnapshot modelBitmap = new SolutionAsBitmapSnapshot("Original model solution", terrainSolution);
+        BitmapFrame modelBitmap = new BitmapFrame("Original model solution", terrainSolution);
         modelBitmap.setVisible(true);
     }
 
@@ -83,7 +82,7 @@ public class TerrainManager implements ProblemManager {
         config.getRanks().forEach(rank -> {
             final Solution svdApproximation = getSvdRankedSolution(rank);
             final double error = svdApproximation.squaredDifference(terrainSolution);
-            SolutionAsBitmapSnapshot svdBitmap = new SolutionAsBitmapSnapshot(String.format("SVD rank %d approximation. Error: %s", rank, error), svdApproximation);
+            BitmapFrame svdBitmap = new BitmapFrame(String.format("SVD rank %d approximation. Error: %s", rank, error), svdApproximation);
             svdBitmap.setVisible(true);
         });
     }
@@ -92,8 +91,8 @@ public class TerrainManager implements ProblemManager {
         final int maxRank = config.getRanks().stream().mapToInt(x -> x).max().getAsInt();
         final Solution maxRankApproximation = getSvdRankedSolution(maxRank);
         final double error = maxRankApproximation.squaredDifference(terrainSolution);
-        ResultsSnapshot approxViewer = new ResultsSnapshot(String.format("SVD rank %d approximation. Error: %s", maxRank, error), maxRankApproximation);
-        approxViewer.setVisible(true);
+//        StaticViewer approxViewer = new StaticViewer(String.format("SVD rank %d approximation. Error: %s", maxRank, error), maxRankApproximation);
+//        approxViewer.setVisible(true);
     }
 
 

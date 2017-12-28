@@ -13,7 +13,7 @@ public class SolutionSeries {
 
     private final List<Solution> subsequentSolutions;
     private Mesh mesh;
-    private ToDoubleBiFunction<Double, Double> modifier;
+    private ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
 
     SolutionSeries(List<Solution> subsequentSolutions, Mesh mesh) {
         this.subsequentSolutions = unmodifiableList(subsequentSolutions);

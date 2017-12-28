@@ -11,8 +11,8 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvPrinter;
-import edu.iga.adi.sm.results.visualization.ResultsSnapshot;
-import edu.iga.adi.sm.results.visualization.TimeLapseViewer;
+import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
 import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
@@ -86,11 +86,21 @@ public class FloodManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
-        ResultsSnapshot terrainView = new ResultsSnapshot("Original solution",
-                terrainSolution);
-        terrainView.setVisible(true);
+//        StaticViewer terrainView = StaticViewer.builder()
+//                .name("Original solution")
+//                .solution(terrainSolution)
+//                .solutionDrawer()
+//                .build();
+//        terrainView.setVisible(true);
+
+
         solutionSeries.addModifier((x, y) -> -terrainSolution.getValue(x, y));
-        TimeLapseViewer timeLapseViewer = new TimeLapseViewer(solutionSeries);
+        TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh())
+                        .build())
+                .solutionSeries(solutionSeries)
+                .build();
         timeLapseViewer.setVisible(true);
     }
 

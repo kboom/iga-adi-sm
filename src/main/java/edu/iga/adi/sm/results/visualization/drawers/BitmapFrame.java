@@ -1,4 +1,4 @@
-package edu.iga.adi.sm.results.visualization;
+package edu.iga.adi.sm.results.visualization.drawers;
 
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
@@ -9,13 +9,14 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
 
-public class SolutionAsBitmapSnapshot extends JFrame {
+@Deprecated
+public class BitmapFrame extends JFrame {
 
-    public SolutionAsBitmapSnapshot(String title, Solution solution) throws HeadlessException {
+    public BitmapFrame(String title, Solution solution) throws HeadlessException {
         initialize(title, solution);
     }
 
-    public static BufferedImage getGrayscale(int width, byte[] buffer) {
+    private static BufferedImage getGrayscale(int width, byte[] buffer) {
         int height = buffer.length / width;
         ColorSpace cs = ColorSpace.getInstance(ColorSpace.CS_GRAY);
         int[] nBits = {8};
