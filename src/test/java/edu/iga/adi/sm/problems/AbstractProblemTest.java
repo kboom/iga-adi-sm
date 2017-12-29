@@ -2,12 +2,16 @@ package edu.iga.adi.sm.problems;
 
 import edu.iga.adi.sm.*;
 import edu.iga.adi.sm.core.Mesh;
+import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.loggers.ConsoleSolutionLogger;
 import edu.iga.adi.sm.loggers.NoopSolutionLogger;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.storage.CompressResultsStorageProcessor;
+import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -39,11 +43,26 @@ class AbstractProblemTest {
                 .problemManagerFactory(() -> problemManagerProxy)
                 .productionExecutorFactory(productionExecutorFactory)
                 .timeLogger(timeLogger)
+                .solutionStorage(initializeStorage(solverConfiguration))
                 .solverFactory(solverFactory)
                 .build()
                 .launch();
 
         return problemManagerProxy;
+    }
+
+    private static FileSolutionStorage<Solution> initializeStorage(SolverConfiguration solverConfiguration) {
+        File solutionDirectory = new File(solverConfiguration.getResultFile());
+        File solutionZip = new File(solverConfiguration.getResultFile() + ".zip");
+        return FileSolutionStorage.builder()
+                .solutionDirectory(solutionDirectory)
+                .storageProcessor(
+                        CompressResultsStorageProcessor.builder()
+                                .archiveFile(solutionZip)
+                                .unpack(solverConfiguration.isRetrieve())
+                                .build()
+                )
+                .build();
     }
 
     final String readTestFile(String path) throws Exception {
