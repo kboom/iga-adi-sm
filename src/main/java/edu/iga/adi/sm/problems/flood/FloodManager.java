@@ -11,8 +11,6 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
-import edu.iga.adi.sm.results.storage.CompressResultsStorageProcessor;
-import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -25,9 +23,6 @@ import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
-
-import java.io.File;
-import java.io.IOException;
 
 public class FloodManager implements ProblemManager {
 
@@ -72,31 +67,6 @@ public class FloodManager implements ProblemManager {
         }
         if (config.isPlotting()) {
             plotResults(solutionSeries);
-        }
-        if (config.isStoring()) {
-            storeResults(solutionSeries);
-        }
-    }
-
-    private void storeResults(SolutionSeries solutionSeries) {
-        File solutionDirectory = new File(config.getResultFile());
-        File solutionZip = new File(config.getResultFile() + ".zip");
-        FileSolutionStorage<Solution> solutionStorage = FileSolutionStorage.builder()
-                .solutionDirectory(solutionDirectory)
-                .storageProcessor(
-                        CompressResultsStorageProcessor.builder()
-                                .archiveFile(solutionZip)
-                                .unpack(config.isRetrieve())
-                                .build()
-                )
-                .build();
-
-        try {
-            solutionStorage.setUp();
-            solutionStorage.storeAll(solutionSeries.getSubsequentSolutions().stream());
-            solutionStorage.tearDown();
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not store solutions", e);
         }
     }
 
