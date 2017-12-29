@@ -5,11 +5,7 @@ import edu.iga.adi.sm.support.Point;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Builder
 public class CsvStringConverter {
@@ -27,21 +23,13 @@ public class CsvStringConverter {
         }
         sb.append(NEWLINE);
 
-        CsvStreamConverter converter = CsvStreamConverter.builder().filter((s) -> header.equals(s)).build();
-
-        converter.toStringStream(points.stream()).forEachOrdered(s -> {
-            sb.append(s);
-            sb.append(NEWLINE);
-        });
+        points.stream().map(point -> String.format("%.8f,%.8f,%.8f", point.getX(), point.getY(), point.getValue()))
+                .forEachOrdered(s -> {
+                    sb.append(s);
+                    sb.append(NEWLINE);
+                });
 
         return sb.toString();
-    }
-
-    public SolutionGrid retrieve(String csv) {
-        CsvStreamConverter converter = CsvStreamConverter.builder().filter((s) -> !header.equals(s)).build();
-        BufferedReader stringReader = new BufferedReader(new StringReader(csv));
-        Stream<Point> pointStream = converter.toPointStream(stringReader.lines());
-        return SolutionGrid.solutionGrid(pointStream.collect(Collectors.toList()));
     }
 
 }

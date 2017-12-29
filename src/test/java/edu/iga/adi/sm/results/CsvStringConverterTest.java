@@ -24,19 +24,4 @@ public class CsvStringConverterTest {
                 "3.00000000,4.00000000,-1.00000000\n");
     }
 
-    @Test
-    public void convertFromCsv() throws Exception {
-        assertThat(csvStringConverter.retrieve("x,y,val\n" +
-                "-1.00000000,-3.00000000,5.00000000\n" +
-                "1.00000000,2.00000000,3.00000000\n" +
-                "5.00000000,2.00000000,3.00000000\n" +
-                "3.00000000,4.00000000,-1.00000000\n"))
-                .isEqualTo(solutionGrid(
-                        Point.solutionPoint(1,2,3),
-                        Point.solutionPoint(3,4,-1),
-                        Point.solutionPoint(-1,-3,5),
-                        Point.solutionPoint(5,2,3)
-                ));
-    }
-
 }

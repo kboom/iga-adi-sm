@@ -34,7 +34,10 @@ public final class SolverLauncher {
         logExecutionTimes();
 
         problemManager.processResults(solutionSeries);
-        storeResults(solutionSeries);
+
+        if(solverConfiguration.isStoring()) {
+            storeResults(solutionSeries);
+        }
 
         problemManager.tearDown();
     }
