@@ -25,3 +25,5 @@ gradle/wrapper@
 !.idea/runConfigurations
 *.iml
 
+terrain
+
