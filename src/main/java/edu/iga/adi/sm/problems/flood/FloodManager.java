@@ -10,7 +10,9 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
-import edu.iga.adi.sm.results.CsvConverter;
+import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.storage.CompressResultsStorageProcessor;
+import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -23,6 +25,9 @@ import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
+
+import java.io.File;
+import java.io.IOException;
 
 public class FloodManager implements ProblemManager {
 
@@ -52,18 +57,12 @@ public class FloodManager implements ProblemManager {
 
             @Override
             public Problem getInitialProblem() {
-                return (x, y) -> super.getInitialProblem ().getValue(x, y) +
+                return (x, y) -> super.getInitialProblem().getValue(x, y) +
                         (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
-                        && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)) ? 100 : 0);
+                                && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)) ? 100 : 0);
             }
 
         };
-
-
-//                new FloodingProblem(config.getDelta(), terrainSolution, (x, y, time) ->
-//                (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
-//                        && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)
-//                ) ? 0 : 0), config.getSteps());
     }
 
     @Override
@@ -74,15 +73,40 @@ public class FloodManager implements ProblemManager {
         if (config.isPlotting()) {
             plotResults(solutionSeries);
         }
+        if (config.isStoring()) {
+            storeResults(solutionSeries);
+        }
+    }
+
+    private void storeResults(SolutionSeries solutionSeries) {
+        File solutionDirectory = new File(config.getResultFile());
+        File solutionZip = new File(config.getResultFile() + ".zip");
+        FileSolutionStorage<Solution> solutionStorage = FileSolutionStorage.builder()
+                .solutionDirectory(solutionDirectory)
+                .storageProcessor(
+                        CompressResultsStorageProcessor.builder()
+                                .archiveFile(solutionZip)
+                                .unpack(config.isRetrieve())
+                                .build()
+                )
+                .build();
+
+        try {
+            solutionStorage.setUp();
+            solutionStorage.storeAll(solutionSeries.getSubsequentSolutions().stream());
+            solutionStorage.tearDown();
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not store solutions", e);
+        }
     }
 
     private void logResults(SolutionSeries solutionSeries) {
         Solution finalSolution = solutionSeries.getFinalSolution();
-        CsvConverter csvConverter = CsvConverter.builder().build();
+        CsvStringConverter csvStringConverter = CsvStringConverter.builder().build();
         System.out.println("------------------- TERRAIN SOLUTION --------------------");
-        System.out.println(csvConverter.convertToCsv(terrainSolution.getSolutionGrid()));
+        System.out.println(csvStringConverter.convertToCsv(terrainSolution.getSolutionGrid()));
         System.out.println("------------------- FINAL SIM SOLUTION --------------------");
-        System.out.println(csvConverter.convertToCsv(finalSolution.getSolutionGrid()));
+        System.out.println(csvStringConverter.convertToCsv(finalSolution.getSolutionGrid()));
     }
 
     private void plotResults(SolutionSeries solutionSeries) {

@@ -5,14 +5,14 @@ import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.support.Point;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.function.ToDoubleBiFunction;
-import java.util.function.ToDoubleFunction;
-import java.util.function.ToLongBiFunction;
 
 import static edu.iga.adi.sm.core.SolutionGrid.solutionGrid;
 import static edu.iga.adi.sm.support.Point.solutionPoint;
 
-public abstract class Solution {
+public abstract class Solution implements Serializable {
 
     protected static final BSpline1 b1 = new BSpline1();
     protected static final BSpline2 b2 = new BSpline2();
@@ -20,7 +20,8 @@ public abstract class Solution {
 
     protected final Mesh mesh;
     protected final double[][] mRHS;
-    private ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
+
+    private transient ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
 
     public Solution(Mesh mesh, double[][] rhs) {
         this.mesh = mesh;
@@ -90,6 +91,32 @@ public abstract class Solution {
     public Solution withModifier(ToDoubleBiFunction<Double, Double> fn) {
         this.modifier = fn;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Solution solution = (Solution) o;
+
+        if (!mesh.equals(solution.mesh)) return false;
+        return Arrays.deepEquals(mRHS, solution.mRHS);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mesh.hashCode();
+        result = 31 * result + Arrays.deepHashCode(mRHS);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Solution{" +
+                "mesh=" + mesh +
+                ", mRHS=" + Arrays.toString(mRHS) +
+                '}';
     }
 
 }

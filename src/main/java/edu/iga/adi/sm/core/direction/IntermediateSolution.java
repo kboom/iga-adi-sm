@@ -14,4 +14,5 @@ public final class IntermediateSolution extends Solution {
         return getValue(x, y);
     }
 
+
 }

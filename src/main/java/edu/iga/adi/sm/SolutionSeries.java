@@ -4,6 +4,7 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.ToDoubleBiFunction;
 
@@ -42,6 +43,10 @@ public class SolutionSeries {
 
     public void addModifier(ToDoubleBiFunction<Double, Double> fn) {
         this.modifier = fn;
+    }
+
+    public List<Solution> getSubsequentSolutions() {
+        return Collections.unmodifiableList(subsequentSolutions);
     }
 
     static class SolutionsInTimeBuilder {

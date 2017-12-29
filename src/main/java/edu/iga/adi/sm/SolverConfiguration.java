@@ -6,8 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static edu.iga.adi.sm.core.Mesh.aMesh;
@@ -17,6 +21,8 @@ import static edu.iga.adi.sm.core.Mesh.aMesh;
 @AllArgsConstructor
 @Getter
 public class SolverConfiguration {
+
+    public static final String EXECUTION_TIMESTAMP = getTimestamp();
 
     @Parameter(names = {"--log", "-l"})
     @Builder.Default
@@ -29,6 +35,18 @@ public class SolverConfiguration {
     @Parameter(names = {"--plot", "-p"})
     @Builder.Default
     private boolean isPlotting = false;
+
+    @Parameter(names = {"--store", "-w"})
+    @Builder.Default
+    private boolean isStoring = false;
+
+    @Parameter(names = {"--retrieve"})
+    @Builder.Default
+    private boolean retrieve = false;
+
+    @Parameter(names = {"--store-file"})
+    @Builder.Default
+    private String resultFile = getTemporaryDir("iga-adi-sm-solution");
 
     @Parameter(names = {"--problem-size", "-s"})
     @Builder.Default
@@ -84,6 +102,14 @@ public class SolverConfiguration {
                 .withResolutionX(problemSize)
                 .withResolutionY(problemSize)
                 .withOrder(2).build();
+    }
+
+    private static String getTimestamp() {
+        return new SimpleDateFormat("yyyy-MM-dd-HH:mm").format(new Date());
+    }
+
+    private static String getTemporaryDir(String name) {
+        return new File(FileUtils.getUserDirectory(), name + "-" + EXECUTION_TIMESTAMP).getAbsolutePath();
     }
 
 }
