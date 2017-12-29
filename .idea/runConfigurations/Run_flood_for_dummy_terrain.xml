@@ -7,7 +7,7 @@
     </extension>
     <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
     <option name="VM_PARAMETERS" value="-Xmx4048m -Xms256m" />
-    <option name="PROGRAM_PARAMETERS" value="--problem-size 48 --plot --problem flood --steps 100 --delta 0.00001 -w" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 12 --plot --problem flood --steps 3 --delta 0.00001 -w" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />

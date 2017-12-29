@@ -18,6 +18,9 @@ public class CompressResultsStorageProcessor implements StorageProcessor {
     @Builder.Default
     private boolean unpack = false;
 
+    @Builder.Default
+    private boolean pack = true;
+
     @Override
     public void afterSetUp(File directory) {
         if(unpack) {
@@ -27,7 +30,9 @@ public class CompressResultsStorageProcessor implements StorageProcessor {
 
     @Override
     public void beforeTearDown(File directory) throws IOException {
-        ZipUtil.pack(directory.getAbsolutePath(), archiveFile.getAbsolutePath());
+        if(pack) {
+            ZipUtil.pack(directory.getAbsolutePath(), archiveFile.getAbsolutePath());
+        }
     }
 
     private static String getTimestamp() {

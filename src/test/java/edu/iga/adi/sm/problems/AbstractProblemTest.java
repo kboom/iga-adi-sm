@@ -14,6 +14,9 @@ import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class AbstractProblemTest {
 
@@ -59,6 +62,7 @@ class AbstractProblemTest {
                 .storageProcessor(
                         CompressResultsStorageProcessor.builder()
                                 .archiveFile(solutionZip)
+                                .pack(solverConfiguration.isStoring())
                                 .unpack(solverConfiguration.isRetrieve())
                                 .build()
                 )
@@ -72,6 +76,8 @@ class AbstractProblemTest {
     public interface ProblemManagerTestResults {
 
         String getResultAsCsvString();
+
+        default List<String> getAllResults() { return Collections.emptyList(); }
 
     }
 
@@ -113,6 +119,15 @@ class AbstractProblemTest {
         @Override
         public String getResultAsCsvString() {
             return CsvStringConverter.builder().build().convertToCsv(results.getFinalSolution().getSolutionGrid());
+        }
+
+        @Override
+        public List<String> getAllResults() {
+            final CsvStringConverter toCsvPrinter = CsvStringConverter.builder().build();
+            return results.getSubsequentSolutions().stream()
+                    .map(Solution::getSolutionGrid)
+                    .map(toCsvPrinter::convertToCsv)
+                    .collect(Collectors.toList());
         }
 
     }

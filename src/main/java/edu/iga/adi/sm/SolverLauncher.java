@@ -5,8 +5,11 @@ import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 import lombok.Builder;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 public final class SolverLauncher {
@@ -15,19 +18,22 @@ public final class SolverLauncher {
     private final TimeLogger timeLogger;
     private final SolverFactory solverFactory;
     private final ProblemManagerFactory problemManagerFactory;
-    private final SolverConfiguration solverConfiguration;
     private final FileSolutionStorage<Solution> solutionStorage;
 
+    private final SolverConfiguration solverConfiguration;
+
+    @SneakyThrows
     public void launch() {
         final ProblemManager problemManager = problemManagerFactory.createProblemManager();
 
         problemManager.setUp();
+        solutionStorage.setUp();
 
         final Solver solver = solverFactory.createSolver(problemManager.getSolutionFactory());
 
         SolutionSeries solutionSeries = !solverConfiguration.isRetrieve()
                 ? solve(problemManager, solver)
-                : null;
+                : retrieve();
 
         productionExecutorFactory.joinAll();
 
@@ -36,9 +42,10 @@ public final class SolverLauncher {
         problemManager.processResults(solutionSeries);
 
         if(solverConfiguration.isStoring()) {
-            storeResults(solutionSeries);
+            solutionStorage.storeAll(solutionSeries.getSubsequentSolutions().stream());
         }
 
+        solutionStorage.tearDown();
         problemManager.tearDown();
     }
 
@@ -50,14 +57,9 @@ public final class SolverLauncher {
                 .solveIteratively(problemManager.getProblem());
     }
 
-    private void storeResults(SolutionSeries solutionSeries) {
-        try {
-            solutionStorage.setUp();
-            solutionStorage.storeAll(solutionSeries.getSubsequentSolutions().stream());
-            solutionStorage.tearDown();
-        } catch (IOException e) {
-            throw new IllegalStateException("Could not store solutions", e);
-        }
+    private SolutionSeries retrieve() {
+        List<Solution> solutions = solutionStorage.retrieveAll().collect(Collectors.toList());
+        return new SolutionSeries(solutions, solverConfiguration.getMesh());
     }
 
     private void logExecutionTimes() {

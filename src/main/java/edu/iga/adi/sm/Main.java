@@ -57,6 +57,7 @@ public class Main {
                 .storageProcessor(
                         CompressResultsStorageProcessor.builder()
                                 .archiveFile(solutionZip)
+                                .pack(solverConfiguration.isStoring())
                                 .unpack(solverConfiguration.isRetrieve())
                                 .build()
                 )

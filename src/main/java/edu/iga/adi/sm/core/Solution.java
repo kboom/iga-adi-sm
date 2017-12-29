@@ -5,6 +5,8 @@ import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.support.Point;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.function.ToDoubleBiFunction;
@@ -117,6 +119,15 @@ public abstract class Solution implements Serializable {
                 "mesh=" + mesh +
                 ", mRHS=" + Arrays.toString(mRHS) +
                 '}';
+    }
+
+    /*
+     * This is to ensure transient fields with default values are initialized.
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        modifier = (x, y) -> 0;
     }
 
 }
