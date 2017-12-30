@@ -12,6 +12,8 @@ import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
@@ -88,21 +90,21 @@ public class FloodManager implements ProblemManager {
                 .build();
         bitmapAnimationViewer.setVisible(true);
 
-//        StaticViewer terrainView = StaticViewer.builder()
-//                .name("Original solution")
-//                .solution(terrainSolution)
-//                .solutionDrawer()
-//                .build();
-//        terrainView.setVisible(true);
+        StaticViewer terrainView = StaticViewer.builder()
+                .name("Original solution")
+                .solution(terrainSolution)
+                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .build();
+        terrainView.setVisible(true);
 
 
-//        TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
-//                .solutionDrawer(SurfaceSolutionDrawer.builder()
-//                        .mesh(solutionSeries.getMesh())
-//                        .build())
-//                .solutionSeries(solutionSeries)
-//                .build();
-//        surfaceAnimationViewer.setVisible(true);
+        TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh())
+                        .build())
+                .solutionSeries(solutionSeries)
+                .build();
+        surfaceAnimationViewer.setVisible(true);
     }
 
     @Override

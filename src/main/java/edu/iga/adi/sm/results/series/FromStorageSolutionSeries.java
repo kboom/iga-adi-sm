@@ -22,7 +22,7 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     @Override
     @SneakyThrows
     public Solution getFinalSolution() {
-        return solutionStorage.retrieveOne(solutionCount - 1);
+        return solutionStorage.retrieveOne(solutionCount - 1).withModifier(modifier);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     @Override
     @SneakyThrows
     public Solution getSolutionAt(int timeStep) {
-        return solutionStorage.retrieveOne(timeStep);
+        return solutionStorage.retrieveOne(timeStep).withModifier(modifier);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     public Stream<Solution> getSubsequentSolutions() {
         return IntStream.range(0, solutionCount).mapToObj(i -> {
             try {
-                return solutionStorage.retrieveOne(i);
+                return solutionStorage.retrieveOne(i).withModifier(modifier);
             } catch (IOException e) {
                 throw new IllegalStateException("Could not get intermediate solution " + i, e);
             }
