@@ -109,7 +109,7 @@ public class SolverConfiguration {
     }
 
     private static String getTemporaryDir(String name) {
-        return new File(FileUtils.getUserDirectory(), name + "-" + EXECUTION_TIMESTAMP).getAbsolutePath();
+        return new File(new File(FileUtils.getUserDirectory(), "iga-adi-mf"), name + "-" + EXECUTION_TIMESTAMP).getAbsolutePath();
     }
 
 }
