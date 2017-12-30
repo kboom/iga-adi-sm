@@ -55,8 +55,8 @@ public class FloodManager implements ProblemManager {
             @Override
             public Problem getInitialProblem() {
                 return (x, y) -> super.getInitialProblem().getValue(x, y) +
-                        (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
-                                && (y > mesh.getElementsY() - 32) && (y < mesh.getElementsY() - 16)) ? 100 : 0);
+                        (double) (((x > mesh.getElementsX() - 64) && (x < mesh.getElementsX() - 32)
+                                && (y > mesh.getElementsY() - 64) && (y < mesh.getElementsY() - 32)) ? 100 : 0);
             }
 
         };

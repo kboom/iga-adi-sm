@@ -17,6 +17,8 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     private final Mesh mesh;
     private final int solutionCount;
     private final SolutionStorage<Solution> solutionStorage;
+
+    @Builder.Default
     private ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
 
     @Override
