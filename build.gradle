@@ -15,10 +15,10 @@ repositories {
 }
 
 jar {
-    baseName = 'komplastechsolver'
+    baseName = 'iga-adi-sm'
     version = '0.1.0'
     manifest {
-        attributes 'Main-Class': 'com.agh.iet.komplastech.solver.Main'
+        attributes 'Main-Class': 'edu.iga.adi.sm.Main'
     }
 }
 
