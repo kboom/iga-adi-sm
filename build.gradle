@@ -5,7 +5,7 @@ plugins {
     id "application"
 }
 
-mainClassName = 'com.agh.iet.komplastech.solver.Main'
+mainClassName = 'edu.iga.adi.sm.Main'
 
 repositories {
     mavenCentral()
