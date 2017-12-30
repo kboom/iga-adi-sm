@@ -1,6 +1,5 @@
 package edu.iga.adi.sm.problems.flood;
 
-import edu.iga.adi.sm.SolutionSeries;
 import edu.iga.adi.sm.Solver;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.SolverFactory;
@@ -11,6 +10,7 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -39,7 +39,7 @@ public class FloodManager implements ProblemManager {
 
     @Override
     public SolutionFactory getSolutionFactory() {
-        return solution -> new FloodSolution(config.getMesh(), solution.getRhs(), terrainSolution.getRhs());
+        return solution -> new FloodSolution(config.getMesh(), solution.getRhs(), terrainSolution.getRhs(), solution.metadata);
     }
 
     @Override

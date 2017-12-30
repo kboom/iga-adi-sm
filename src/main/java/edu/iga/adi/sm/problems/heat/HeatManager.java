@@ -1,12 +1,12 @@
 package edu.iga.adi.sm.problems.heat;
 
-import edu.iga.adi.sm.SolutionSeries;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
@@ -28,7 +28,7 @@ public class HeatManager implements ProblemManager {
 
     @Override
     public SolutionFactory getSolutionFactory() {
-        return solution -> new HeatSolution(config.getMesh(), solution.getRhs());
+        return solution -> new HeatSolution(config.getMesh(), solution.getRhs(), solution.metadata);
     }
 
     @Override

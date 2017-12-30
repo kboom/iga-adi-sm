@@ -2,7 +2,6 @@ package edu.iga.adi.sm.problems.terrain;
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
-import edu.iga.adi.sm.SolutionSeries;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
@@ -10,6 +9,7 @@ import edu.iga.adi.sm.core.direction.IntermediateSolution;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.BitmapFrame;
 import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;

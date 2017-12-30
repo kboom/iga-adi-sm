@@ -1,6 +1,6 @@
 package edu.iga.adi.sm.results.visualization.viewers;
 
-import edu.iga.adi.sm.SolutionSeries;
+import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.results.visualization.SolutionDrawer;
 import lombok.Builder;

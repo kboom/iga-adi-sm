@@ -1,6 +1,9 @@
 package edu.iga.adi.sm.problems;
 
-import edu.iga.adi.sm.*;
+import edu.iga.adi.sm.SolverConfiguration;
+import edu.iga.adi.sm.SolverFactory;
+import edu.iga.adi.sm.SolverLauncher;
+import edu.iga.adi.sm.TimeLogger;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
@@ -8,8 +11,11 @@ import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.loggers.ConsoleSolutionLogger;
 import edu.iga.adi.sm.loggers.NoopSolutionLogger;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.series.FromStorageSolutionSeries;
+import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.storage.CompressResultsStorageProcessor;
 import edu.iga.adi.sm.results.storage.FileSolutionStorage;
+import edu.iga.adi.sm.results.storage.InMemorySolutionStorage;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -77,7 +83,9 @@ class AbstractProblemTest {
 
         String getResultAsCsvString();
 
-        default List<String> getAllResults() { return Collections.emptyList(); }
+        default List<String> getAllResults() {
+            return Collections.emptyList();
+        }
 
     }
 
@@ -103,7 +111,16 @@ class AbstractProblemTest {
 
         @Override
         public void processResults(SolutionSeries solutionSeries) {
-            results = solutionSeries;
+            // safe copy the results because they may become unavailable before assertions
+            InMemorySolutionStorage<Solution> safeStorage = new InMemorySolutionStorage<>(
+                    solutionSeries.getSubsequentSolutions()
+                            .collect(Collectors.toList()));
+            
+            results = FromStorageSolutionSeries.builder()
+                    .mesh(solutionSeries.getMesh())
+                    .solutionCount(solutionSeries.getTimeStepCount())
+                    .solutionStorage(safeStorage)
+                    .build();
         }
 
         @Override
@@ -124,7 +141,7 @@ class AbstractProblemTest {
         @Override
         public List<String> getAllResults() {
             final CsvStringConverter toCsvPrinter = CsvStringConverter.builder().build();
-            return results.getSubsequentSolutions().stream()
+            return results.getSubsequentSolutions()
                     .map(Solution::getSolutionGrid)
                     .map(toCsvPrinter::convertToCsv)
                     .collect(Collectors.toList());

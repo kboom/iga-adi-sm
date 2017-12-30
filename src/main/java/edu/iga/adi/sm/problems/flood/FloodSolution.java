@@ -3,13 +3,17 @@ package edu.iga.adi.sm.problems.flood;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
 
+import java.util.Properties;
+
 public class FloodSolution extends Solution {
+
+    private static final long serialVersionUID = 1243569388117L;
 
     private double meanValue;
     private double[][] terrain;
 
-    public FloodSolution(Mesh mesh, double[][] rhs, double[][] terrain) {
-        super(mesh, rhs);
+    public FloodSolution(Mesh mesh, double[][] rhs, double[][] terrain, Properties metadata) {
+        super(mesh, rhs, metadata);
         this.terrain = terrain;
 //        meanValue = computeMeanOf(rhs);
     }

@@ -38,6 +38,7 @@ public class FloodProblemTest extends AbstractProblemTest {
         ProblemManagerTestResults testResults = launchSolver(SolverConfiguration.builder()
                 .problemSize(12)
                 .problemType("flood")
+                .steps(3)
                 .resultFile(flood3FolderPath)
                 .retrieve(true)
                 .build());

@@ -103,7 +103,7 @@ public class FileSolutionStorage<T extends Solution> implements SolutionStorage<
 
     private void tearDownOrFail(File directory) {
         try {
-            FileUtils.deleteDirectory(directory);
+            FileUtils.forceDeleteOnExit(directory);
         } catch (Exception e) {
             throw wrongFile(directory, e);
         }

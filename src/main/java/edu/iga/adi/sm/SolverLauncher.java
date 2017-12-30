@@ -3,13 +3,12 @@ package edu.iga.adi.sm;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.ProblemManager;
+import edu.iga.adi.sm.results.series.FromStorageSolutionSeries;
+import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.storage.FileSolutionStorage;
+import edu.iga.adi.sm.results.storage.InMemorySolutionStorage;
 import lombok.Builder;
 import lombok.SneakyThrows;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 public final class SolverLauncher {
@@ -41,10 +40,6 @@ public final class SolverLauncher {
 
         problemManager.processResults(solutionSeries);
 
-        if(solverConfiguration.isStoring()) {
-            solutionStorage.storeAll(solutionSeries.getSubsequentSolutions().stream());
-        }
-
         solutionStorage.tearDown();
         problemManager.tearDown();
     }
@@ -52,14 +47,18 @@ public final class SolverLauncher {
     private SolutionSeries solve(ProblemManager problemManager, Solver solver) {
         return IterativeSolver.builder()
                 .mesh(solverConfiguration.getMesh())
+                .solutionStorage(solverConfiguration.isStoring() ? solutionStorage : new InMemorySolutionStorage<>())
                 .solver(solver)
                 .build()
                 .solveIteratively(problemManager.getProblem());
     }
 
     private SolutionSeries retrieve() {
-        List<Solution> solutions = solutionStorage.retrieveAll().collect(Collectors.toList());
-        return new SolutionSeries(solutions, solverConfiguration.getMesh());
+        return FromStorageSolutionSeries.builder()
+                .mesh(solverConfiguration.getMesh())
+                .solutionStorage(solutionStorage)
+                .solutionCount(solverConfiguration.getSteps())
+                .build();
     }
 
     private void logExecutionTimes() {

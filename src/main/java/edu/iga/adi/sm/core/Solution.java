@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.function.ToDoubleBiFunction;
 
 import static edu.iga.adi.sm.core.SolutionGrid.solutionGrid;
@@ -20,14 +21,17 @@ public abstract class Solution implements Serializable {
     protected static final BSpline2 b2 = new BSpline2();
     protected static final BSpline3 b3 = new BSpline3();
 
+    public final Properties metadata;
+
     protected final Mesh mesh;
     protected final double[][] mRHS;
 
     private transient ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
 
-    public Solution(Mesh mesh, double[][] rhs) {
+    public Solution(Mesh mesh, double[][] rhs, Properties metadata) {
         this.mesh = mesh;
-        mRHS = rhs;
+        this.metadata = metadata;
+        this.mRHS = rhs;
     }
 
     public final double[][] getRhs() {
