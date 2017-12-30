@@ -4,6 +4,7 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.problems.IterativeProblem;
+import edu.iga.adi.sm.results.series.CachedSolutionSeries;
 import edu.iga.adi.sm.results.series.FromStorageSolutionSeries;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.storage.InMemorySolutionStorage;
@@ -36,11 +37,11 @@ class IterativeSolver {
             storeAndCacheSolution(solutionNumber++, solution);
             currentProblem = iterativeProblem.getNextProblem(solution);
         }
-        return FromStorageSolutionSeries.builder()
+        return new CachedSolutionSeries(FromStorageSolutionSeries.builder()
                 .mesh(mesh)
                 .solutionCount(solutionNumber)
                 .solutionStorage(solutionStorage)
-                .build();
+                .build());
     }
 
     private void storeAndCacheSolution(int solutionNumber, Solution solution) {

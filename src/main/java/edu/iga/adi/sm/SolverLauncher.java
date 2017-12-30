@@ -3,6 +3,7 @@ package edu.iga.adi.sm;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.ProblemManager;
+import edu.iga.adi.sm.results.series.CachedSolutionSeries;
 import edu.iga.adi.sm.results.series.FromStorageSolutionSeries;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.storage.FileSolutionStorage;
@@ -54,11 +55,11 @@ public final class SolverLauncher {
     }
 
     private SolutionSeries retrieve() {
-        return FromStorageSolutionSeries.builder()
+        return new CachedSolutionSeries(FromStorageSolutionSeries.builder()
                 .mesh(solverConfiguration.getMesh())
                 .solutionStorage(solutionStorage)
                 .solutionCount(solverConfiguration.getSteps())
-                .build();
+                .build());
     }
 
     private void logExecutionTimes() {
