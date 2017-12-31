@@ -17,7 +17,7 @@ public class StaticViewer extends JFrame {
 
     private JPanel framePanel;
 
-    public void display() {
+    public StaticViewer display() {
         attachAskToClose();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1600, 900);
@@ -25,6 +25,8 @@ public class StaticViewer extends JFrame {
         setTitle(name);
         setLayout(new BorderLayout());
         draw();
+        setVisible(true);
+        return this;
     }
 
     private void draw() {

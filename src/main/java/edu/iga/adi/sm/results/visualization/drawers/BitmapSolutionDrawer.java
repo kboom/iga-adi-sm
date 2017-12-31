@@ -20,7 +20,6 @@ public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
 
     @Override
     public void attachTo(JComponent component) {
-        setSize(800, 820);
         setPreferredSize(PREFERRED_SIZE);
         setLayout(new BorderLayout());
         add(imagePanel, BorderLayout.CENTER);
@@ -46,7 +45,7 @@ public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
             }
         }
 
-        imagePanel.image = getGrayscale(elementsY, buffer); // image.getScaledInstance(1600, 900, Image.SCALE_FAST);
+        imagePanel.image = getGrayscale(elementsX, buffer);
         imagePanel.repaint();
     }
 
@@ -69,7 +68,7 @@ public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
 
     public class ImagePanel extends JComponent {
 
-        private BufferedImage image;
+        private Image image;
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -77,10 +76,10 @@ public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
             Graphics2D tGraphics2D = (Graphics2D) g;
             tGraphics2D.setBackground(Color.WHITE);
             tGraphics2D.setPaint(Color.WHITE);
-            tGraphics2D.fillRect(0, 0, 800, 800);
+            tGraphics2D.fillRect(0, 0, PREFERRED_SIZE.width, PREFERRED_SIZE.height);
             tGraphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
             if(image != null) {
-                tGraphics2D.drawImage(image, 0, 0, 800, 800, null);
+                tGraphics2D.drawImage(image, 0, 0, PREFERRED_SIZE.width, PREFERRED_SIZE.height, null);
             }
         }
 
