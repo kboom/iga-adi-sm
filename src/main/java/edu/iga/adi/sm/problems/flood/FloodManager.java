@@ -55,8 +55,8 @@ public class FloodManager implements ProblemManager {
             @Override
             public Problem getInitialProblem() {
                 return (x, y) -> super.getInitialProblem().getValue(x, y) +
-                        (double) (((x > mesh.getElementsX() - 336) && (x < mesh.getElementsX() - 432)
-                                && (y > mesh.getElementsY() - 336) && (y < mesh.getElementsY() - 432)) ? 100 : 0);
+                        (double) (((x > mesh.getElementsX() - 64) && (x < mesh.getElementsX() - 32)
+                                && (y > mesh.getElementsY() - 64) && (y < mesh.getElementsY() - 32)) ? 100 : 0);
             }
 
         };
@@ -82,7 +82,7 @@ public class FloodManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
-        solutionSeries.addModifier((x, y) -> -terrainSolution.getValue(x, y));
+//        solutionSeries.addModifier((y, x) -> -terrainSolution.getValue(x, y));
 
         TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
                 .solutionDrawer(BitmapSolutionDrawer.builder().build())
@@ -90,21 +90,20 @@ public class FloodManager implements ProblemManager {
                 .build();
         bitmapAnimationViewer.setVisible(true);
 
-//        StaticViewer terrainView = StaticViewer.builder()
-//                .name("Original solution")
-//                .solution(terrainSolution)
-//                .solutionDrawer(BitmapSolutionDrawer.builder().build())
-//                .build();
-//        terrainView.setVisible(true);
+        StaticViewer.builder()
+                .name("Original solution")
+                .solution(terrainSolution)
+                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .build().display();
 
 //
-//        TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
-//                .solutionDrawer(SurfaceSolutionDrawer.builder()
-//                        .mesh(solutionSeries.getMesh())
-//                        .build())
-//                .solutionSeries(solutionSeries)
-//                .build();
-//        surfaceAnimationViewer.setVisible(true);
+        TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh())
+                        .build())
+                .solutionSeries(solutionSeries)
+                .build();
+        surfaceAnimationViewer.setVisible(true);
     }
 
     @Override
@@ -138,7 +137,12 @@ public class FloodManager implements ProblemManager {
         } else {
             return new MapTerrainStorage(FunctionTerrainBuilder.get()
                     .withMesh(config.getMesh())
-                    .withFunction((x, y) -> (double) (x + y))
+                    .withFunction((x, y) -> {
+                        if(x < 10 & y < 10) return 200d;
+                        if(x >= 86 & y < 10) return 500d;
+                        if(x < 10 & y >= 86) return 400d;
+                        else return (double) (x + y);
+                    })
                     .build());
         }
     }
