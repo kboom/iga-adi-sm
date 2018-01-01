@@ -24,7 +24,9 @@ public class CompressResultsStorageProcessor implements StorageProcessor {
     @Override
     public void afterSetUp(File directory) {
         if(unpack) {
-            ZipUtil.unpack(archiveFile.getAbsolutePath(), directory.getAbsolutePath());
+            if(!directory.exists()) {
+                ZipUtil.unpack(archiveFile.getAbsolutePath(), directory.getAbsolutePath());
+            }
         }
     }
 

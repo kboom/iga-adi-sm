@@ -14,6 +14,8 @@ import static edu.iga.adi.sm.support.Point.solutionPoint;
 
 public abstract class Solution implements Serializable {
 
+    private static final long serialVersionUID = 2709689660744689327L;
+
     protected static final BSpline1 b1 = new BSpline1();
     protected static final BSpline2 b2 = new BSpline2();
     protected static final BSpline3 b3 = new BSpline3();
