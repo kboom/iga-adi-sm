@@ -93,26 +93,63 @@ public class FloodManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
-//        solutionSeries.addModifier((y, x) -> -terrainSolution.getValue(x, y));
+        solutionSeries.addModifier((y, x) -> -terrainSolution.getValue(x, y));
 
         TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
+                .name("Bitmap solution in time")
                 .solutionDrawer(BitmapSolutionDrawer.builder().build())
                 .solutionSeries(solutionSeries)
+                .downSampleRatio(config.getDownSampleRatio())
                 .build();
         bitmapAnimationViewer.setVisible(true);
 
         StaticViewer.builder()
-                .name("Original solution")
+                .name("Terrain bitmap")
                 .solution(terrainSolution)
                 .solutionDrawer(BitmapSolutionDrawer.builder().build())
                 .build().display();
 
+        StaticViewer.builder()
+                .name("Terrain surface")
+                .solution(terrainSolution)
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh()).build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Initial bitmap")
+                .solution(solutionSeries.getSolutionAt(0))
+                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Final bitmap")
+                .solution(solutionSeries.getFinalSolution())
+                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Initial surface")
+                .solution(solutionSeries.getSolutionAt(0))
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh()).build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Final surface")
+                .solution(solutionSeries.getFinalSolution())
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .mesh(solutionSeries.getMesh()).build())
+                .build().display();
+
 //
         TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
+                .name("Surface solution in time")
                 .solutionDrawer(SurfaceSolutionDrawer.builder()
                         .mesh(solutionSeries.getMesh())
                         .build())
                 .solutionSeries(solutionSeries)
+                .downSampleRatio(config.getDownSampleRatio())
                 .build();
         surfaceAnimationViewer.setVisible(true);
     }

@@ -3,11 +3,15 @@ package edu.iga.adi.sm.results.visualization.util;
 import org.jzy3d.colors.Color;
 import org.jzy3d.colors.ColorMapper;
 import org.jzy3d.colors.colormaps.ColorMapRainbow;
+import org.jzy3d.contour.MapperContourPictureGenerator;
 import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.builder.Builder;
 import org.jzy3d.plot3d.builder.Mapper;
 import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Shape;
+import org.jzy3d.plot3d.primitives.axes.ContourAxeBox;
+import org.jzy3d.plot3d.primitives.axes.IAxe;
+import org.jzy3d.plot3d.primitives.axes.layout.providers.RegularTickProvider;
 
 public class SurfaceBuilder {
 

@@ -30,6 +30,8 @@ public class FileSolutionStorage<T extends Solution> implements SolutionStorage<
     @Builder.Default
     private StorageProcessor storageProcessor = NOOP_STORAGE_PROCESSOR;
 
+    @Builder.Default
+    private boolean cleanUpOnExit = false;
 
     @Override
     public void setUp() throws IOException {
@@ -40,7 +42,9 @@ public class FileSolutionStorage<T extends Solution> implements SolutionStorage<
     @Override
     public void tearDown() throws IOException {
         storageProcessor.beforeTearDown(solutionDirectory);
-        tearDownOrFail(solutionDirectory);
+        if(cleanUpOnExit) {
+            tearDownOrFail(solutionDirectory);
+        }
     }
 
     @Override

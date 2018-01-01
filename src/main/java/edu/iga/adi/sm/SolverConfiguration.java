@@ -70,6 +70,10 @@ public class SolverConfiguration {
     @Builder.Default
     private int steps = 10;
 
+    @Parameter(names = {"--downsample"})
+    @Builder.Default
+    private int downSampleRatio = 1;
+
     /*
 
         TERRAIN CONFIGURATION PARAMETERS

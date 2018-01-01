@@ -13,11 +13,14 @@ public class TimeLapseViewer extends JFrame {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(600, 700);
 
-    @Builder.Default
-    private final String name = "Transient solution";
-
     private final SolutionSeries solutionSeries;
     private final SolutionDrawer solutionDrawer;
+
+    @Builder.Default
+    private String name = "Transient solution";
+
+    @Builder.Default
+    private int downSampleRatio = 1;
 
     private JSlider frameSlider;
     private JPanel framePanel;
@@ -29,10 +32,14 @@ public class TimeLapseViewer extends JFrame {
     @Builder
     public TimeLapseViewer(
             SolutionSeries solutionSeries,
-            SolutionDrawer solutionDrawer
+            SolutionDrawer solutionDrawer,
+            String name,
+            int downSampleRatio
     ) {
         this.solutionSeries = solutionSeries;
         this.solutionDrawer = solutionDrawer;
+        this.downSampleRatio = downSampleRatio;
+        this.name = name;
         initialize();
         animate();
         initializeSlider();
@@ -74,10 +81,11 @@ public class TimeLapseViewer extends JFrame {
             final int timeStepCount = solutionSeries.getTimeStepCount();
             int timeStep = 0;
             while (displayState == DisplayState.ANIMATION_DISPLAY) {
+                timeStep += downSampleRatio / (timeStepCount / downSampleRatio);
                 if (timeStep >= timeStepCount) {
                     timeStep = 0;
                 }
-                drawStep(timeStep++);
+                drawStep(timeStep);
                 frameSlider.setValue(timeStep);
                 try {
                     Thread.sleep(100);

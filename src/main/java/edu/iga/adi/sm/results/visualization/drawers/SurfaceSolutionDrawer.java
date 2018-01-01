@@ -34,7 +34,7 @@ public class SurfaceSolutionDrawer extends JPanel implements SolutionDrawer {
     @Override
     public void attachTo(JComponent component) {
         chart = AWTChartComponentFactory.chart(
-                Quality.Advanced,
+                Quality.Intermediate,
                 IChartComponentFactory.Toolkit.swing);
         Component canvas = (Component) chart.getCanvas();
         canvas.setPreferredSize(PREFERRED_SIZE);
