@@ -97,7 +97,7 @@ public class FloodManager implements ProblemManager {
 
     private void plotResults(SolutionSeries solutionSeries) {
         drawSurfaces(solutionSeries);
-        drawBitmaps(solutionSeries);
+//        drawBitmaps(solutionSeries);
     }
 
     private void drawSurfaces(SolutionSeries solutionSeries) {
@@ -107,28 +107,28 @@ public class FloodManager implements ProblemManager {
                 .staticSolution(terrainSolution)
                 .build();
 
-        StaticViewer.builder()
-                .name("Plain terrain surface")
-                .solution(terrainSolution)
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(SingleSurfaceProvider.builder()
-                                .surfaceFactory(surfaceFactory)
-                                .build()).build())
-                .build().display();
-
-        StaticViewer.builder()
-                .name("Initial flooded surface")
-                .solution(solutionSeries.getSolutionAt(0))
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(rainAndTerrainSurfaces).build())
-                .build().display();
-
-        StaticViewer.builder()
-                .name("Final flooded surface")
-                .solution(solutionSeries.getFinalSolution())
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(rainAndTerrainSurfaces).build())
-                .build().display();
+//        StaticViewer.builder()
+//                .name("Plain terrain surface")
+//                .solution(terrainSolution)
+//                .solutionDrawer(SurfaceSolutionDrawer.builder()
+//                        .surfaceProvider(SingleSurfaceProvider.builder()
+//                                .surfaceFactory(surfaceFactory)
+//                                .build()).build())
+//                .build().display();
+//
+//        StaticViewer.builder()
+//                .name("Initial flooded surface")
+//                .solution(solutionSeries.getSolutionAt(0))
+//                .solutionDrawer(SurfaceSolutionDrawer.builder()
+//                        .surfaceProvider(rainAndTerrainSurfaces).build())
+//                .build().display();
+//
+//        StaticViewer.builder()
+//                .name("Final flooded surface")
+//                .solution(solutionSeries.getFinalSolution())
+//                .solutionDrawer(SurfaceSolutionDrawer.builder()
+//                        .surfaceProvider(rainAndTerrainSurfaces).build())
+//                .build().display();
 
         TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
                 .name("Surface flooding in time")
