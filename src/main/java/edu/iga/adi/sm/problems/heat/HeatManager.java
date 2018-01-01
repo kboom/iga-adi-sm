@@ -8,6 +8,8 @@ import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.drawers.surfaces.SingleSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceFactory;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
 
@@ -44,9 +46,12 @@ public class HeatManager implements ProblemManager {
     }
 
     private void displayResults(SolutionSeries solutionSeries) {
+        final SurfaceFactory surfaceFactory = SurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
         TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
                 .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .mesh(solutionSeries.getMesh())
+                        .surfaceProvider(SingleSurfaceProvider.builder()
+                                .surfaceFactory(surfaceFactory)
+                                .build())
                         .build())
                 .solutionSeries(solutionSeries)
                 .build();

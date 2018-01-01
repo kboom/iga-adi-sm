@@ -68,7 +68,7 @@ public class FileSolutionStorage<T extends Solution> implements SolutionStorage<
 
     @Override
     public T retrieveOne(int id) throws IOException {
-        File file = solutionFile(id);
+         File file = solutionFile(id);
         return retrieveFromFile(file);
     }
 

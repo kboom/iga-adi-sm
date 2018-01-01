@@ -33,11 +33,6 @@ public abstract class SolutionSeriesAdapter implements SolutionSeries {
     }
 
     @Override
-    public void addModifier(ToDoubleBiFunction<Double, Double> fn) {
-        delegate.addModifier(fn);
-    }
-
-    @Override
     public Stream<Solution> getSubsequentSolutions() {
         return delegate.getSubsequentSolutions();
     }

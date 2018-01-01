@@ -10,11 +10,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
+import java.util.function.ToDoubleBiFunction;
+import java.util.function.ToDoubleFunction;
 
 @Builder
 public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(600, 600);
+
+    @Builder.Default
+    private SolutionMapper mapper = (x, y, z) -> z;
 
     private final ImagePanel imagePanel = new ImagePanel();
 
@@ -34,13 +39,13 @@ public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
 
         byte[] buffer = new byte[elementsX * elementsY];
 
-        double maxValue = solution.getSolutionGrid().getPoints().stream().mapToDouble(edu.iga.adi.sm.support.Point::getValue).max().getAsDouble(); //maxValueOf(rhs);
-        double minValue = solution.getSolutionGrid().getPoints().stream().mapToDouble(Point::getValue).min().getAsDouble();
+        double maxValue = solution.getSolutionGrid().getPoints().stream().mapToDouble(pointToValue()).max().getAsDouble(); //maxValueOf(rhs);
+        double minValue = solution.getSolutionGrid().getPoints().stream().mapToDouble(pointToValue()).min().getAsDouble();
         double offset = minValue < 0 ? Math.abs(minValue) : 0;
 
         for (int i = 0; i < elementsY; i++) {
             for (int j = 0; j < elementsX; j++) {
-                double value = solution.getValue(i, j);
+                double value = mapper.value(i, j, solution.getValue(i, j));
                 buffer[(i * elementsY) + j] = (byte) (((value + offset) / (maxValue + offset)) * 255);
             }
         }
@@ -64,6 +69,10 @@ public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
         DataBufferByte db = new DataBufferByte(buffer, width * height);
         WritableRaster raster = Raster.createWritableRaster(sm, db, null);
         return new BufferedImage(cm, raster, false, null);
+    }
+
+    private ToDoubleFunction<Point> pointToValue() {
+        return p -> mapper.value(p.getX(), p.getY(), p.getValue());
     }
 
     public class ImagePanel extends JComponent {

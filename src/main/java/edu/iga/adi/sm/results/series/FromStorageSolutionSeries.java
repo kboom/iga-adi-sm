@@ -44,11 +44,6 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     }
 
     @Override
-    public void addModifier(ToDoubleBiFunction<Double, Double> fn) {
-        this.modifier = fn;
-    }
-
-    @Override
     public Stream<Solution> getSubsequentSolutions() {
         return IntStream.range(0, solutionCount).mapToObj(i -> {
             try {
