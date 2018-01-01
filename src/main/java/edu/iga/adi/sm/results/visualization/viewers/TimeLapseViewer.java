@@ -81,7 +81,7 @@ public class TimeLapseViewer extends JFrame {
             final int timeStepCount = solutionSeries.getTimeStepCount();
             int timeStep = 0;
             while (displayState == DisplayState.ANIMATION_DISPLAY) {
-                timeStep += downSampleRatio / (timeStepCount / downSampleRatio);
+                timeStep += timeStepCount * (downSampleRatio / (float) timeStepCount);
                 if (timeStep >= timeStepCount) {
                     timeStep = 0;
                 }

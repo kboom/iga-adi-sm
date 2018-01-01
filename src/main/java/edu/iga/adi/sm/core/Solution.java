@@ -5,12 +5,9 @@ import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.support.Point;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.function.ToDoubleBiFunction;
 
 import static edu.iga.adi.sm.core.SolutionGrid.solutionGrid;
 import static edu.iga.adi.sm.support.Point.solutionPoint;
@@ -25,8 +22,6 @@ public abstract class Solution implements Serializable {
 
     protected final Mesh mesh;
     protected final double[][] mRHS;
-
-    private transient ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
 
     public Solution(Mesh mesh, double[][] rhs, Properties metadata) {
         this.mesh = mesh;
@@ -60,12 +55,12 @@ public abstract class Solution implements Serializable {
         return getValue(mRHS, x, y);
     }
 
-    protected final double getValue(double[][] c, double x, double y) {
+    protected final double getValue(double[][] c, double y, double x) {
         int ielemx = (int) (x / mesh.getDx()) + 1;
         int ielemy = (int) (y / mesh.getDy()) + 1;
         double localx = x - mesh.getDx() * (ielemx - 1);
         double localy = y - mesh.getDy() * (ielemy - 1);
-        return modifier.applyAsDouble(x, y) + b1.getValue(localx) * b1.getValue(localy) * c[ielemx][ielemy]
+        return b1.getValue(localx) * b1.getValue(localy) * c[ielemx][ielemy]
                 + b1.getValue(localx) * b2.getValue(localy) * c[ielemx][ielemy + 1]
                 + b1.getValue(localx) * b3.getValue(localy) * c[ielemx][ielemy + 2]
                 + b2.getValue(localx) * b1.getValue(localy) * c[ielemx + 1][ielemy]
@@ -94,11 +89,6 @@ public abstract class Solution implements Serializable {
         return Math.sqrt(difference);
     }
 
-    public Solution withModifier(ToDoubleBiFunction<Double, Double> fn) {
-        this.modifier = fn;
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,15 +113,6 @@ public abstract class Solution implements Serializable {
                 "mesh=" + mesh +
                 ", mRHS=" + Arrays.toString(mRHS) +
                 '}';
-    }
-
-    /*
-     * This is to ensure transient fields with default values are initialized.
-     */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-
-        modifier = (x, y) -> 0;
     }
 
 }

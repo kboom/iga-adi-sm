@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
-import java.util.function.ToDoubleBiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -18,13 +17,10 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     private final int solutionCount;
     private final SolutionStorage<Solution> solutionStorage;
 
-    @Builder.Default
-    private ToDoubleBiFunction<Double, Double> modifier = (x, y) -> 0;
-
     @Override
     @SneakyThrows
     public Solution getFinalSolution() {
-        return solutionStorage.retrieveOne(solutionCount - 1).withModifier(modifier);
+        return solutionStorage.retrieveOne(solutionCount - 1);
     }
 
     @Override
@@ -35,7 +31,7 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     @Override
     @SneakyThrows
     public Solution getSolutionAt(int timeStep) {
-        return solutionStorage.retrieveOne(timeStep).withModifier(modifier);
+        return solutionStorage.retrieveOne(timeStep);
     }
 
     @Override
@@ -47,7 +43,7 @@ public class FromStorageSolutionSeries implements SolutionSeries {
     public Stream<Solution> getSubsequentSolutions() {
         return IntStream.range(0, solutionCount).mapToObj(i -> {
             try {
-                return solutionStorage.retrieveOne(i).withModifier(modifier);
+                return solutionStorage.retrieveOne(i);
             } catch (IOException e) {
                 throw new IllegalStateException("Could not get intermediate solution " + i, e);
             }
