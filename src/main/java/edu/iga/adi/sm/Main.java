@@ -12,6 +12,8 @@ import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 
 import java.io.File;
 
+import static java.lang.System.exit;
+
 public class Main {
 
     private static final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory();
@@ -47,6 +49,8 @@ public class Main {
                 .solutionStorage(initializeStorage(solverConfiguration))
                 .build()
                 .launch();
+
+        exit(0);
     }
 
     private static FileSolutionStorage<Solution> initializeStorage(SolverConfiguration solverConfiguration) {
