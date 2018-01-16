@@ -3,6 +3,7 @@ plugins {
     id "java"
     id "idea"
     id "application"
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 mainClassName = 'edu.iga.adi.sm.Main'
@@ -25,9 +26,18 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-task packageToSource(type: Copy, dependsOn: ["distTar"]) {
-    from 'build/distributions'
+runShadow {
+    args '--problem', 'heat', '--steps', '1'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4.1'
+}
+
+task packageToSource(type: Copy, dependsOn: ["shadowJar"]) {
+    from 'build/libs/iga-adi-sm-all.jar'
     into 'dist'
+    rename 'iga-adi-sm-all.jar', 'iga-adi-sm.jar'
 }
 
 dependencies {
