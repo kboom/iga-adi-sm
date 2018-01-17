@@ -16,7 +16,6 @@ import static java.lang.System.exit;
 
 public class Main {
 
-    private static final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory();
     private static final TimeLogger timeLogger = new TimeLogger();
     private static String[] PROGRAM_ARGUMENTS;
 
@@ -25,7 +24,8 @@ public class Main {
 
         SolverConfiguration solverConfiguration = withInjectedProgramArguments(SolverConfiguration.builder().build());
 
-        productionExecutorFactory.setAvailableThreads(solverConfiguration.getMaxThreads());
+        final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory(solverConfiguration);
+
         final Mesh mesh = solverConfiguration.getMesh();
 
         final SolverFactory solverFactory = new SolverFactory(
@@ -36,6 +36,7 @@ public class Main {
 
         final ProblemManagerFactory problemManagerFactory = LocalProblemManagerFactory.builder()
                 .mesh(mesh)
+                .productionExecutorFactory(productionExecutorFactory)
                 .solverConfiguration(solverConfiguration)
                 .solverFactory(solverFactory)
                 .build();
@@ -50,7 +51,9 @@ public class Main {
                 .build()
                 .launch();
 
-        exit(0);
+        if(!solverConfiguration.isPlotting()) {
+            exit(0);
+        }
     }
 
     private static FileSolutionStorage<Solution> initializeStorage(SolverConfiguration solverConfiguration) {

@@ -25,7 +25,7 @@ public class GeneralProblemTest {
     private static final TimeLogger DUMMY_TIME_LOGGER = new TimeLogger();
     private static final SolutionFactory DUMMY_SOLUTION_FACTORY = solution -> solution;
     private static final int REQUIRED_PRECISION = 6;
-    private static final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory();
+    private static final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory(SolverConfiguration.builder().build());
     private static final int TEST_PROBLEM_SIZE = 12;
     private static final int BIG_PROBLEM_SIZE = 24;
 
@@ -91,7 +91,7 @@ public class GeneralProblemTest {
 
     private SolutionGrid generateSolutionGridFor(Mesh mesh, BiFunction<Double, Double, Double> fn) {
         return solutionGrid(IntStream.range(0, mesh.getElementsX()).boxed().parallel().flatMap(
-                x -> IntStream.range(0, mesh.getElementsY()).mapToObj(y -> solutionPoint(x + 0.5, y + 0.5, fn.apply(y + 0.5, x + 0.5)))
+                y -> IntStream.range(0, mesh.getElementsY()).mapToObj(x -> solutionPoint(x + 0.5, y + 0.5, fn.apply(x + 0.5, y + 0.5)))
         ).collect(Collectors.toList()));
     }
 

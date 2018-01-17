@@ -17,8 +17,10 @@ public class SolverFactory {
     private final SolutionLogger solutionLogger;
     private final TimeLogger timeLogger;
 
-    public Solver createSolver(SolutionFactory solutionFactory) {
-        ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory();
+    public Solver createSolver(
+            SolutionFactory solutionFactory,
+            ProductionExecutorFactory productionExecutorFactory
+    ) {
 
         TwoDimensionalProblemSolver problemSolver = new TwoDimensionalProblemSolver(
                 productionExecutorFactory,

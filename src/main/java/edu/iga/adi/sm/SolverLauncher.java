@@ -29,7 +29,7 @@ public final class SolverLauncher {
         problemManager.setUp();
         solutionStorage.setUp();
 
-        final Solver solver = solverFactory.createSolver(problemManager.getSolutionFactory());
+        final Solver solver = solverFactory.createSolver(problemManager.getSolutionFactory(), productionExecutorFactory);
 
         SolutionSeries solutionSeries = !solverConfiguration.isRetrieve()
                 ? solve(problemManager, solver)

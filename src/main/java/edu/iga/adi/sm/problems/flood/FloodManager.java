@@ -7,6 +7,7 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
+import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
@@ -28,19 +29,16 @@ import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class FloodManager implements ProblemManager {
 
     private final SolverFactory solverFactory;
+    private final ProductionExecutorFactory productionExecutorFactory;
+    private final SolverConfiguration config;
 
     private Solution terrainSolution;
-
-    private SolverConfiguration config;
-
-    public FloodManager(SolverConfiguration config, SolverFactory solverFactory) {
-        this.config = config;
-        this.solverFactory = solverFactory;
-    }
 
     @Override
     public SolutionFactory getSolutionFactory() {
@@ -66,7 +64,7 @@ public class FloodManager implements ProblemManager {
                 final double rainAreaX = elementsX / 4;
                 final double rainAreaY = elementsY / 4;
 
-                final int rainVolume = 500;
+                final int rainVolume = 80;
 
                 return (x, y) -> super.getInitialProblem().getValue(x, y) +
                         (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
@@ -97,7 +95,7 @@ public class FloodManager implements ProblemManager {
 
     private void plotResults(SolutionSeries solutionSeries) {
         drawSurfaces(solutionSeries);
-//        drawBitmaps(solutionSeries);
+        drawBitmaps(solutionSeries);
     }
 
     private void drawSurfaces(SolutionSeries solutionSeries) {
@@ -107,28 +105,28 @@ public class FloodManager implements ProblemManager {
                 .staticSolution(terrainSolution)
                 .build();
 
-//        StaticViewer.builder()
-//                .name("Plain terrain surface")
-//                .solution(terrainSolution)
-//                .solutionDrawer(SurfaceSolutionDrawer.builder()
-//                        .surfaceProvider(SingleSurfaceProvider.builder()
-//                                .surfaceFactory(surfaceFactory)
-//                                .build()).build())
-//                .build().display();
-//
-//        StaticViewer.builder()
-//                .name("Initial flooded surface")
-//                .solution(solutionSeries.getSolutionAt(0))
-//                .solutionDrawer(SurfaceSolutionDrawer.builder()
-//                        .surfaceProvider(rainAndTerrainSurfaces).build())
-//                .build().display();
-//
-//        StaticViewer.builder()
-//                .name("Final flooded surface")
-//                .solution(solutionSeries.getFinalSolution())
-//                .solutionDrawer(SurfaceSolutionDrawer.builder()
-//                        .surfaceProvider(rainAndTerrainSurfaces).build())
-//                .build().display();
+        StaticViewer.builder()
+                .name("Plain terrain surface")
+                .solution(terrainSolution)
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .surfaceProvider(SingleSurfaceProvider.builder()
+                                .surfaceFactory(surfaceFactory)
+                                .build()).build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Initial flooded surface")
+                .solution(solutionSeries.getSolutionAt(0))
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .surfaceProvider(rainAndTerrainSurfaces).build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Final flooded surface")
+                .solution(solutionSeries.getFinalSolution())
+                .solutionDrawer(SurfaceSolutionDrawer.builder()
+                        .surfaceProvider(rainAndTerrainSurfaces).build())
+                .build().display();
 
         TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
                 .name("Surface flooding in time")
@@ -154,15 +152,21 @@ public class FloodManager implements ProblemManager {
                 .solutionDrawer(BitmapSolutionDrawer.builder().build())
                 .build().display();
 
+        // plot diff?
         StaticViewer.builder()
                 .name("Final bitmap")
                 .solution(solutionSeries.getFinalSolution())
-                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .solutionDrawer(BitmapSolutionDrawer.builder()
+                        .mapper((x, y, z) -> z - terrainSolution.getValue(x, y))
+                        .build())
                 .build().display();
 
+        // plot diff?
         TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
                 .name("Bitmap solution in time")
-                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .solutionDrawer(BitmapSolutionDrawer.builder()
+                        .mapper((x, y, z) -> z - terrainSolution.getValue(x, y))
+                        .build())
                 .solutionSeries(solutionSeries)
                 .downSampleRatio(config.getDownSampleRatio())
                 .build();
@@ -185,7 +189,7 @@ public class FloodManager implements ProblemManager {
                 .build()
                 .terraform(config.getMesh());
 
-        Solver solver = solverFactory.createSolver(solution -> solution);
+        Solver solver = solverFactory.createSolver(solution -> solution, productionExecutorFactory);
         terrainSolution = solver.solveProblem(new TerrainProjectionProblem(outputTerrain));
     }
 
@@ -204,7 +208,7 @@ public class FloodManager implements ProblemManager {
                         if(x < 10 & y < 10) return 200d;
                         if(x >= 86 & y < 10) return 500d;
                         if(x < 10 & y >= 86) return 400d;
-                        else return (double) (x + y);
+                        else return (double) 2 * (x + y);
                     })
                     .build());
         }

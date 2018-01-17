@@ -27,10 +27,8 @@ import java.util.stream.Collectors;
 class AbstractProblemTest {
 
     ProblemManagerTestResults launchSolver(SolverConfiguration solverConfiguration) {
-        final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory();
+        final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory(solverConfiguration);
         final TimeLogger timeLogger = new TimeLogger();
-
-        productionExecutorFactory.setAvailableThreads(solverConfiguration.getMaxThreads());
 
         final Mesh mesh = solverConfiguration.getMesh();
 
@@ -44,6 +42,7 @@ class AbstractProblemTest {
                 .mesh(mesh)
                 .solverConfiguration(solverConfiguration)
                 .solverFactory(solverFactory)
+                .productionExecutorFactory(productionExecutorFactory)
                 .build()
                 .createProblemManager());
 

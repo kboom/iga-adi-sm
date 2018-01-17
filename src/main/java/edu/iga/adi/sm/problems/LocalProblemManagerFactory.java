@@ -4,6 +4,7 @@ import edu.iga.adi.sm.ProblemManagerFactory;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.SolverFactory;
 import edu.iga.adi.sm.core.Mesh;
+import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.flood.FloodManager;
 import edu.iga.adi.sm.problems.heat.HeatManager;
 import edu.iga.adi.sm.problems.projection.ProjectionProblemManager;
@@ -16,6 +17,7 @@ public class LocalProblemManagerFactory implements ProblemManagerFactory {
     private SolverConfiguration solverConfiguration;
     private Mesh mesh;
     private SolverFactory solverFactory;
+    private ProductionExecutorFactory productionExecutorFactory;
 
     @Override
     public ProblemManager createProblemManager() {
@@ -42,7 +44,7 @@ public class LocalProblemManagerFactory implements ProblemManagerFactory {
     }
 
     private ProblemManager createFloodProblemFactory() {
-        return new FloodManager(solverConfiguration, solverFactory);
+        return new FloodManager(solverFactory, productionExecutorFactory, solverConfiguration);
     }
 
     private ProblemManager createHeatProblemFactory() {

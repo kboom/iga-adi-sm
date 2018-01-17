@@ -36,6 +36,8 @@ public class ProductionExecutor {
 
     private static class ProductionCallable implements Callable<Void> {
 
+        private Logger logger = Logger.getLogger(ProductionCallable.class);
+
         private Production production;
 
         private ProductionCallable(Production production) {
