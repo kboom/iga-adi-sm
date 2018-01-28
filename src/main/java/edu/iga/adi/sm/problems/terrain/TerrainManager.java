@@ -18,6 +18,7 @@ import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
 import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
@@ -115,6 +116,7 @@ public class TerrainManager implements ProblemManager {
                         ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
                                 .withNext(new ToClosestTerrainProcessor())
                                 .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
+                                .withNext(new ZeroWaterLevelProcessor())
                 )
                 .build()
                 .terraform(config.getMesh());

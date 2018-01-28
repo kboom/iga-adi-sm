@@ -121,6 +121,8 @@ Feel free to contribute to this project. Merge requests will be reviewed and acc
 
 ### Terrain maps
 
+[Geospatial selection](http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp)
+
 https://catalog.data.gov/dataset?tags=terrain
 https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=1124
 https://catalog.data.gov/dataset/new-orleans-louisiana-coastal-digital-elevation-model

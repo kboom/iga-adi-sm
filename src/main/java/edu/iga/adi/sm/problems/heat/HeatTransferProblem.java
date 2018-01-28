@@ -26,17 +26,22 @@ public final class HeatTransferProblem implements IterativeProblem {
     @Override
     public Problem getInitialProblem() {
         return (x, y) -> {
-            final int diameterX = Math.max(10, mesh.getElementsX() / 5);
-            final int diameterY = Math.max(5, mesh.getElementsY() / 10);
-
             int heat = mesh.getElementsX() * 100;
+            int radius = Double.valueOf(Math.pow(mesh.getElementsX() / 4, 2)).intValue();
 
-            boolean oneCorner = x > (mesh.getElementsX() - diameterX) && y > (mesh.getElementsY() - diameterY);
-            boolean otherCorner = x < diameterX && y < diameterY;
+            int aX = mesh.getElementsX() - mesh.getElementsX() / 2;
+            int aY = mesh.getElementsY() - mesh.getElementsY() / 2;
 
-            if(oneCorner || otherCorner) {
-                return Math.max(100, heat);
-            } else return 0;
+            double distA = Math.pow(x - aX, 2) + Math.pow(y - aY, 2);
+            if(distA < radius) return heat;
+
+//            int bX = diameterB;
+//            int bY = diameterB;
+//
+//            double distB = Math.pow(x - bX, 2) + Math.pow(y - bY, 2);
+//            if(distB < radius) return heat;
+
+            return 0;
         };
     }
 

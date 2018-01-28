@@ -27,6 +27,7 @@ import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
 import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
@@ -69,11 +70,14 @@ public class FloodManager implements ProblemManager {
                 final double rainAreaX = elementsX / 4;
                 final double rainAreaY = elementsY / 4;
 
-                final int rainVolume = 80;
+                final int rainVolume = 30;
 
-                return (x, y) -> super.getInitialProblem().getValue(x, y) +
-                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
-                                && (y > centerY - rainAreaY / 2) && (y < centerY + rainAreaY / 2)) ? rainVolume : 0);
+                return (x, y) -> super.getInitialProblem().getValue(x, y)
+                        + ((x < centerX && y < centerY) ? rainVolume: 0);
+
+//                return (x, y) -> super.getInitialProblem().getValue(x, y) +
+//                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
+//                                && (y > centerY - rainAreaY / 2) && (y < centerY + rainAreaY / 2)) ? rainVolume : 0);
             }
 
         };
@@ -234,6 +238,7 @@ public class FloodManager implements ProblemManager {
                         ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
                                 .withNext(new ToClosestTerrainProcessor())
                                 .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
+                                .withNext(new ZeroWaterLevelProcessor())
                 )
                 .build()
                 .terraform(config.getMesh());

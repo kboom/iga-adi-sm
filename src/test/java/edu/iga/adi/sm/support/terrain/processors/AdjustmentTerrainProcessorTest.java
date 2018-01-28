@@ -35,4 +35,16 @@ public class AdjustmentTerrainProcessorTest {
         );
     }
 
+    @Test
+    public void scalesFloats() {
+        final AdjustmentTerrainProcessor adjustmentTerrainProcessor = AdjustmentTerrainProcessor
+                .builder().scale(100).build();
+
+        assertThat(adjustmentTerrainProcessor.apply(Stream.of(
+                new TerrainPoint(0, 0, 0), new TerrainPoint(3.86, 4.81, 5)
+        )).collect(Collectors.toList())).containsExactlyInAnyOrder(
+                new TerrainPoint(0, 0, 0), new TerrainPoint(386, 481, 5)
+        );
+    }
+
 }

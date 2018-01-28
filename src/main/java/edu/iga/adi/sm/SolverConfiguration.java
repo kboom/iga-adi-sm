@@ -98,7 +98,7 @@ public class SolverConfiguration {
 
     @Parameter(names = {"--terrain-scale"})
     @Builder.Default
-    private int scale = 1; // 100
+    private int scale = 10; // 100
 
     @Parameter(names = {"--terrain-x-offset"})
     @Builder.Default
