@@ -17,6 +17,7 @@ import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SolutionChangesSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SingleSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceFactory;
+import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -157,7 +158,9 @@ public class FloodManager implements ProblemManager {
                 .name("Final bitmap")
                 .solution(solutionSeries.getFinalSolution())
                 .solutionDrawer(BitmapSolutionDrawer.builder()
-                        .mapper((x, y, z) -> z - terrainSolution.getValue(x, y))
+                        .imageFactory(
+                                GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
+                        )
                         .build())
                 .build().display();
 
@@ -165,7 +168,9 @@ public class FloodManager implements ProblemManager {
         TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
                 .name("Bitmap solution in time")
                 .solutionDrawer(BitmapSolutionDrawer.builder()
-                        .mapper((x, y, z) -> z - terrainSolution.getValue(x, y))
+                        .imageFactory(
+                                GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
+                        )
                         .build())
                 .solutionSeries(solutionSeries)
                 .downSampleRatio(config.getDownSampleRatio())
