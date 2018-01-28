@@ -11,8 +11,9 @@ import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.ImageStorage;
 import edu.iga.adi.sm.results.series.SolutionSeries;
-import edu.iga.adi.sm.results.visualization.drawers.BitmapSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SolutionChangesSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SingleSurfaceProvider;
@@ -31,6 +32,9 @@ import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
 import lombok.RequiredArgsConstructor;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 @RequiredArgsConstructor
 public class FloodManager implements ProblemManager {
@@ -83,6 +87,9 @@ public class FloodManager implements ProblemManager {
         if (config.isPlotting()) {
             plotResults(solutionSeries);
         }
+        if (config.isStoringImages()) {
+            storeImages(solutionSeries);
+        }
     }
 
     private void logResults(SolutionSeries solutionSeries) {
@@ -97,6 +104,37 @@ public class FloodManager implements ProblemManager {
     private void plotResults(SolutionSeries solutionSeries) {
         drawSurfaces(solutionSeries);
         drawBitmaps(solutionSeries);
+    }
+
+    private void storeImages(SolutionSeries solutionSeries) {
+        ImageStorage imageStorage = ImageStorage.builder().baseDir(
+                new File(config.getImagesDir())
+        ).build();
+
+        BufferedImage terrainSurface = GreyscaleImageFactory.builder()
+                .build()
+                .createImageFor(terrainSolution);
+
+        imageStorage.saveImageAsTIFF("terrain.tiff", terrainSurface);
+
+        BufferedImage floodStart = GreyscaleImageFactory.builder()
+                .build()
+                .createImageFor(solutionSeries.getSolutionAt(0));
+
+        imageStorage.saveImageAsTIFF("flood-start.tiff", floodStart);
+
+        BufferedImage floodEnd = GreyscaleImageFactory.builder()
+                .build()
+                .createImageFor(solutionSeries.getFinalSolution());
+
+        imageStorage.saveImageAsTIFF("flood-end.tiff", floodEnd);
+
+        BufferedImage floodEndDepth = GreyscaleImageFactory.builder()
+                .mapper((x, y, z) -> z - terrainSolution.getValue(x, y))
+                .build()
+                .createImageFor(solutionSeries.getFinalSolution());
+
+        imageStorage.saveImageAsTIFF("flood-end-depth.tiff", floodEndDepth);
     }
 
     private void drawSurfaces(SolutionSeries solutionSeries) {
@@ -144,20 +182,26 @@ public class FloodManager implements ProblemManager {
         StaticViewer.builder()
                 .name("Terrain bitmap")
                 .solution(terrainSolution)
-                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
                 .build().display();
 
         StaticViewer.builder()
                 .name("Initial bitmap")
                 .solution(solutionSeries.getSolutionAt(0))
-                .solutionDrawer(BitmapSolutionDrawer.builder().build())
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Mid bitmap")
+                .solution(solutionSeries.getSolutionAt(solutionSeries.getTimeStepCount() / 2))
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
                 .build().display();
 
         // plot diff?
         StaticViewer.builder()
                 .name("Final bitmap")
                 .solution(solutionSeries.getFinalSolution())
-                .solutionDrawer(BitmapSolutionDrawer.builder()
+                .solutionDrawer(FlatSolutionDrawer.builder()
                         .imageFactory(
                                 GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
                         )
@@ -167,7 +211,7 @@ public class FloodManager implements ProblemManager {
         // plot diff?
         TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
                 .name("Bitmap solution in time")
-                .solutionDrawer(BitmapSolutionDrawer.builder()
+                .solutionDrawer(FlatSolutionDrawer.builder()
                         .imageFactory(
                                 GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
                         )

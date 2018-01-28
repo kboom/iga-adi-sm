@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 @Builder
-public class BitmapSolutionDrawer extends JPanel implements SolutionDrawer {
+public class FlatSolutionDrawer extends JPanel implements SolutionDrawer {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(600, 600);
 

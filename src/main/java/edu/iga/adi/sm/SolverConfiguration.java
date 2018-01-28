@@ -23,6 +23,7 @@ import static edu.iga.adi.sm.core.Mesh.aMesh;
 public class SolverConfiguration {
 
     public static final String EXECUTION_TIMESTAMP = getTimestamp();
+    public static final String TEMPORARY_DIR = getTemporaryDir("iga-adi-sm-solution");
 
     @Parameter(names = {"--log", "-l"})
     @Builder.Default
@@ -40,13 +41,25 @@ public class SolverConfiguration {
     @Builder.Default
     private boolean isStoring = false;
 
+    @Parameter(names = {"--images", "-i"})
+    @Builder.Default
+    private boolean isStoringImages = false;
+
+    @Parameter(names = {"--images-dir"})
+    @Builder.Default
+    private String imagesDir = new File(TEMPORARY_DIR, "images").getAbsolutePath();
+
+    @Parameter(names = {"--images-freq"})
+    @Builder.Default
+    private int imagesFrequencyPercentage = 10;
+
     @Parameter(names = {"--retrieve"})
     @Builder.Default
     private boolean retrieve = false;
 
     @Parameter(names = {"--store-file"})
     @Builder.Default
-    private String resultFile = getTemporaryDir("iga-adi-sm-solution");
+    private String resultFile = TEMPORARY_DIR;
 
     @Parameter(names = {"--problem-size", "-s"})
     @Builder.Default

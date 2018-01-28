@@ -6,12 +6,21 @@ import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.ImageStorage;
 import edu.iga.adi.sm.results.series.SolutionSeries;
+import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.SingleSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.surfaces.HeatSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceFactory;
+import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
+import edu.iga.adi.sm.results.visualization.images.HeatmapImageFactory;
+import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.stream.IntStream;
 
 @AllArgsConstructor
 public class HeatManager implements ProblemManager {
@@ -43,19 +52,77 @@ public class HeatManager implements ProblemManager {
         if (config.isPlotting()) {
             displayResults(solutionSeries);
         }
+        if (config.isStoringImages()) {
+            storeImages(solutionSeries);
+        }
     }
 
     private void displayResults(SolutionSeries solutionSeries) {
+        drawTimelapses(solutionSeries);
+        drawBitmaps(solutionSeries);
+    }
+
+    private void drawTimelapses(SolutionSeries solutionSeries) {
         final SurfaceFactory surfaceFactory = SurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
         TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
                 .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(SingleSurfaceProvider.builder()
+                        .surfaceProvider(HeatSurfaceProvider.builder()
                                 .surfaceFactory(surfaceFactory)
                                 .build())
                         .build())
                 .solutionSeries(solutionSeries)
                 .build();
         timeLapseViewer.setVisible(true);
+    }
+
+    private void storeImages(SolutionSeries solutionSeries) {
+        ImageStorage imageStorage = ImageStorage.builder().baseDir(
+                new File(config.getImagesDir())
+        ).build();
+
+        BufferedImage floodStart = GreyscaleImageFactory.builder()
+                .build()
+                .createImageFor(solutionSeries.getSolutionAt(0));
+
+        imageStorage.saveImageAsTIFF("heat-start.tiff", floodStart);
+
+        final int framePickingInterval = Math.max(1, config.getSteps() * (100 - config.getImagesFrequencyPercentage()) / 100);
+
+        IntStream.range(0, config.getSteps()).filter(i -> (i + framePickingInterval / 2) % framePickingInterval == 0)
+                .forEach(frame -> {
+                    BufferedImage heatMid = GreyscaleImageFactory.builder()
+                            .build()
+                            .createImageFor(solutionSeries.getSolutionAt(frame));
+                    imageStorage.saveImageAsTIFF(String.format("heat-mid-%d.tiff", frame), heatMid);
+                });
+
+        BufferedImage floodEnd = GreyscaleImageFactory.builder()
+                .build()
+                .createImageFor(solutionSeries.getFinalSolution());
+
+        imageStorage.saveImageAsTIFF("heat-end.tiff", floodEnd);
+    }
+
+    private void drawBitmaps(SolutionSeries solutionSeries) {
+        StaticViewer.builder()
+                .name("Initial image")
+                .solution(solutionSeries.getSolutionAt(0))
+                .solutionDrawer(FlatSolutionDrawer.builder()
+                        .imageFactory(
+                                HeatmapImageFactory.builder().build()
+                        )
+                        .build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Final image")
+                .solution(solutionSeries.getFinalSolution())
+                .solutionDrawer(FlatSolutionDrawer.builder()
+                        .imageFactory(
+                                HeatmapImageFactory.builder().build()
+                        )
+                        .build())
+                .build().display();
     }
 
     @Override
