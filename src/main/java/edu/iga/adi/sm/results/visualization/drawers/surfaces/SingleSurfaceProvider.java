@@ -14,7 +14,7 @@ public class SingleSurfaceProvider implements SurfaceProvider {
 
     @Override
     public List<Shape> provideSurfacesFor(Solution solution) {
-        return Lists.newArrayList(surfaceFactory.createSolidSurface(Jzy3dSolutionMapper.builder()
+        return Lists.newArrayList(surfaceFactory.createHotColdSurface(Jzy3dSolutionMapper.builder()
                 .solution(solution)
                 .build()));
     }

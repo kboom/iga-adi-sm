@@ -41,7 +41,7 @@ task packageToSource(type: Copy, dependsOn: ["shadowJar"]) {
 }
 
 dependencies {
-    compile 'org.jzy3d:jzy3d-api:0.9.1'
+    compile 'org.jzy3d:jzy3d-api:1.0.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile "org.jogamp.gluegen:gluegen-rt:2.2.4"
     compile "org.jogamp.jogl:jogl-all:2.2.4"

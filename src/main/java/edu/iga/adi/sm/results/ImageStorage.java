@@ -9,14 +9,12 @@ import lombok.SneakyThrows;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Iterator;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ImageStorage {
@@ -50,7 +48,9 @@ public class ImageStorage {
             throw new IllegalStateException("Could not create new file");
         }
 
-        BufferedImage after = getScaledImage(bufferedImage);
+//        BufferedImage after = getScaledImage(bufferedImage);
+
+        BufferedImage after = bufferedImage;
 
         writeImage(new Consumer<ImageWriter>() {
 

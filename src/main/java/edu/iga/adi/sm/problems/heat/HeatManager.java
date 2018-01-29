@@ -13,14 +13,12 @@ import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.HeatSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
-import edu.iga.adi.sm.results.visualization.images.HeatmapImageFactory;
+import edu.iga.adi.sm.results.visualization.images.HeatImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.stream.IntStream;
 
 @AllArgsConstructor
 public class HeatManager implements ProblemManager {
@@ -80,27 +78,37 @@ public class HeatManager implements ProblemManager {
                 new File(config.getImagesDir())
         ).build();
 
-        BufferedImage floodStart = GreyscaleImageFactory.builder()
-                .build()
-                .createImageFor(solutionSeries.getSolutionAt(0));
+        imageStorage.saveImageAsTIFF("heat-start.tiff",
+                new HeatImageFactory().createImageFor(solutionSeries.getFinalSolution())
+        );
 
-        imageStorage.saveImageAsTIFF("heat-start.tiff", floodStart);
 
-        final int framePickingInterval = Math.max(1, config.getSteps() * (100 - config.getImagesFrequencyPercentage()) / 100);
-
-        IntStream.range(0, config.getSteps()).filter(i -> (i + framePickingInterval / 2) % framePickingInterval == 0)
-                .forEach(frame -> {
-                    BufferedImage heatMid = GreyscaleImageFactory.builder()
-                            .build()
-                            .createImageFor(solutionSeries.getSolutionAt(frame));
-                    imageStorage.saveImageAsTIFF(String.format("heat-mid-%d.tiff", frame), heatMid);
-                });
-
-        BufferedImage floodEnd = GreyscaleImageFactory.builder()
-                .build()
-                .createImageFor(solutionSeries.getFinalSolution());
-
-        imageStorage.saveImageAsTIFF("heat-end.tiff", floodEnd);
+//
+//
+//
+//
+//
+//        BufferedImage floodStart = GreyscaleImageFactory.builder()
+//                .build()
+//                .createImageFor(solutionSeries.getSolutionAt(0));
+//
+//        imageStorage.saveImageAsTIFF("heat-start.tiff", floodStart);
+//
+//        final int framePickingInterval = Math.max(1, config.getSteps() * (100 - config.getImagesFrequencyPercentage()) / 100);
+//
+//        IntStream.range(0, config.getSteps()).filter(i -> (i + framePickingInterval / 2) % framePickingInterval == 0)
+//                .forEach(frame -> {
+//                    BufferedImage heatMid = GreyscaleImageFactory.builder()
+//                            .build()
+//                            .createImageFor(solutionSeries.getSolutionAt(frame));
+//                    imageStorage.saveImageAsTIFF(String.format("heat-mid-%d.tiff", frame), heatMid);
+//                });
+//
+//        BufferedImage floodEnd = GreyscaleImageFactory.builder()
+//                .build()
+//                .createImageFor(solutionSeries.getFinalSolution());
+//
+//        imageStorage.saveImageAsTIFF("heat-end.tiff", floodEnd);
     }
 
     private void drawBitmaps(SolutionSeries solutionSeries) {
@@ -109,7 +117,7 @@ public class HeatManager implements ProblemManager {
                 .solution(solutionSeries.getSolutionAt(0))
                 .solutionDrawer(FlatSolutionDrawer.builder()
                         .imageFactory(
-                                HeatmapImageFactory.builder().build()
+                                GreyscaleImageFactory.builder().build()
                         )
                         .build())
                 .build().display();
@@ -119,7 +127,7 @@ public class HeatManager implements ProblemManager {
                 .solution(solutionSeries.getFinalSolution())
                 .solutionDrawer(FlatSolutionDrawer.builder()
                         .imageFactory(
-                                HeatmapImageFactory.builder().build()
+                                GreyscaleImageFactory.builder().build()
                         )
                         .build())
                 .build().display();
