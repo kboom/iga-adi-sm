@@ -7,18 +7,21 @@ import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
 import edu.iga.adi.sm.results.ImageStorage;
+import edu.iga.adi.sm.results.SnapshotSaver;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.HeatSurfaceProvider;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceFactory;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dHeatSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
 import edu.iga.adi.sm.results.visualization.images.HeatImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.stream.IntStream;
 
 @AllArgsConstructor
 public class HeatManager implements ProblemManager {
@@ -61,10 +64,12 @@ public class HeatManager implements ProblemManager {
     }
 
     private void drawTimelapses(SolutionSeries solutionSeries) {
-        final SurfaceFactory surfaceFactory = SurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
+        final Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
         TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(HeatSurfaceProvider.builder()
+                .name("Heat transfer process")
+                .downSampleRatio(config.getDownSampleRatio())
+                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
+                        .jzy3dSurfaceProvider(Jzy3dHeatSurfaceProvider.builder()
                                 .surfaceFactory(surfaceFactory)
                                 .build())
                         .build())
@@ -74,41 +79,17 @@ public class HeatManager implements ProblemManager {
     }
 
     private void storeImages(SolutionSeries solutionSeries) {
-        ImageStorage imageStorage = ImageStorage.builder().baseDir(
+        final ImageStorage imageStorage = ImageStorage.builder().baseDir(
                 new File(config.getImagesDir())
         ).build();
 
-        imageStorage.saveImageAsTIFF("heat-start.tiff",
-                new HeatImageFactory().createImageFor(solutionSeries.getFinalSolution())
-        );
-
-
-//
-//
-//
-//
-//
-//        BufferedImage floodStart = GreyscaleImageFactory.builder()
-//                .build()
-//                .createImageFor(solutionSeries.getSolutionAt(0));
-//
-//        imageStorage.saveImageAsTIFF("heat-start.tiff", floodStart);
-//
-//        final int framePickingInterval = Math.max(1, config.getSteps() * (100 - config.getImagesFrequencyPercentage()) / 100);
-//
-//        IntStream.range(0, config.getSteps()).filter(i -> (i + framePickingInterval / 2) % framePickingInterval == 0)
-//                .forEach(frame -> {
-//                    BufferedImage heatMid = GreyscaleImageFactory.builder()
-//                            .build()
-//                            .createImageFor(solutionSeries.getSolutionAt(frame));
-//                    imageStorage.saveImageAsTIFF(String.format("heat-mid-%d.tiff", frame), heatMid);
-//                });
-//
-//        BufferedImage floodEnd = GreyscaleImageFactory.builder()
-//                .build()
-//                .createImageFor(solutionSeries.getFinalSolution());
-//
-//        imageStorage.saveImageAsTIFF("heat-end.tiff", floodEnd);
+        SnapshotSaver.builder()
+                .imageFactory(new HeatImageFactory())
+                .imageStorage(imageStorage)
+                .frequencyPercentage(config.getImagesFrequencyPercentage())
+                .nameTemplate("heat-%s")
+                .build()
+                .storeSnapshots(solutionSeries);
     }
 
     private void drawBitmaps(SolutionSeries solutionSeries) {

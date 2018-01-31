@@ -12,13 +12,16 @@ import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
 import edu.iga.adi.sm.results.ImageStorage;
+import edu.iga.adi.sm.results.SnapshotSaver;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.SurfaceSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.SolutionChangesSurfaceProvider;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.SingleSurfaceProvider;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceFactory;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dChangesOverStaticJzy3dSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSingleSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
+import edu.iga.adi.sm.results.visualization.images.FloodImageFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
+import edu.iga.adi.sm.results.visualization.images.HeatImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -115,35 +118,36 @@ public class FloodManager implements ProblemManager {
                 new File(config.getImagesDir())
         ).build();
 
-        BufferedImage terrainSurface = GreyscaleImageFactory.builder()
+        SnapshotSaver.builder()
+                .imageFactory(GreyscaleImageFactory.builder().build())
+                .imageStorage(imageStorage)
+                .frequencyPercentage(config.getImagesFrequencyPercentage())
+                .nameTemplate("flood-bitmap-%s.tiff")
                 .build()
-                .createImageFor(terrainSolution);
+                .storeSnapshots(solutionSeries);
 
-        imageStorage.saveImageAsTIFF("terrain.tiff", terrainSurface);
-
-        BufferedImage floodStart = GreyscaleImageFactory.builder()
+        SnapshotSaver.builder()
+                .imageFactory(FloodImageFactory.builder().terrainSolution(terrainSolution).build())
+                .imageStorage(imageStorage)
+                .frequencyPercentage(config.getImagesFrequencyPercentage())
+                .nameTemplate("flood-3d-%s.tiff")
                 .build()
-                .createImageFor(solutionSeries.getSolutionAt(0));
+                .storeSnapshots(solutionSeries);
 
-        imageStorage.saveImageAsTIFF("flood-start.tiff", floodStart);
-
-        BufferedImage floodEnd = GreyscaleImageFactory.builder()
+        SnapshotSaver.builder()
+                .imageFactory(GreyscaleImageFactory.builder()
+                        .mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
+                )
+                .imageStorage(imageStorage)
+                .frequencyPercentage(config.getImagesFrequencyPercentage())
+                .nameTemplate("flood-depth-%s.tiff")
                 .build()
-                .createImageFor(solutionSeries.getFinalSolution());
-
-        imageStorage.saveImageAsTIFF("flood-end.tiff", floodEnd);
-
-        BufferedImage floodEndDepth = GreyscaleImageFactory.builder()
-                .mapper((x, y, z) -> z - terrainSolution.getValue(x, y))
-                .build()
-                .createImageFor(solutionSeries.getFinalSolution());
-
-        imageStorage.saveImageAsTIFF("flood-end-depth.tiff", floodEndDepth);
+                .storeSnapshots(solutionSeries);
     }
 
     private void drawSurfaces(SolutionSeries solutionSeries) {
-        final SurfaceFactory surfaceFactory = SurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
-        SolutionChangesSurfaceProvider rainAndTerrainSurfaces = SolutionChangesSurfaceProvider.builder()
+        final Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
+        Jzy3dChangesOverStaticJzy3dSurfaceProvider rainAndTerrainSurfaces = Jzy3dChangesOverStaticJzy3dSurfaceProvider.builder()
                 .surfaceFactory(surfaceFactory)
                 .staticSolution(terrainSolution)
                 .build();
@@ -151,8 +155,8 @@ public class FloodManager implements ProblemManager {
         StaticViewer.builder()
                 .name("Plain terrain surface")
                 .solution(terrainSolution)
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(SingleSurfaceProvider.builder()
+                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
+                        .jzy3dSurfaceProvider(Jzy3dSingleSurfaceProvider.builder()
                                 .surfaceFactory(surfaceFactory)
                                 .build()).build())
                 .build().display();
@@ -160,21 +164,21 @@ public class FloodManager implements ProblemManager {
         StaticViewer.builder()
                 .name("Initial flooded surface")
                 .solution(solutionSeries.getSolutionAt(0))
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(rainAndTerrainSurfaces).build())
+                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
+                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces).build())
                 .build().display();
 
         StaticViewer.builder()
                 .name("Final flooded surface")
                 .solution(solutionSeries.getFinalSolution())
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(rainAndTerrainSurfaces).build())
+                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
+                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces).build())
                 .build().display();
 
         TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
                 .name("Surface flooding in time")
-                .solutionDrawer(SurfaceSolutionDrawer.builder()
-                        .surfaceProvider(rainAndTerrainSurfaces)
+                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
+                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
                         .build())
                 .solutionSeries(solutionSeries)
                 .downSampleRatio(config.getDownSampleRatio())

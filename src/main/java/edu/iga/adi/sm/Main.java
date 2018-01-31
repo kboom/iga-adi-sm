@@ -52,7 +52,7 @@ public class Main {
                 .launch();
 
         if(!solverConfiguration.isPlotting()) {
-            exit(0);
+//            exit(0);
         }
     }
 

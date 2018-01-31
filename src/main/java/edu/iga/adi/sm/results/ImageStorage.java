@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 public class ImageStorage {
 
-    private static final int DPI = 500; // the minimum for most journals
+    private static final int DPI = 1000; // the minimum for most journals
 
     private final File baseDir;
     private int width = 800;

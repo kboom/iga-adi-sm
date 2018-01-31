@@ -26,7 +26,7 @@ public final class HeatTransferProblem implements IterativeProblem {
     @Override
     public Problem getInitialProblem() {
         return (x, y) -> {
-            int heat = mesh.getElementsX() * 100;
+            int heat = mesh.getElementsX() * 50;
             int radius = Double.valueOf(Math.pow(mesh.getElementsX() / 4, 2)).intValue();
 
             int aX = mesh.getElementsX() - mesh.getElementsX() / 2;

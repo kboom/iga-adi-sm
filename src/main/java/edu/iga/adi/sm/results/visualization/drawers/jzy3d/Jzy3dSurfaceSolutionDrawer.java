@@ -1,33 +1,41 @@
-package edu.iga.adi.sm.results.visualization.drawers;
+package edu.iga.adi.sm.results.visualization.drawers.jzy3d;
 
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.results.visualization.SolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.surfaces.SurfaceProvider;
 import lombok.Builder;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.controllers.mouse.camera.AWTCameraMouseController;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.chart.factories.IChartComponentFactory;
+import org.jzy3d.maths.Coord3d;
+import org.jzy3d.plot3d.builder.Mapper;
+import org.jzy3d.plot3d.primitives.AbstractDrawable;
+import org.jzy3d.plot3d.primitives.Point;
+import org.jzy3d.plot3d.primitives.Polygon;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
 import javax.swing.*;
-import java.awt.Dimension;
-import java.awt.Component;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
-public class SurfaceSolutionDrawer extends JPanel implements SolutionDrawer {
+public class Jzy3dSurfaceSolutionDrawer extends JPanel implements SolutionDrawer {
 
     private static final Dimension PREFERRED_SIZE = new Dimension(600, 600);
 
     private Chart chart;
 
-    private final SurfaceProvider surfaceProvider;
+    private final Jzy3dSurfaceProvider jzy3dSurfaceProvider;
+
+    private final Jzy3dSolutionMapper jzy3dSettableSolutionMapper = Jzy3dSolutionMapper.builder().build();
 
     @Builder
-    public SurfaceSolutionDrawer(SurfaceProvider surfaceProvider) {
-        this.surfaceProvider = surfaceProvider;
+    public Jzy3dSurfaceSolutionDrawer(Jzy3dSurfaceProvider jzy3dSurfaceProvider) {
+        this.jzy3dSurfaceProvider = jzy3dSurfaceProvider;
     }
+
+    private List<Shape> shapes = new ArrayList<>();
 
     @Override
     public void attachTo(JComponent component) {
@@ -49,9 +57,15 @@ public class SurfaceSolutionDrawer extends JPanel implements SolutionDrawer {
 
     @Override
     public void update(JComponent component, Solution solution) {
-        List<Shape> shapes = surfaceProvider.provideSurfacesFor(solution);
-        chart.getScene().getGraph().getAll().clear();
-        chart.getScene().getGraph().add(shapes);
+        jzy3dSettableSolutionMapper.setSolution(solution);
+        if(shapes.isEmpty()) {
+            shapes.addAll(jzy3dSurfaceProvider.provideSurfacesFor(jzy3dSettableSolutionMapper));
+            chart.getScene().getGraph().getAll().clear();
+            chart.getScene().getGraph().add(shapes);
+        }
+        shapes.forEach(shape -> {
+            Jzy3dSolutionMapper.builder().solution(solution).build().remap(shape);
+        });
     }
 
     @Override
