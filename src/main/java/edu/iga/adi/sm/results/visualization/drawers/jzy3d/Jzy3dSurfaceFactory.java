@@ -27,7 +27,6 @@ public class Jzy3dSurfaceFactory {
         Shape surface = org.jzy3d.plot3d.builder.Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(new ColorMapGrayscale(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, 1f)));
         surface.setWireframeDisplayed(false);
-        surface.setWireframeColor(Color.WHITE);
         surface.setFaceDisplayed(true);
         return surface;
     }
@@ -39,7 +38,6 @@ public class Jzy3dSurfaceFactory {
         Shape surface = org.jzy3d.plot3d.builder.Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(new ColorMapHotCold(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, 1f)));
         surface.setWireframeDisplayed(false);
-        surface.setWireframeColor(Color.WHITE);
         surface.setFaceDisplayed(true);
         return surface;
     }
@@ -50,11 +48,9 @@ public class Jzy3dSurfaceFactory {
         final Range range = new Range(0, mesh.getElementsX() - 1);
 
         Shape surface = org.jzy3d.plot3d.builder.Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
-        surface.setColorMapper(new ColorMapper(new ColorMapWhiteBlue(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, .3f)));
+        surface.setColorMapper(new ColorMapper(new ColorMapWhiteBlue(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, 0.1f)));
         surface.setWireframeDisplayed(false);
-        surface.setWireframeColor(Color.WHITE);
         surface.setFaceDisplayed(true);
-        surface.setWireframeDisplayed(true);
         return surface;
     }
 

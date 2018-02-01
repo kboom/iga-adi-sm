@@ -115,9 +115,7 @@ public class FloodManager implements ProblemManager {
                 .name("Flood visual simulation")
                 .downSampleRatio(config.getDownSampleRatio())
                 .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(Jzy3dHeatSurfaceProvider.builder()
-                                .surfaceFactory(surfaceFactory)
-                                .build())
+                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
                         .build())
                 .solutionSeries(solutionSeries)
                 .build();
