@@ -15,10 +15,7 @@ import edu.iga.adi.sm.results.ImageStorage;
 import edu.iga.adi.sm.results.SnapshotSaver;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dChangesOverStaticSurfaceProvider;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSingleSurfaceProvider;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.*;
 import edu.iga.adi.sm.results.visualization.images.FloodImageFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
@@ -103,8 +100,70 @@ public class FloodManager implements ProblemManager {
     }
 
     private void plotResults(SolutionSeries solutionSeries) {
-        drawSurfaces(solutionSeries);
-        drawBitmaps(solutionSeries);
+        drawTimelapses(solutionSeries);
+//        drawImages(solutionSeries);
+    }
+
+    private void drawTimelapses(SolutionSeries solutionSeries) {
+        final Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
+        Jzy3dChangesOverStaticSurfaceProvider rainAndTerrainSurfaces = Jzy3dChangesOverStaticSurfaceProvider.builder()
+                .surfaceFactory(surfaceFactory)
+                .staticSolution(terrainSolution)
+                .build(); // this causes the problem
+
+        TimeLapseViewer timeLapsViewer = TimeLapseViewer.builder()
+                .name("Flood visual simulation")
+                .downSampleRatio(config.getDownSampleRatio())
+                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
+                        .jzy3dSurfaceProvider(Jzy3dHeatSurfaceProvider.builder()
+                                .surfaceFactory(surfaceFactory)
+                                .build())
+                        .build())
+                .solutionSeries(solutionSeries)
+                .build();
+        timeLapsViewer.setVisible(true);
+    }
+
+    private void drawImages(SolutionSeries solutionSeries) {
+        StaticViewer.builder()
+                .name("Terrain bitmap")
+                .solution(terrainSolution)
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Initial bitmap")
+                .solution(solutionSeries.getSolutionAt(0))
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Mid bitmap")
+                .solution(solutionSeries.getSolutionAt(solutionSeries.getTimeStepCount() / 2))
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
+                .build().display();
+
+        StaticViewer.builder()
+                .name("Final bitmap")
+                .solution(solutionSeries.getFinalSolution())
+                .solutionDrawer(FlatSolutionDrawer.builder()
+                        .imageFactory(
+                                GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
+                        )
+                        .build())
+                .build().display();
+
+        TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
+                .name("Bitmap solution in time")
+                .solutionDrawer(FlatSolutionDrawer.builder()
+                        .imageFactory(
+                                GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
+                        )
+                        .build())
+                .solutionSeries(solutionSeries)
+                .downSampleRatio(config.getDownSampleRatio())
+                .build();
+        bitmapAnimationViewer.setVisible(true);
     }
 
     private void storeImages(SolutionSeries solutionSeries) {
@@ -137,93 +196,6 @@ public class FloodManager implements ProblemManager {
                 .nameTemplate("flood-depth-%s.tiff")
                 .build()
                 .storeSnapshots(solutionSeries);
-    }
-
-    private void drawSurfaces(SolutionSeries solutionSeries) {
-        final Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
-        Jzy3dChangesOverStaticSurfaceProvider rainAndTerrainSurfaces = Jzy3dChangesOverStaticSurfaceProvider.builder()
-                .surfaceFactory(surfaceFactory)
-                .staticSolution(terrainSolution)
-                .build();
-
-        StaticViewer.builder()
-                .name("Plain terrain surface")
-                .solution(terrainSolution)
-                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(Jzy3dSingleSurfaceProvider.builder()
-                                .surfaceFactory(surfaceFactory)
-                                .build()).build())
-                .build().display();
-
-        StaticViewer.builder()
-                .name("Initial flooded surface")
-                .solution(solutionSeries.getSolutionAt(0))
-                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
-                        .build())
-                .build().display();
-
-        StaticViewer.builder()
-                .name("Final flooded surface")
-                .solution(solutionSeries.getFinalSolution())
-                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
-                        .build())
-                .build().display();
-
-        TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
-                .name("Surface flooding in time")
-                .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
-                        .build())
-                .solutionSeries(solutionSeries)
-                .downSampleRatio(config.getDownSampleRatio())
-                .build();
-        surfaceAnimationViewer.setVisible(true);
-    }
-
-    private void drawBitmaps(SolutionSeries solutionSeries) {
-        StaticViewer.builder()
-                .name("Terrain bitmap")
-                .solution(terrainSolution)
-                .solutionDrawer(FlatSolutionDrawer.builder().build())
-                .build().display();
-
-        StaticViewer.builder()
-                .name("Initial bitmap")
-                .solution(solutionSeries.getSolutionAt(0))
-                .solutionDrawer(FlatSolutionDrawer.builder().build())
-                .build().display();
-
-        StaticViewer.builder()
-                .name("Mid bitmap")
-                .solution(solutionSeries.getSolutionAt(solutionSeries.getTimeStepCount() / 2))
-                .solutionDrawer(FlatSolutionDrawer.builder().build())
-                .build().display();
-
-        // plot diff?
-        StaticViewer.builder()
-                .name("Final bitmap")
-                .solution(solutionSeries.getFinalSolution())
-                .solutionDrawer(FlatSolutionDrawer.builder()
-                        .imageFactory(
-                                GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
-                        )
-                        .build())
-                .build().display();
-
-        // plot diff?
-        TimeLapseViewer bitmapAnimationViewer = TimeLapseViewer.builder()
-                .name("Bitmap solution in time")
-                .solutionDrawer(FlatSolutionDrawer.builder()
-                        .imageFactory(
-                                GreyscaleImageFactory.builder().mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
-                        )
-                        .build())
-                .solutionSeries(solutionSeries)
-                .downSampleRatio(config.getDownSampleRatio())
-                .build();
-        bitmapAnimationViewer.setVisible(true);
     }
 
     @Override

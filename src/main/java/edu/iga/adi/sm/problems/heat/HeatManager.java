@@ -19,9 +19,7 @@ import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.stream.IntStream;
 
 @AllArgsConstructor
 public class HeatManager implements ProblemManager {
@@ -60,13 +58,13 @@ public class HeatManager implements ProblemManager {
 
     private void displayResults(SolutionSeries solutionSeries) {
         drawTimelapses(solutionSeries);
-        drawBitmaps(solutionSeries);
+        drawImages(solutionSeries);
     }
 
     private void drawTimelapses(SolutionSeries solutionSeries) {
         final Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
         TimeLapseViewer timeLapseViewer = TimeLapseViewer.builder()
-                .name("Heat transfer process")
+                .name("Heat visual simulation")
                 .downSampleRatio(config.getDownSampleRatio())
                 .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
                         .jzy3dSurfaceProvider(Jzy3dHeatSurfaceProvider.builder()
@@ -92,7 +90,7 @@ public class HeatManager implements ProblemManager {
                 .storeSnapshots(solutionSeries);
     }
 
-    private void drawBitmaps(SolutionSeries solutionSeries) {
+    private void drawImages(SolutionSeries solutionSeries) {
         StaticViewer.builder()
                 .name("Initial image")
                 .solution(solutionSeries.getSolutionAt(0))
