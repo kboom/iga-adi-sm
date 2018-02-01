@@ -16,12 +16,11 @@ import edu.iga.adi.sm.results.SnapshotSaver;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dChangesOverStaticJzy3dSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dChangesOverStaticSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSingleSurfaceProvider;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
 import edu.iga.adi.sm.results.visualization.images.FloodImageFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
-import edu.iga.adi.sm.results.visualization.images.HeatImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -30,14 +29,12 @@ import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
 import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
-import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
 import lombok.RequiredArgsConstructor;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 @RequiredArgsConstructor
@@ -73,14 +70,11 @@ public class FloodManager implements ProblemManager {
                 final double rainAreaX = elementsX / 4;
                 final double rainAreaY = elementsY / 4;
 
-                final int rainVolume = 30;
+                final int rainVolume = 80;
 
-                return (x, y) -> super.getInitialProblem().getValue(x, y)
-                        + ((x < centerX && y < centerY) ? rainVolume: 0);
-
-//                return (x, y) -> super.getInitialProblem().getValue(x, y) +
-//                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
-//                                && (y > centerY - rainAreaY / 2) && (y < centerY + rainAreaY / 2)) ? rainVolume : 0);
+                return (x, y) -> super.getInitialProblem().getValue(x, y) +
+                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
+                                && (y > centerY - rainAreaY / 2) && (y < centerY + rainAreaY / 2)) ? rainVolume : 0);
             }
 
         };
@@ -147,7 +141,7 @@ public class FloodManager implements ProblemManager {
 
     private void drawSurfaces(SolutionSeries solutionSeries) {
         final Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solutionSeries.getMesh()).build();
-        Jzy3dChangesOverStaticJzy3dSurfaceProvider rainAndTerrainSurfaces = Jzy3dChangesOverStaticJzy3dSurfaceProvider.builder()
+        Jzy3dChangesOverStaticSurfaceProvider rainAndTerrainSurfaces = Jzy3dChangesOverStaticSurfaceProvider.builder()
                 .surfaceFactory(surfaceFactory)
                 .staticSolution(terrainSolution)
                 .build();
@@ -165,14 +159,16 @@ public class FloodManager implements ProblemManager {
                 .name("Initial flooded surface")
                 .solution(solutionSeries.getSolutionAt(0))
                 .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces).build())
+                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
+                        .build())
                 .build().display();
 
         StaticViewer.builder()
                 .name("Final flooded surface")
                 .solution(solutionSeries.getFinalSolution())
                 .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
-                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces).build())
+                        .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
+                        .build())
                 .build().display();
 
         TimeLapseViewer surfaceAnimationViewer = TimeLapseViewer.builder()
@@ -242,7 +238,7 @@ public class FloodManager implements ProblemManager {
                         ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
                                 .withNext(new ToClosestTerrainProcessor())
                                 .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
-                                .withNext(new ZeroWaterLevelProcessor())
+//                                .withNext(new ZeroWaterLevelProcessor())
                 )
                 .build()
                 .terraform(config.getMesh());
@@ -260,13 +256,12 @@ public class FloodManager implements ProblemManager {
         if (config.getTerrainFile() != null) {
             return FileTerrainStorage.builder().inFilePath(config.getTerrainFile()).build();
         } else {
+            Mesh mesh = config.getMesh();
             return new MapTerrainStorage(FunctionTerrainBuilder.get()
-                    .withMesh(config.getMesh())
+                    .withMesh(mesh)
                     .withFunction((x, y) -> {
-                        if(x < 10 & y < 10) return 200d;
-                        if(x >= 86 & y < 10) return 500d;
-                        if(x < 10 & y >= 86) return 400d;
-                        else return (double) 2 * (x + y);
+                        if(x < mesh.getElementsX() / 4 & y < mesh.getElementsY() / 4) return 100d;
+                        else return (double) (x + y);
                     })
                     .build());
         }

@@ -21,7 +21,10 @@ public class Jzy3dSurfaceFactory {
     private Mesh mesh;
 
     public final Shape createSolidSurface(Jzy3dSolutionMapper mapper) {
-        Shape surface = org.jzy3d.plot3d.builder.Builder.buildDelaunay(mapper.getSolution().getSolutionGrid().getPoints().stream().map(p -> new Coord3d(p.getX(), p.getY(), p.getValue())).collect(Collectors.toList()));
+        final int steps = mesh.getElementsX();
+        final Range range = new Range(0, mesh.getElementsX() - 1);
+
+        Shape surface = org.jzy3d.plot3d.builder.Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(new ColorMapGrayscale(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, 1f)));
         surface.setWireframeDisplayed(false);
         surface.setWireframeColor(Color.WHITE);
@@ -43,7 +46,10 @@ public class Jzy3dSurfaceFactory {
 
 
     public final Shape createTransparentSurface(Jzy3dSolutionMapper mapper) {
-        Shape surface = org.jzy3d.plot3d.builder.Builder.buildDelaunay(mapper.getSolution().getSolutionGrid().getPoints().stream().map(p -> new Coord3d(p.getX(), p.getY(), p.getValue())).collect(Collectors.toList()));
+        final int steps = mesh.getElementsX();
+        final Range range = new Range(0, mesh.getElementsX() - 1);
+
+        Shape surface = org.jzy3d.plot3d.builder.Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
         surface.setColorMapper(new ColorMapper(new ColorMapWhiteBlue(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, .3f)));
         surface.setWireframeDisplayed(false);
         surface.setWireframeColor(Color.WHITE);

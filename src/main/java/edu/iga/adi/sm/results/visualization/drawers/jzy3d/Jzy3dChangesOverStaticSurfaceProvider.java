@@ -10,7 +10,7 @@ import org.jzy3d.plot3d.primitives.Shape;
 import java.util.List;
 
 @Builder
-public class Jzy3dChangesOverStaticJzy3dSurfaceProvider implements Jzy3dSurfaceProvider {
+public class Jzy3dChangesOverStaticSurfaceProvider implements Jzy3dSurfaceProvider {
 
     @NonNull
     private final Jzy3dSurfaceFactory surfaceFactory;
