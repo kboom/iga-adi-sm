@@ -25,14 +25,18 @@ public class ImageStorage {
     private int width = 800;
     private int height = 800;
 
+    @Builder.Default
+    private int imageType = BufferedImage.TYPE_BYTE_GRAY;
+
     @Builder
-    public ImageStorage(File baseDir) {
+    public ImageStorage(File baseDir, int imageType) {
         if (!baseDir.exists()) {
             if (!baseDir.mkdirs()) {
                 throw new IllegalStateException("Could not create directory structure");
             }
         }
         this.baseDir = baseDir;
+        this.imageType = imageType;
     }
 
     @SneakyThrows
@@ -49,7 +53,6 @@ public class ImageStorage {
         }
 
 //        BufferedImage after = getScaledImage(bufferedImage);
-
         BufferedImage after = bufferedImage;
 
         writeImage(new Consumer<ImageWriter>() {
@@ -73,7 +76,7 @@ public class ImageStorage {
     @SneakyThrows
     private IIOMetadata createMetadata(ImageWriter writer, ImageWriteParam writerParams) {
         // Get default metadata from writer
-        ImageTypeSpecifier type = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_BYTE_GRAY);
+        ImageTypeSpecifier type = ImageTypeSpecifier.createFromBufferedImageType(imageType);
         IIOMetadata meta = writer.getDefaultImageMetadata(type, writerParams);
 
         // Convert default metadata to TIFF metadata
@@ -101,7 +104,7 @@ public class ImageStorage {
         for (Iterator<ImageWriter> iw = ImageIO.getImageWritersByFormatName("TIFF"); iw.hasNext(); ) {
             ImageWriter writer = iw.next();
             ImageWriteParam writeParam = writer.getDefaultWriteParam();
-            ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_BYTE_GRAY);
+            ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(imageType);
             IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
             if (metadata.isReadOnly() || !metadata.isStandardMetadataFormatSupported()) {
                 continue;
@@ -114,7 +117,7 @@ public class ImageStorage {
         final double scaleX = width / bufferedImage.getWidth();
         final double scaleY = height / bufferedImage.getHeight();
 
-        BufferedImage after = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        BufferedImage after = new BufferedImage(width, height, imageType);
         AffineTransform at = AffineTransform.getScaleInstance(scaleX, scaleY);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         after = scaleOp.filter(bufferedImage, after);

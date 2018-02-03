@@ -40,8 +40,8 @@ public class Jzy3dSurfaceSolutionDrawer extends JPanel implements SolutionDrawer
     @Override
     public void attachTo(JComponent component) {
         chart = AWTChartComponentFactory.chart(
-                Quality.Intermediate,
-                IChartComponentFactory.Toolkit.swing);
+                Quality.Advanced,
+                IChartComponentFactory.Toolkit.awt);
         Component canvas = (Component) chart.getCanvas();
         canvas.setPreferredSize(PREFERRED_SIZE);
         add(canvas);

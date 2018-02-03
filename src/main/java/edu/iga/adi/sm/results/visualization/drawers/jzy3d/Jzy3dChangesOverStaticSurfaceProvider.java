@@ -20,7 +20,7 @@ public class Jzy3dChangesOverStaticSurfaceProvider implements Jzy3dSurfaceProvid
 
     @Override
     public List<Shape> provideSurfacesFor(Jzy3dSolutionMapper mapper) {
-        return Lists.newArrayList(createStaticSurface(), createChangingSurface(mapper));
+        return Lists.newArrayList(createChangingSurface(mapper), createStaticSurface());
     }
 
     private Shape createStaticSurface() {

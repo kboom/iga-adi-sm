@@ -19,6 +19,7 @@ import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 @AllArgsConstructor
@@ -77,15 +78,23 @@ public class HeatManager implements ProblemManager {
     }
 
     private void storeImages(SolutionSeries solutionSeries) {
-        final ImageStorage imageStorage = ImageStorage.builder().baseDir(
+        final ImageStorage rgbImageStorage = ImageStorage.builder().baseDir(
                 new File(config.getImagesDir())
-        ).build();
+        ).imageType(BufferedImage.TYPE_INT_ARGB).build();
 
         SnapshotSaver.builder()
                 .imageFactory(new HeatImageFactory())
-                .imageStorage(imageStorage)
+                .imageStorage(rgbImageStorage)
                 .frequencyPercentage(config.getImagesFrequencyPercentage())
-                .nameTemplate("heat-%s")
+                .nameTemplate("heat-%s.tiff")
+                .build()
+                .storeSnapshots(solutionSeries);
+
+        SnapshotSaver.builder()
+                .imageFactory(GreyscaleImageFactory.builder().build())
+                .imageStorage(rgbImageStorage)
+                .frequencyPercentage(config.getImagesFrequencyPercentage())
+                .nameTemplate("heat-greyscale-%s.tiff")
                 .build()
                 .storeSnapshots(solutionSeries);
     }

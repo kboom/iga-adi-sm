@@ -11,6 +11,7 @@ import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+import org.jzy3d.plot3d.rendering.view.modes.ViewPositionMode;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,8 +23,9 @@ public class HeatImageFactory implements ImageFactory {
 
     @Override
     public BufferedImage createImageFor(Solution solution) {
-        Chart chart = NewtChartComponentFactory.chart(Quality.Nicest, "offscreen");
+        Chart chart = NewtChartComponentFactory.chart(Quality.Nicest, "offscreen,1600,1600");
         chart.getScene().getGraph().add(createHotColdSurface(solution));
+        chart.setViewMode(ViewPositionMode.TOP);
         chart.render();
 
         try {

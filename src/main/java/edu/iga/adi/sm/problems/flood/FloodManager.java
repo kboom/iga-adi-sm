@@ -33,6 +33,7 @@ import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
 import lombok.RequiredArgsConstructor;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 @RequiredArgsConstructor
@@ -62,13 +63,13 @@ public class FloodManager implements ProblemManager {
                 final double elementsX = mesh.getElementsX();
                 final double elementsY = mesh.getElementsY();
 
-                final double centerX = mesh.getElementsX() / 8;
-                final double centerY = mesh.getElementsY();
+                final double centerX = mesh.getElementsX();
+                final double centerY = 0; // mesh.getElementsY();
 
 
-                final double radius = elementsX / 4;
+                final double radius = elementsX / 6;
 
-                final int rainVolume = 0;
+                final int rainVolume = 1000;
 
                 return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (((Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= Math.pow(radius, 2)) ? rainVolume : 0);
 
@@ -168,13 +169,17 @@ public class FloodManager implements ProblemManager {
     }
 
     private void storeImages(SolutionSeries solutionSeries) {
-        ImageStorage imageStorage = ImageStorage.builder().baseDir(
+        ImageStorage greyscaleImageStorage = ImageStorage.builder().baseDir(
                 new File(config.getImagesDir())
-        ).build();
+        ).imageType(BufferedImage.TYPE_BYTE_GRAY).build();
+
+        ImageStorage colorImageStorage = ImageStorage.builder().baseDir(
+                new File(config.getImagesDir())
+        ).imageType(BufferedImage.TYPE_INT_ARGB).build();
 
         SnapshotSaver.builder()
                 .imageFactory(GreyscaleImageFactory.builder().build())
-                .imageStorage(imageStorage)
+                .imageStorage(greyscaleImageStorage)
                 .frequencyPercentage(config.getImagesFrequencyPercentage())
                 .nameTemplate("flood-bitmap-%s.tiff")
                 .build()
@@ -182,7 +187,7 @@ public class FloodManager implements ProblemManager {
 
         SnapshotSaver.builder()
                 .imageFactory(FloodImageFactory.builder().terrainSolution(terrainSolution).build())
-                .imageStorage(imageStorage)
+                .imageStorage(colorImageStorage)
                 .frequencyPercentage(config.getImagesFrequencyPercentage())
                 .nameTemplate("flood-3d-%s.tiff")
                 .build()
@@ -192,7 +197,7 @@ public class FloodManager implements ProblemManager {
                 .imageFactory(GreyscaleImageFactory.builder()
                         .mapper((x, y, z) -> z - terrainSolution.getValue(x, y)).build()
                 )
-                .imageStorage(imageStorage)
+                .imageStorage(greyscaleImageStorage)
                 .frequencyPercentage(config.getImagesFrequencyPercentage())
                 .nameTemplate("flood-depth-%s.tiff")
                 .build()

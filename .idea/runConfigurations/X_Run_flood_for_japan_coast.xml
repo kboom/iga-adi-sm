@@ -7,7 +7,7 @@
     </extension>
     <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
     <option name="VM_PARAMETERS" value="-Xmx12048m -Xms256m" />
-    <option name="PROGRAM_PARAMETERS" value="--problem-size 384 --problem flood --steps 3 --delta 0.0000001 --terrain-file $PROJECT_DIR$/terrain/japan.small.csv --terrain-x-offset 143 --terrain-y-offset 42.0008 --terrain-scale 0.005 -i --plot" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 384 --problem flood --steps 3 --delta 0.00001 --terrain-file $PROJECT_DIR$/terrain/japan.small.csv --terrain-x-offset 143 --terrain-y-offset 42.0008 --terrain-scale 0.005 -i --plot" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
