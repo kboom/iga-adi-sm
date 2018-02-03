@@ -14,9 +14,7 @@ public class ZeroWaterLevelProcessor implements TerrainProcessor {
 
     @Override
     public Stream<TerrainPoint> apply(Stream<TerrainPoint> terrainPointStream) {
-        return terrainPointStream.map(terrainPoint -> {
-            return new TerrainPoint(terrainPoint, Math.max(0, terrainPoint.z));
-        });
+        return terrainPointStream.map(terrainPoint -> new TerrainPoint(terrainPoint, Math.max(0, terrainPoint.z)));
     }
 
     @Override

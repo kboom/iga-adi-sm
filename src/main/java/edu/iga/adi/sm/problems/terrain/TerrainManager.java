@@ -15,7 +15,7 @@ import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
 import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
-import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
@@ -113,9 +113,9 @@ public class TerrainManager implements ProblemManager {
                 .inputStorage(inputTerrain)
                 .outputStorage(outputTerrain)
                 .terrainProcessor(
-                        ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
+                        ChainedTerrainProcessor.startingFrom(TranslationTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
                                 .withNext(new ToClosestTerrainProcessor())
-                                .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
+                                .withNext(TranslationTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
                                 .withNext(new ZeroWaterLevelProcessor())
                 )
                 .build()

@@ -12,8 +12,6 @@ import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 
 import java.io.File;
 
-import static java.lang.System.exit;
-
 public class Main {
 
     private static final TimeLogger timeLogger = new TimeLogger();
@@ -23,7 +21,10 @@ public class Main {
         PROGRAM_ARGUMENTS = args;
 
         SolverConfiguration solverConfiguration = withInjectedProgramArguments(SolverConfiguration.builder().build());
+        solve(solverConfiguration);
+    }
 
+    private static void solve(SolverConfiguration solverConfiguration) {
         final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory(solverConfiguration);
 
         final Mesh mesh = solverConfiguration.getMesh();

@@ -23,9 +23,10 @@ import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
 import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
-import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
@@ -64,14 +65,16 @@ public class FloodManager implements ProblemManager {
                 final double centerX = elementsX / 2;
                 final double centerY = elementsY / 2;
 
-                final double rainAreaX = elementsX / 4;
-                final double rainAreaY = elementsY / 4;
+                final double rainAreaX = elementsX / 8;
+                final double rainAreaY = elementsY / 8;
 
-                final int rainVolume = 80;
+                final int rainVolume = 500;
 
-                return (x, y) -> super.getInitialProblem().getValue(x, y) +
-                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
-                                && (y > centerY - rainAreaY / 2) && (y < centerY + rainAreaY / 2)) ? rainVolume : 0);
+                return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) ((x < rainAreaX) && (y < rainAreaY) ? rainVolume : 0);
+
+//                return (x, y) -> super.getInitialProblem().getValue(x, y) +
+//                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
+//                                && (y > centerY - rainAreaY / 2) && (y < centerY + rainAreaY / 2)) ? rainVolume : 0);
             }
 
         };
@@ -101,7 +104,7 @@ public class FloodManager implements ProblemManager {
 
     private void plotResults(SolutionSeries solutionSeries) {
         drawTimelapses(solutionSeries);
-//        drawImages(solutionSeries);
+        drawImages(solutionSeries);
     }
 
     private void drawTimelapses(SolutionSeries solutionSeries) {
@@ -201,14 +204,17 @@ public class FloodManager implements ProblemManager {
         TerrainStorage inputTerrain = createTerrainInput();
         MapTerrainStorage outputTerrain = new MapTerrainStorage();
 
+        TranslationTerrainProcessor translator = TranslationTerrainProcessor.builder()
+                .center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build();
+
         Terraformer.builder()
                 .inputStorage(inputTerrain)
                 .outputStorage(outputTerrain)
                 .terrainProcessor(
-                        ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
+                        ChainedTerrainProcessor.startingFrom(translator)
                                 .withNext(new ToClosestTerrainProcessor())
-                                .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
-//                                .withNext(new ZeroWaterLevelProcessor())
+                                .withNext(translator.reverse())
+                                .withNext(new ZeroWaterLevelProcessor())
                 )
                 .build()
                 .terraform(config.getMesh());
