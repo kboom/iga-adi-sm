@@ -48,7 +48,7 @@ public class Jzy3dSurfaceFactory {
         final Range range = new Range(0, mesh.getElementsX() - 1);
 
         Shape surface = org.jzy3d.plot3d.builder.Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
-        surface.setColorMapper(new ColorMapper(new ColorMapWhiteBlue(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, 0.1f)));
+        surface.setColorMapper(new ColorMapper(new ColorMapWhiteBlue(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new org.jzy3d.colors.Color(1, 1, 1, 0.5f)));
         surface.setWireframeDisplayed(false);
         surface.setFaceDisplayed(true);
         return surface;

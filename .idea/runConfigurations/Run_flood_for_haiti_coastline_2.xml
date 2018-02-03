@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run flood for haiti coastline" type="Application" factoryName="Application">
+  <configuration default="false" name="Run flood for haiti coastline 2" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
@@ -7,7 +7,7 @@
     </extension>
     <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
     <option name="VM_PARAMETERS" value="-Xmx8048m -Xms256m" />
-    <option name="PROGRAM_PARAMETERS" value="--problem-size 192 --plot --problem flood --steps 1 --delta 0.00001 --terrain-file $PROJECT_DIR$/terrain/haiti.cut.csv --terrain-x-offset 72.0008 --terrain-y-offset 18.0008 --terrain-scale 0.001 -i" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 192 --plot --problem flood --steps 1 --delta 0.00001 --terrain-file $PROJECT_DIR$/terrain/haiti.cut.csv --terrain-x-offset 72.5008 --terrain-y-offset 18.5008 --terrain-scale 0.001 -i" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />

@@ -1,13 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run flood for japan coast" type="Application" factoryName="Application">
+  <configuration default="false" name="X Run flood for japan coast" type="Application" factoryName="Application">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <ENTRIES />
     </extension>
     <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
-    <option name="VM_PARAMETERS" value="-Xmx12048m" />
-    <option name="PROGRAM_PARAMETERS" value="--problem-size 384 --plot --problem flood --steps 1 --delta 0.000001 --terrain-file $PROJECT_DIR$/terrain/japan.coast.xyz --terrain-scale 10 --plot -i -w --terrain-x-offset 136 --terrain-y-offset 35" />
+    <option name="VM_PARAMETERS" value="-Xmx12048m -Xms256m" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 384 --problem flood --steps 3 --delta 0.0000001 --terrain-file $PROJECT_DIR$/terrain/japan.small.csv --terrain-x-offset 143 --terrain-y-offset 42.0008 --terrain-scale 0.005 -i --plot" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
