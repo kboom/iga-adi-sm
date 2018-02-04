@@ -11,6 +11,7 @@ import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Rectangle;
 import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
+import org.jzy3d.plot3d.rendering.view.modes.ViewPositionMode;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,6 +28,9 @@ public class FloodImageFactory implements ImageFactory {
         Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solution.getMesh()).build();
 
         Chart chart = NewtChartComponentFactory.chart(Quality.Nicest, "offscreen,1600,1600");
+
+//        chart.setViewPoint(new Coord3d(0, 0, 100));
+
 //        chart.setViewPoint(new Coord3d(0, 0, 10000));
 //        chart.addLight(new Coord3d(0, 0, 20000));
 
@@ -34,7 +38,7 @@ public class FloodImageFactory implements ImageFactory {
                 .solution(terrainSolution).build()));
 
         chart.getScene().getGraph().add(surfaceFactory.createTransparentSurface(Jzy3dSolutionMapper.builder()
-                .solution(solution).solutionMapper((x,y,z) -> z - 1).build()));  // ensure the water level is just a bit below the terrain
+                .solution(solution).solutionMapper((x,y,z) -> Math.max(0, z - terrainSolution.getValue(x,y))).build()));  // ensure the water level is just a bit below the terrain
 
         chart.render();
 

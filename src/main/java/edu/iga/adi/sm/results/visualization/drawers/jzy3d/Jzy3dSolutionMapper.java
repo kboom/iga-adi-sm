@@ -27,4 +27,15 @@ public class Jzy3dSolutionMapper extends Mapper {
         return solutionMapper.value(x, y, Optional.ofNullable(solution).map(solution -> solution.getValue(x, y)).orElse(0D));
     }
 
+    public Jzy3dSolutionMapper mappedWith(SolutionMapper extraMapper) {
+        return new Jzy3dSolutionMapper(solution, solutionMapper) {
+
+            @Override
+            public double f(double x, double y) {
+                return extraMapper.value(x, y, Jzy3dSolutionMapper.this.f(x, y));
+            }
+
+        };
+    }
+
 }

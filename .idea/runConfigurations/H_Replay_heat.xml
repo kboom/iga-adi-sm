@@ -7,7 +7,7 @@
     </extension>
     <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
     <option name="VM_PARAMETERS" value="-Xmx8048m -Xms256m" />
-    <option name="PROGRAM_PARAMETERS" value="--problem-size 96 --problem heat --delta 0.0001 --steps 10000 --store-file $USER_HOME$/iga-adi-mf/heat --retrieve -i" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 768 --problem heat --delta 0.0001 --steps 2500 --store-file $USER_HOME$/Dropbox/public/iga-adi-sm-solution-2018-02-04-08:17 --retrieve -i" />
     <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />

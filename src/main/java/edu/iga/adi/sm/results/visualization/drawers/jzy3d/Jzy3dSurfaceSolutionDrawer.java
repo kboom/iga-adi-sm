@@ -23,13 +23,11 @@ public class Jzy3dSurfaceSolutionDrawer extends JPanel implements SolutionDrawer
 
     private final Jzy3dSurfaceProvider jzy3dSurfaceProvider;
 
-    @Builder.Default
-    private Jzy3dSolutionMapper jzy3dSettableSolutionMapper = Jzy3dSolutionMapper.builder().build();
+    private final Jzy3dSolutionMapper jzy3dSettableSolutionMapper = Jzy3dSolutionMapper.builder().build();
 
     @Builder
-    public Jzy3dSurfaceSolutionDrawer(Jzy3dSurfaceProvider jzy3dSurfaceProvider, Jzy3dSolutionMapper solutionMapper) {
+    public Jzy3dSurfaceSolutionDrawer(Jzy3dSurfaceProvider jzy3dSurfaceProvider) {
         this.jzy3dSurfaceProvider = jzy3dSurfaceProvider;
-        this.jzy3dSettableSolutionMapper = solutionMapper;
     }
 
     private List<Jzy3dSurface> surfaces = new ArrayList<>();

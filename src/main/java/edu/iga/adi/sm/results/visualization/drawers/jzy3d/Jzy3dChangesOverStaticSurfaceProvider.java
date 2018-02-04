@@ -4,8 +4,6 @@ import com.beust.jcommander.internal.Lists;
 import edu.iga.adi.sm.core.Solution;
 import lombok.Builder;
 import lombok.NonNull;
-import org.jzy3d.plot3d.builder.Mapper;
-import org.jzy3d.plot3d.primitives.Shape;
 
 import java.util.List;
 
@@ -30,7 +28,9 @@ public class Jzy3dChangesOverStaticSurfaceProvider implements Jzy3dSurfaceProvid
     }
 
     private Jzy3dSurface createChangingSurface(Jzy3dSolutionMapper mapper) {
-        return Jzy3dSurface.builder().shape(surfaceFactory.createTransparentSurface(mapper)).build();
+        return Jzy3dSurface.builder().shape(surfaceFactory.createTransparentSurface(
+                mapper.mappedWith((x, y, z) -> Math.max(0, z - staticSolution.getValue(x, y))))
+        ).build();
     }
 
 }

@@ -1,5 +1,6 @@
 package edu.iga.adi.sm.problems.flood;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.iga.adi.sm.Solver;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.SolverFactory;
@@ -38,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
 public class FloodManager implements ProblemManager {
@@ -66,15 +68,46 @@ public class FloodManager implements ProblemManager {
                 final double elementsX = mesh.getElementsX();
                 final double elementsY = mesh.getElementsY();
 
-                final double centerX = mesh.getElementsX();
-                final double centerY = 0;
+                final double centerX = mesh.getElementsX() / 2;
+                final double centerY = mesh.getElementsY() / 2;
 
+                final double radius = elementsX / 5;
 
-                final double radius = elementsX / 4;
-
-                final int rainVolume = 0;
+                final int rainVolume = 1000;
 
                 return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (((Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= Math.pow(radius, 2)) ? rainVolume : 0);
+
+
+                // working fine for 768
+//                final double centerX = 4.0 / 5.0 * mesh.getElementsX();
+//                final double centerY = 0;
+//
+//
+//                final double radius = elementsX / 5;
+//
+//                final int rainVolume = 1000;
+//
+//                return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (((Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= Math.pow(radius, 2)) ? rainVolume : 0);
+
+//                final double centerX = mesh.getElementsX();
+//                final double centerY = 0;
+//
+//                final BiFunction<Double, Double, Boolean> border = (x, y) -> {
+//                    final double x1 = mesh.getElementsX();
+//                    final double x2 = mesh.getElementsX() / 2;
+//                    final double y1 = mesh.getElementsY() / 2;
+//                    final double y2 = 0;
+//
+//                    double yl = (y2 - y1) / (x2 - x1) * (x - x1) + y1;
+//
+//                    return y < yl;
+//                };
+//
+//                final int rainVolume = 0;
+//
+//                return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (border.apply(x,y) ? rainVolume : 0);
+
+
 
 //                return (x, y) -> super.getInitialProblem().getValue(x, y) +
 //                        (double) (((x > centerX - rainAreaX / 2) && (x < centerX + rainAreaX / 2)
@@ -123,7 +156,6 @@ public class FloodManager implements ProblemManager {
                 .downSampleRatio(config.getDownSampleRatio())
                 .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
                         .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
-                        .solutionMapper(Jzy3dSolutionMapper.builder().solutionMapper((x,y,z) -> z - 3).build()) // make the water level go just below the terrain
                         .build())
                 .solutionSeries(solutionSeries)
                 .build();
