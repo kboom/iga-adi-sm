@@ -19,18 +19,18 @@ public class Jzy3dChangesOverStaticSurfaceProvider implements Jzy3dSurfaceProvid
     private final Solution staticSolution;
 
     @Override
-    public List<Shape> provideSurfacesFor(Jzy3dSolutionMapper mapper) {
+    public List<Jzy3dSurface> provideSurfacesFor(Jzy3dSolutionMapper mapper) {
         return Lists.newArrayList(createStaticSurface(), createChangingSurface(mapper));
     }
 
-    private Shape createStaticSurface() {
-        return surfaceFactory.createSolidSurface(Jzy3dSolutionMapper.builder()
+    private Jzy3dSurface createStaticSurface() {
+        return Jzy3dSurface.builder().shape(surfaceFactory.createSolidSurface(Jzy3dSolutionMapper.builder()
                 .solution(staticSolution)
-                .build());
+                .build())).solutionDependent(false).build();
     }
 
-    private Shape createChangingSurface(Jzy3dSolutionMapper mapper) {
-        return surfaceFactory.createTransparentSurface(mapper);
+    private Jzy3dSurface createChangingSurface(Jzy3dSolutionMapper mapper) {
+        return Jzy3dSurface.builder().shape(surfaceFactory.createTransparentSurface(mapper)).build();
     }
 
 }

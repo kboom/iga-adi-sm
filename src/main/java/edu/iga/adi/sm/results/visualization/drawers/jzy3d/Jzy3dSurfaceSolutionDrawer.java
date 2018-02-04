@@ -7,18 +7,13 @@ import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.controllers.mouse.camera.AWTCameraMouseController;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
 import org.jzy3d.chart.factories.IChartComponentFactory;
-import org.jzy3d.maths.Coord3d;
-import org.jzy3d.plot3d.builder.Mapper;
-import org.jzy3d.plot3d.primitives.AbstractDrawable;
-import org.jzy3d.plot3d.primitives.Point;
-import org.jzy3d.plot3d.primitives.Polygon;
-import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Jzy3dSurfaceSolutionDrawer extends JPanel implements SolutionDrawer {
 
@@ -28,14 +23,16 @@ public class Jzy3dSurfaceSolutionDrawer extends JPanel implements SolutionDrawer
 
     private final Jzy3dSurfaceProvider jzy3dSurfaceProvider;
 
-    private final Jzy3dSolutionMapper jzy3dSettableSolutionMapper = Jzy3dSolutionMapper.builder().build();
+    @Builder.Default
+    private Jzy3dSolutionMapper jzy3dSettableSolutionMapper = Jzy3dSolutionMapper.builder().build();
 
     @Builder
-    public Jzy3dSurfaceSolutionDrawer(Jzy3dSurfaceProvider jzy3dSurfaceProvider) {
+    public Jzy3dSurfaceSolutionDrawer(Jzy3dSurfaceProvider jzy3dSurfaceProvider, Jzy3dSolutionMapper solutionMapper) {
         this.jzy3dSurfaceProvider = jzy3dSurfaceProvider;
+        this.jzy3dSettableSolutionMapper = solutionMapper;
     }
 
-    private List<Shape> shapes = new ArrayList<>();
+    private List<Jzy3dSurface> surfaces = new ArrayList<>();
 
     @Override
     public void attachTo(JComponent component) {
@@ -58,14 +55,12 @@ public class Jzy3dSurfaceSolutionDrawer extends JPanel implements SolutionDrawer
     @Override
     public void update(JComponent component, Solution solution) {
         jzy3dSettableSolutionMapper.setSolution(solution);
-        if(shapes.isEmpty()) {
-            shapes.addAll(jzy3dSurfaceProvider.provideSurfacesFor(jzy3dSettableSolutionMapper));
+        if(surfaces.isEmpty()) {
+            surfaces.addAll(jzy3dSurfaceProvider.provideSurfacesFor(jzy3dSettableSolutionMapper));
             chart.getScene().getGraph().getAll().clear();
-            chart.getScene().getGraph().add(shapes);
+            chart.getScene().getGraph().add(surfaces.stream().map(Jzy3dSurface::getShape).collect(Collectors.toList()));
         }
-        shapes.forEach(shape -> {
-            Jzy3dSolutionMapper.builder().solution(solution).build().remap(shape);
-        });
+        surfaces.stream().filter(Jzy3dSurface::isSolutionDependent).map(Jzy3dSurface::getShape).forEach(jzy3dSettableSolutionMapper::remap);
     }
 
     @Override

@@ -15,7 +15,10 @@ import edu.iga.adi.sm.results.ImageStorage;
 import edu.iga.adi.sm.results.SnapshotSaver;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.*;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dChangesOverStaticSurfaceProvider;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSolutionMapper;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
+import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.images.FloodImageFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
@@ -23,9 +26,9 @@ import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
 import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
-import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
@@ -62,13 +65,13 @@ public class FloodManager implements ProblemManager {
                 final double elementsX = mesh.getElementsX();
                 final double elementsY = mesh.getElementsY();
 
-                final double centerX = mesh.getElementsX() / 8;
-                final double centerY = mesh.getElementsY();
+                final double centerX = mesh.getElementsX();
+                final double centerY = 0;
 
 
-                final double radius = elementsX / 4;
+                final double radius = elementsX / 6;
 
-                final int rainVolume = 0;
+                final int rainVolume = 1000;
 
                 return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (((Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= Math.pow(radius, 2)) ? rainVolume : 0);
 
@@ -119,6 +122,7 @@ public class FloodManager implements ProblemManager {
                 .downSampleRatio(config.getDownSampleRatio())
                 .solutionDrawer(Jzy3dSurfaceSolutionDrawer.builder()
                         .jzy3dSurfaceProvider(rainAndTerrainSurfaces)
+                        .solutionMapper(Jzy3dSolutionMapper.builder().solutionMapper((x,y,z) -> z - 3).build()) // make the water level go just below the terrain
                         .build())
                 .solutionSeries(solutionSeries)
                 .build();
