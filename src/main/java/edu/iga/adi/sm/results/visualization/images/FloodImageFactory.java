@@ -4,8 +4,12 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSolutionMapper;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
 import lombok.Builder;
+import org.jzy3d.bridge.IFrame;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.NewtChartComponentFactory;
+import org.jzy3d.maths.Coord3d;
+import org.jzy3d.maths.Rectangle;
+import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
 import javax.imageio.ImageIO;
@@ -22,9 +26,16 @@ public class FloodImageFactory implements ImageFactory {
     public BufferedImage createImageFor(Solution solution) {
         Jzy3dSurfaceFactory surfaceFactory = Jzy3dSurfaceFactory.builder().mesh(solution.getMesh()).build();
 
-        Chart chart = NewtChartComponentFactory.chart(Quality.Nicest, "offscreen");
-        chart.getScene().getGraph().add(surfaceFactory.createSolidSurface(solutionMapper(terrainSolution)));
-        chart.getScene().getGraph().add(surfaceFactory.createTransparentSurface(solutionMapper(solution)));
+        Chart chart = NewtChartComponentFactory.chart(Quality.Nicest, "offscreen,1600,1600");
+//        chart.setViewPoint(new Coord3d(0, 0, 10000));
+//        chart.addLight(new Coord3d(0, 0, 20000));
+
+        chart.getScene().getGraph().add(surfaceFactory.createSolidSurface(Jzy3dSolutionMapper.builder()
+                .solution(terrainSolution).build()));
+
+        chart.getScene().getGraph().add(surfaceFactory.createTransparentSurface(Jzy3dSolutionMapper.builder()
+                .solution(solution).solutionMapper((x,y,z) -> z - 1).build()));  // ensure the water level is just a bit below the terrain
+
         chart.render();
 
         try {
@@ -35,12 +46,6 @@ public class FloodImageFactory implements ImageFactory {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    private Jzy3dSolutionMapper solutionMapper(Solution solution) {
-        return Jzy3dSolutionMapper.builder()
-                .solution(solution)
-                .build();
     }
 
 }
