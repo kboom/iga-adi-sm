@@ -38,7 +38,7 @@ public class FloodImageFactory implements ImageFactory {
                 .solution(terrainSolution).build()));
 
         chart.getScene().getGraph().add(surfaceFactory.createTransparentSurface(Jzy3dSolutionMapper.builder()
-                .solution(solution).solutionMapper((x,y,z) -> Math.max(0, z - terrainSolution.getValue(x,y))).build()));  // ensure the water level is just a bit below the terrain
+                .solution(solution).solutionMapper((x,y,z) -> Math.max(0, z - 1)).build()));  // ensure the water level is just a bit below the terrain
 
         chart.render();
 

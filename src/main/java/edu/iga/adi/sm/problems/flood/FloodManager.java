@@ -73,7 +73,7 @@ public class FloodManager implements ProblemManager {
 
                 final double radius = elementsX / 5;
 
-                final int rainVolume = 1000;
+                final int rainVolume = 300;
 
                 return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (((Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= Math.pow(radius, 2)) ? rainVolume : 0);
 

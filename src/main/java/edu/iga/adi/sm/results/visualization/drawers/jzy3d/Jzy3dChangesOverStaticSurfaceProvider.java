@@ -29,7 +29,7 @@ public class Jzy3dChangesOverStaticSurfaceProvider implements Jzy3dSurfaceProvid
 
     private Jzy3dSurface createChangingSurface(Jzy3dSolutionMapper mapper) {
         return Jzy3dSurface.builder().shape(surfaceFactory.createTransparentSurface(
-                mapper.mappedWith((x, y, z) -> Math.max(0, z - staticSolution.getValue(x, y))))
+                mapper.mappedWith((x, y, z) -> Math.max(0, z - 1)))
         ).build();
     }
 
