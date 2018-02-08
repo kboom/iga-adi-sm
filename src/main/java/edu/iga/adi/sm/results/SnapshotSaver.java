@@ -27,9 +27,7 @@ public class SnapshotSaver {
         final int steps = solutionSeries.getTimeStepCount();
         final int framePickingInterval = Math.max(1, steps * frequencyPercentage / 100);
 
-        imageStorage.saveImageAsTIFF(String.format(nameTemplate, "start"),
-                imageFactory.createImageFor(solutionSeries.getSolutionAt(0))
-        );
+        storeOne(solutionSeries.getSolutionAt(0), "start");
 
         IntStream.range(0, steps).filter(i -> (i + framePickingInterval / 2) % framePickingInterval == 0)
                 .forEach(frame -> {
@@ -39,8 +37,12 @@ public class SnapshotSaver {
                 });
 
 
-        imageStorage.saveImageAsTIFF(String.format(nameTemplate, "end"),
-                imageFactory.createImageFor(solutionSeries.getFinalSolution())
+        storeOne(solutionSeries.getFinalSolution(), "end");
+    }
+
+    public void storeOne(Solution solution, String name) {
+        imageStorage.saveImageAsTIFF(String.format(nameTemplate, name),
+                imageFactory.createImageFor(solution)
         );
     }
 

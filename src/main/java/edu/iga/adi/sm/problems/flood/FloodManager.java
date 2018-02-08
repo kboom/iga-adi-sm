@@ -22,6 +22,7 @@ import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.images.FloodImageFactory;
 import edu.iga.adi.sm.results.visualization.images.GreyscaleImageFactory;
+import edu.iga.adi.sm.results.visualization.images.TerrainImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
@@ -212,6 +213,25 @@ public class FloodManager implements ProblemManager {
         ImageStorage colorImageStorage = ImageStorage.builder().baseDir(
                 new File(config.getImagesDir())
         ).imageType(BufferedImage.TYPE_INT_ARGB).build();
+
+
+        // terrain
+
+        SnapshotSaver.builder()
+                .imageFactory(GreyscaleImageFactory.builder().build())
+                .imageStorage(greyscaleImageStorage)
+                .nameTemplate("terrain-%s.tiff")
+                .build()
+                .storeOne(terrainSolution, "bitmap");
+
+        SnapshotSaver.builder()
+                .imageFactory(TerrainImageFactory.builder().terrainSolution(terrainSolution).build())
+                .imageStorage(colorImageStorage)
+                .nameTemplate("terrain-%s.tiff")
+                .build()
+                .storeOne(terrainSolution, "3d");
+
+        // dynamic
 
         SnapshotSaver.builder()
                 .imageFactory(GreyscaleImageFactory.builder().build())
