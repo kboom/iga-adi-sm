@@ -69,12 +69,12 @@ public class FloodManager implements ProblemManager {
                 final double elementsX = mesh.getElementsX();
                 final double elementsY = mesh.getElementsY();
 
-                final double centerX = mesh.getElementsX() / 2;
-                final double centerY = mesh.getElementsY() / 2;
+                final double centerX = 10 + mesh.getElementsX() / 8;
+                final double centerY = 10 + mesh.getElementsY() / 8;
 
                 final double radius = elementsX / 5;
 
-                final int rainVolume = 300;
+                final int rainVolume = 50;
 
                 return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (((Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) <= Math.pow(radius, 2)) ? rainVolume : 0);
 
