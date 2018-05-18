@@ -1,7 +1,7 @@
 package edu.iga.adi.sm.support.terrain;
 
 import edu.iga.adi.sm.core.Mesh;
-import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
@@ -79,6 +79,23 @@ public class TerraformerTest implements TerrainStorage {
         );
     }
 
+    @Test
+    public void handlesSmallMeshes() {
+        final Terraformer terraformer = buildAligned(72.443, 19.321, 0.001);
+
+        originalPoints.addAll(newArrayList(
+                new TerrainPoint(72.443, 19.321, 4),
+                new TerrainPoint(72.444, 19.322, 101)
+        ));
+
+        terraformer.terraform(Mesh.aMesh().withElementsX(2).withElementsY(2).build());
+
+        assertThat(savedPoints).containsExactlyInAnyOrder(
+                new TerrainPoint(0, 0, 4), new TerrainPoint(0, 1, 4),
+                new TerrainPoint(1, 0, 101), new TerrainPoint(1, 1, 101)
+        );
+    }
+
     @Override
     public Stream<TerrainPoint> loadTerrainPoints() {
         return this.originalPoints.stream();
@@ -90,13 +107,16 @@ public class TerraformerTest implements TerrainStorage {
     }
 
     private Terraformer buildAligned(double x, double y, double scale) {
+        TranslationTerrainProcessor translator = TranslationTerrainProcessor.builder()
+                .center(new Point2D(x, y)).scale(scale).build();
+
         return Terraformer.builder()
                 .inputStorage(this)
                 .outputStorage(this)
                 .terrainProcessor(
-                        ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(x, y)).scale(scale).build())
+                        ChainedTerrainProcessor.startingFrom(translator)
                                 .withNext(new ToClosestTerrainProcessor())
-                                .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-x, -y)).scale(1 / scale).build())
+                                .withNext(translator.reverse())
                 )
                 .build();
     }

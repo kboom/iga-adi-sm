@@ -26,10 +26,22 @@ public final class HeatTransferProblem implements IterativeProblem {
     @Override
     public Problem getInitialProblem() {
         return (x, y) -> {
-            double dist = (x - mesh.getCenterX()) * (x - mesh.getCenterX())
-                    + (y - mesh.getCenterY()) * (y - mesh.getCenterY());
+            int heat = mesh.getElementsX() / 2;
+            int radius = Double.valueOf(Math.pow(mesh.getElementsX() / 4, 2)).intValue();
 
-            return dist < problemSize ? problemSize - dist : 0;
+            int aX = mesh.getElementsX() - mesh.getElementsX() / 2;
+            int aY = mesh.getElementsY() - mesh.getElementsY() / 2;
+
+            double distA = Math.pow(x - aX, 2) + Math.pow(y - aY, 2);
+            if(distA < radius) return heat;
+
+//            int bX = diameterB;
+//            int bY = diameterB;
+//
+//            double distB = Math.pow(x - bX, 2) + Math.pow(y - bY, 2);
+//            if(distB < radius) return heat;
+
+            return 0;
         };
     }
 

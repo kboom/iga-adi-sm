@@ -6,8 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static edu.iga.adi.sm.core.Mesh.aMesh;
@@ -17,6 +21,9 @@ import static edu.iga.adi.sm.core.Mesh.aMesh;
 @AllArgsConstructor
 @Getter
 public class SolverConfiguration {
+
+    public static final String EXECUTION_TIMESTAMP = getTimestamp();
+    public static final String TEMPORARY_DIR = getTemporaryDir("iga-adi-sm-solution");
 
     @Parameter(names = {"--log", "-l"})
     @Builder.Default
@@ -29,6 +36,30 @@ public class SolverConfiguration {
     @Parameter(names = {"--plot", "-p"})
     @Builder.Default
     private boolean isPlotting = false;
+
+    @Parameter(names = {"--store", "-w"})
+    @Builder.Default
+    private boolean isStoring = false;
+
+    @Parameter(names = {"--images", "-i"})
+    @Builder.Default
+    private boolean isStoringImages = false;
+
+    @Parameter(names = {"--images-dir"})
+    @Builder.Default
+    private String imagesDir = new File(TEMPORARY_DIR, "images").getAbsolutePath();
+
+    @Parameter(names = {"--images-freq"})
+    @Builder.Default
+    private int imagesFrequencyPercentage = 10;
+
+    @Parameter(names = {"--retrieve"})
+    @Builder.Default
+    private boolean retrieve = false;
+
+    @Parameter(names = {"--store-file"})
+    @Builder.Default
+    private String resultFile = TEMPORARY_DIR;
 
     @Parameter(names = {"--problem-size", "-s"})
     @Builder.Default
@@ -52,6 +83,10 @@ public class SolverConfiguration {
     @Builder.Default
     private int steps = 10;
 
+    @Parameter(names = {"--downsample"})
+    @Builder.Default
+    private int downSampleRatio = 1;
+
     /*
 
         TERRAIN CONFIGURATION PARAMETERS
@@ -63,7 +98,7 @@ public class SolverConfiguration {
 
     @Parameter(names = {"--terrain-scale"})
     @Builder.Default
-    private int scale = 1; // 100
+    private double scale = 1; // 100
 
     @Parameter(names = {"--terrain-x-offset"})
     @Builder.Default
@@ -84,6 +119,14 @@ public class SolverConfiguration {
                 .withResolutionX(problemSize)
                 .withResolutionY(problemSize)
                 .withOrder(2).build();
+    }
+
+    private static String getTimestamp() {
+        return new SimpleDateFormat("yyyy-MM-dd-HH:mm").format(new Date());
+    }
+
+    private static String getTemporaryDir(String name) {
+        return new File(new File(FileUtils.getUserDirectory(), "iga-adi-mf"), name + "-" + EXECUTION_TIMESTAMP).getAbsolutePath();
     }
 
 }

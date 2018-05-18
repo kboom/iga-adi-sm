@@ -119,6 +119,38 @@ Rather that that implement the **IterativeProblem** interface.
 
 Feel free to contribute to this project. Merge requests will be reviewed and accepted upon verification.
 
+### Terrain maps
+
+[Geospatial selection](http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp)
+
+https://catalog.data.gov/dataset?tags=terrain
+https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=1124
+https://catalog.data.gov/dataset/new-orleans-louisiana-coastal-digital-elevation-model
+[1 meter elevation map resources](https://thor-f5.er.usgs.gov/ngtoc/metadata/waf/elevation/1_meter/img/)
+[Google elevation API](https://developers.google.com/maps/documentation/elevation/start)
+[CSV elevation maps](https://catalog.data.gov/dataset?tags=elevation&res_format=CSV)
+
+
+[San Francisco 5ft](https://data.sfgov.org/api/views/mi5i-wqjv/rows.csv?accessType=DOWNLOAD)
+
+
+[Free GIS resources](https://freegisdata.rtwilson.com/)
+[Global elevation](http://srtm.csi.cgiar.org/)
+
+[Maps](http://www.naturalearthdata.com/downloads/)
+[Small scale maps](https://nationalmap.gov/small_scale/atlasftp.html)
+
+
+[Direct links to elevation maps](https://nationalmap.gov/small_scale/atlasftp.html#elevhii)
+
+
+
+[TIF files](http://www.cgiar-csi.org/data/srtm-90m-digital-elevation-database-v4-1#download)
+[QGis](https://qgis.org/pl/site/)
+
+[Poland NMT](http://www.codgik.gov.pl/index.php/darmowe-dane/nmt-100.html)
+
+
 ### Contact & More information
 
 * [http://home.agh.edu.pl/~paszynsk/](http://home.agh.edu.pl/~paszynsk/)

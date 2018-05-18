@@ -3,10 +3,14 @@ package edu.iga.adi.sm.problems.heat;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
 
+import java.util.Properties;
+
 public class HeatSolution extends Solution {
 
-    public HeatSolution(Mesh mesh, double[][] rhs) {
-        super(mesh, rhs);
+    private static final long serialVersionUID = 1243565388611L;
+
+    public HeatSolution(Mesh mesh, double[][] rhs, Properties properties) {
+        super(mesh, rhs, properties);
     }
 
     @Override

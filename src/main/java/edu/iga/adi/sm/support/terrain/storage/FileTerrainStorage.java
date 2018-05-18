@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @Builder
 public class FileTerrainStorage implements TerrainStorage {
 
-    private static final String LINE_ENDING_PATTERN = Pattern.quote(System.getProperty("line.separator"));
+    private static final String LINE_ENDING_PATTERN = "\n"; //Pattern.quote(System.getProperty("line.separator"));
 
     private String inFilePath;
 

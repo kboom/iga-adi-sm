@@ -5,21 +5,30 @@ import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.support.Point;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Properties;
+
 import static edu.iga.adi.sm.core.SolutionGrid.solutionGrid;
 import static edu.iga.adi.sm.support.Point.solutionPoint;
 
-public abstract class Solution {
+public abstract class Solution implements Serializable {
+
+    private static final long serialVersionUID = 2709689660744689327L;
 
     protected static final BSpline1 b1 = new BSpline1();
     protected static final BSpline2 b2 = new BSpline2();
     protected static final BSpline3 b3 = new BSpline3();
 
+    public final Properties metadata;
+
     protected final Mesh mesh;
     protected final double[][] mRHS;
 
-    public Solution(Mesh mesh, double[][] rhs) {
+    public Solution(Mesh mesh, double[][] rhs, Properties metadata) {
         this.mesh = mesh;
-        mRHS = rhs;
+        this.metadata = metadata;
+        this.mRHS = rhs;
     }
 
     public final double[][] getRhs() {
@@ -48,7 +57,7 @@ public abstract class Solution {
         return getValue(mRHS, x, y);
     }
 
-    protected final double getValue(double[][] c, double x, double y) {
+    protected final double getValue(double[][] c, double y, double x) {
         int ielemx = (int) (x / mesh.getDx()) + 1;
         int ielemy = (int) (y / mesh.getDy()) + 1;
         double localx = x - mesh.getDx() * (ielemx - 1);
@@ -80,6 +89,32 @@ public abstract class Solution {
             }
         }
         return Math.sqrt(difference);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Solution solution = (Solution) o;
+
+        if (!mesh.equals(solution.mesh)) return false;
+        return Arrays.deepEquals(mRHS, solution.mRHS);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mesh.hashCode();
+        result = 31 * result + Arrays.deepHashCode(mRHS);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Solution{" +
+                "mesh=" + mesh +
+                ", mRHS=" + Arrays.toString(mRHS) +
+                '}';
     }
 
 }

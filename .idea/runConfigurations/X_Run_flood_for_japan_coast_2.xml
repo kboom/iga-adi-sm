@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="X Run flood for japan coast 2" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <extension name="net.ashald.envfile">
+      <option name="IS_ENABLED" value="false" />
+      <ENTRIES />
+    </extension>
+    <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
+    <option name="VM_PARAMETERS" value="-Xmx12048m -Xms256m" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 768 --problem flood --steps 2 --delta 0.000001 --terrain-file $USER_HOME$/Dropbox/public/japan.nonoise.xyz --terrain-x-offset 140.2 --terrain-y-offset 38 --terrain-scale 0.0025 -i --plot" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="ENABLE_SWING_INSPECTOR" value="false" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <module name="iga-adi-sm_main" />
+    <envs />
+    <method />
+  </configuration>
+</component>

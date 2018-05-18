@@ -3,13 +3,17 @@ package edu.iga.adi.sm.problems.flood;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
 
+import java.util.Properties;
+
 public class FloodSolution extends Solution {
+
+    private static final long serialVersionUID = 1243569388117L;
 
     private double meanValue;
     private double[][] terrain;
 
-    public FloodSolution(Mesh mesh, double[][] rhs, double[][] terrain) {
-        super(mesh, rhs);
+    public FloodSolution(Mesh mesh, double[][] rhs, double[][] terrain, Properties metadata) {
+        super(mesh, rhs, metadata);
         this.terrain = terrain;
 //        meanValue = computeMeanOf(rhs);
     }
@@ -26,7 +30,7 @@ public class FloodSolution extends Solution {
 
         double diffUtZ = Math.max(Ut - Z, 0);
 
-        double K = Math.pow(diffUtZ, 5.0 / 3.0) / Math.sqrt(getMeanGradient(x, y));
+        double K = - Math.pow(diffUtZ, 5.0 / 3.0) / Math.sqrt(getMeanGradient(x, y));
 
         return K * (b1.getSecondDerivativeValueAt(localx) * b1.getValue(localy) * mRHS[ielemx][ielemy]
                 + b1.getSecondDerivativeValueAt(localx) * b2.getValue(localy) * mRHS[ielemx][ielemy + 1]

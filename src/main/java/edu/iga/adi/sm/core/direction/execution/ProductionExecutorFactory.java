@@ -1,17 +1,26 @@
 package edu.iga.adi.sm.core.direction.execution;
 
+import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.direction.productions.Production;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static java.util.Arrays.asList;
-import static java.util.concurrent.Executors.newCachedThreadPool;
 
 public class ProductionExecutorFactory {
 
-    private ExecutorService executorService = newCachedThreadPool();
+    private static final Logger log = Logger.getLogger(ProductionExecutorFactory.class);
+
+    private final ExecutorService executorService;
+
+    public ProductionExecutorFactory(
+            SolverConfiguration solverConfiguration
+    ) {
+        this.executorService = Executors.newFixedThreadPool(solverConfiguration.getMaxThreads());
+    }
 
     public ProductionExecutor createLauncherFor(Production... productions) {
         return createLauncherFor(asList(productions));
@@ -19,10 +28,6 @@ public class ProductionExecutorFactory {
 
     public ProductionExecutor createLauncherFor(Collection<Production> productions) {
         return new ProductionExecutor(executorService, productions);
-    }
-
-    public void setAvailableThreads(int availableThreads) {
-        executorService = Executors.newFixedThreadPool(availableThreads);
     }
 
     public void joinAll() {

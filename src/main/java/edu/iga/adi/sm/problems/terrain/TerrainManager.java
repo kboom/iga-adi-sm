@@ -2,23 +2,23 @@ package edu.iga.adi.sm.problems.terrain;
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
-import edu.iga.adi.sm.SolutionSeries;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
-import edu.iga.adi.sm.results.CsvPrinter;
-import edu.iga.adi.sm.results.visualization.ResultsSnapshot;
-import edu.iga.adi.sm.results.visualization.SolutionAsBitmapSnapshot;
+import edu.iga.adi.sm.results.CsvStringConverter;
+import edu.iga.adi.sm.results.series.SolutionSeries;
+import edu.iga.adi.sm.results.visualization.drawers.BitmapFrame;
 import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
 import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
-import edu.iga.adi.sm.support.terrain.processors.AdjustmentTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
@@ -57,9 +57,9 @@ public class TerrainManager implements ProblemManager {
     }
 
     private void logResults(Solution finalSolution) {
-        CsvPrinter csvPrinter = new CsvPrinter();
+        CsvStringConverter csvStringConverter = CsvStringConverter.builder().build();
         System.out.println("------------------- TERRAIN SOLUTION --------------------");
-        System.out.println(csvPrinter.convertToCsv(finalSolution.getSolutionGrid()));
+        System.out.println(csvStringConverter.convertToCsv(finalSolution.getSolutionGrid()));
     }
 
     private void plotResults(Solution finalSolution) {
@@ -70,12 +70,12 @@ public class TerrainManager implements ProblemManager {
     }
 
     private void displayOriginalSolution(Solution terrainSolution) {
-        ResultsSnapshot terrainView = new ResultsSnapshot("Original solution", terrainSolution);
-        terrainView.setVisible(true);
+//        StaticViewer terrainView = new StaticViewer("Original solution", terrainSolution);
+//        terrainView.setVisible(true);
     }
 
     private void displayOriginalSolutionBitmap(Solution terrainSolution) {
-        SolutionAsBitmapSnapshot modelBitmap = new SolutionAsBitmapSnapshot("Original model solution", terrainSolution);
+        BitmapFrame modelBitmap = new BitmapFrame("Original model solution", terrainSolution);
         modelBitmap.setVisible(true);
     }
 
@@ -83,7 +83,7 @@ public class TerrainManager implements ProblemManager {
         config.getRanks().forEach(rank -> {
             final Solution svdApproximation = getSvdRankedSolution(rank);
             final double error = svdApproximation.squaredDifference(terrainSolution);
-            SolutionAsBitmapSnapshot svdBitmap = new SolutionAsBitmapSnapshot(String.format("SVD rank %d approximation. Error: %s", rank, error), svdApproximation);
+            BitmapFrame svdBitmap = new BitmapFrame(String.format("SVD rank %d approximation. Error: %s", rank, error), svdApproximation);
             svdBitmap.setVisible(true);
         });
     }
@@ -92,8 +92,8 @@ public class TerrainManager implements ProblemManager {
         final int maxRank = config.getRanks().stream().mapToInt(x -> x).max().getAsInt();
         final Solution maxRankApproximation = getSvdRankedSolution(maxRank);
         final double error = maxRankApproximation.squaredDifference(terrainSolution);
-        ResultsSnapshot approxViewer = new ResultsSnapshot(String.format("SVD rank %d approximation. Error: %s", maxRank, error), maxRankApproximation);
-        approxViewer.setVisible(true);
+//        StaticViewer approxViewer = new StaticViewer(String.format("SVD rank %d approximation. Error: %s", maxRank, error), maxRankApproximation);
+//        approxViewer.setVisible(true);
     }
 
 
@@ -113,9 +113,10 @@ public class TerrainManager implements ProblemManager {
                 .inputStorage(inputTerrain)
                 .outputStorage(outputTerrain)
                 .terrainProcessor(
-                        ChainedTerrainProcessor.startingFrom(AdjustmentTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
+                        ChainedTerrainProcessor.startingFrom(TranslationTerrainProcessor.builder().center(new Point2D(config.getXOffset(), config.getYOffset())).scale(config.getScale()).build())
                                 .withNext(new ToClosestTerrainProcessor())
-                                .withNext(AdjustmentTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
+                                .withNext(TranslationTerrainProcessor.builder().center(new Point2D(-config.getXOffset(), -config.getYOffset())).scale(1d / config.getScale()).build())
+                                .withNext(new ZeroWaterLevelProcessor())
                 )
                 .build()
                 .terraform(config.getMesh());

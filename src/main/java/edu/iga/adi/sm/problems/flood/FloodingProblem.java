@@ -7,7 +7,7 @@ import edu.iga.adi.sm.problems.TimeModifier;
 
 import java.util.Optional;
 
-public final class FloodingProblem implements IterativeProblem {
+public class FloodingProblem implements IterativeProblem {
 
     private final Solution terrain;
     private final double delta;
@@ -35,10 +35,6 @@ public final class FloodingProblem implements IterativeProblem {
         currentStep++;
         return currentStep < steps ? Optional.of(getProblem(solution)) : Optional.empty();
     }
-
-//    private Problem getProblem(Solution solution) {
-//        return (x, y) -> solution.getValue(x, y) + delta * solution.getModifiedValue(x, y) + rainF.getAddedValue(x, y, currentTime);
-//    }
 
     private Problem getProblem(Solution solution) {
         return (x, y) -> solution.getValue(x, y) + delta * solution.getModifiedValue(x, y) + rainF.getAddedValue(x, y, currentTime);

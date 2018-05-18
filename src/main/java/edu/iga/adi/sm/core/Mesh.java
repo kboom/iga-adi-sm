@@ -1,6 +1,13 @@
 package edu.iga.adi.sm.core;
 
-public class Mesh {
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.io.Serializable;
+
+@ToString
+@EqualsAndHashCode
+public class Mesh implements Serializable {
 
     private double resolutionX;
 
@@ -15,7 +22,6 @@ public class Mesh {
     private int dofsX;
 
     private int dofsY;
-    private int centerY;
 
     private Mesh() {
     }
