@@ -5,6 +5,7 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.SolutionGrid;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.dimension.TwoDimensionalProblemSolver;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.SolutionLogger;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.loggers.NoopSolutionLogger;
@@ -71,7 +72,7 @@ public class GeneralProblemTest {
     private void canSolveProblemOfSize(BiFunction<Double, Double, Double> fn, int size) {
         final Mesh mesh = createRectangularMesh(size);
         TwoDimensionalProblemSolver problemSolver = createSolver(mesh);
-        Solution solution = problemSolver.solveProblem(fn::apply);
+        Solution solution = problemSolver.solveProblem(fn::apply, RunInformation.initialInformation());
         assertThat(solution.getSolutionGrid().withPrecisionTo(REQUIRED_PRECISION)).isEqualTo(
 
                 generateSolutionGridFor(mesh, fn)

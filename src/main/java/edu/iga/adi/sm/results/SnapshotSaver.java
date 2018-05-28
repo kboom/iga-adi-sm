@@ -2,7 +2,6 @@ package edu.iga.adi.sm.results;
 
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.results.series.SolutionSeries;
-import edu.iga.adi.sm.results.visualization.images.HeatImageFactory;
 import edu.iga.adi.sm.results.visualization.images.ImageFactory;
 import lombok.Builder;
 import lombok.NonNull;

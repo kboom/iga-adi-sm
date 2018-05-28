@@ -1,6 +1,5 @@
 package edu.iga.adi.sm.problems.flood;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.iga.adi.sm.Solver;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.SolverFactory;
@@ -8,6 +7,7 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
@@ -17,7 +17,6 @@ import edu.iga.adi.sm.results.SnapshotSaver;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dChangesOverStaticSurfaceProvider;
-import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSolutionMapper;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceSolutionDrawer;
 import edu.iga.adi.sm.results.visualization.images.FloodImageFactory;
@@ -40,7 +39,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.function.BiFunction;
 
 @RequiredArgsConstructor
 public class FloodManager implements ProblemManager {
@@ -281,7 +279,7 @@ public class FloodManager implements ProblemManager {
                 .terraform(config.getMesh());
 
         Solver solver = solverFactory.createSolver(solution -> solution, productionExecutorFactory);
-        terrainSolution = solver.solveProblem(new TerrainProjectionProblem(outputTerrain));
+        terrainSolution = solver.solveProblem(new TerrainProjectionProblem(outputTerrain), RunInformation.initialInformation());
     }
 
     @Override

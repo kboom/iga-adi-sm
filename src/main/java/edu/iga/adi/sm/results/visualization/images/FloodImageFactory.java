@@ -4,14 +4,9 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSolutionMapper;
 import edu.iga.adi.sm.results.visualization.drawers.jzy3d.Jzy3dSurfaceFactory;
 import lombok.Builder;
-import org.jzy3d.bridge.IFrame;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.NewtChartComponentFactory;
-import org.jzy3d.maths.Coord3d;
-import org.jzy3d.maths.Rectangle;
-import org.jzy3d.maths.Scale;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-import org.jzy3d.plot3d.rendering.view.modes.ViewPositionMode;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

@@ -5,6 +5,7 @@ import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.dimension.TwoDimensionalProblemSolver;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.SolutionLogger;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import lombok.AccessLevel;
@@ -43,8 +44,8 @@ public class SolverFactory {
         private final Solver solver;
 
         @Override
-        public Solution solveProblem(Problem problem) {
-            return solver.solveProblem(problem);
+        public Solution solveProblem(Problem problem, RunInformation runInformation) {
+            return solver.solveProblem(problem, runInformation);
         }
 
     }

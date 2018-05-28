@@ -3,6 +3,7 @@ package edu.iga.adi.sm;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.results.series.CachedSolutionSeries;
 import edu.iga.adi.sm.results.series.FromStorageSolutionSeries;
@@ -32,10 +33,12 @@ class IterativeSolver {
     SolutionSeries solveIteratively(IterativeProblem iterativeProblem) {
         Optional<Problem> currentProblem = Optional.of(iterativeProblem.getInitialProblem());
         int solutionNumber = 0;
+        RunInformation runInformation = RunInformation.initialInformation();
         while (currentProblem.isPresent()) {
-            Solution solution = solver.solveProblem(currentProblem.get());
+            Solution solution = solver.solveProblem(currentProblem.get(), runInformation);
             storeAndCacheSolution(solutionNumber++, solution);
             currentProblem = iterativeProblem.getNextProblem(solution);
+            runInformation = runInformation.nextRun();
         }
         return new CachedSolutionSeries(FromStorageSolutionSeries.builder()
                 .mesh(mesh)

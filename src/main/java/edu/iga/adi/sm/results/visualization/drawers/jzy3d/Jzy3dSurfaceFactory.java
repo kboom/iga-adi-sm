@@ -2,19 +2,13 @@ package edu.iga.adi.sm.results.visualization.drawers.jzy3d;
 
 import edu.iga.adi.sm.core.Mesh;
 import lombok.Builder;
-import org.jzy3d.colors.Color;
 import org.jzy3d.colors.ColorMapper;
-import org.jzy3d.colors.colormaps.ColorMapGrayscale;
 import org.jzy3d.colors.colormaps.ColorMapHotCold;
 import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.colors.colormaps.ColorMapWhiteBlue;
-import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
-import org.jzy3d.plot3d.builder.Mapper;
 import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Shape;
-
-import java.util.stream.Collectors;
 
 @Builder
 public class Jzy3dSurfaceFactory {
