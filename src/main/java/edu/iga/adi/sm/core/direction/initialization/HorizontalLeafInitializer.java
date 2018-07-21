@@ -28,24 +28,12 @@ public class HorizontalLeafInitializer implements LeafInitializer {
 
         final ProductionSupplier productionSupplier = new ProductionSupplier(runInformation);
 
-        Vertex firstVertex = leafLevelVertices.get(0);
-        initializationProductions.add(productionSupplier.create(firstVertex.leftChild));
-        initializationProductions.add(productionSupplier.create(firstVertex.middleChild));
-        initializationProductions.add(productionSupplier.create(firstVertex.rightChild));
-
-
-        for (int i = 1; i < leafLevelVertices.size() - 1; i++) {
+        for (int i = 0; i < leafLevelVertices.size(); i++) {
             Vertex vertex = leafLevelVertices.get(i);
             initializationProductions.add(productionSupplier.create(vertex.leftChild));
             initializationProductions.add(productionSupplier.create(vertex.middleChild));
             initializationProductions.add(productionSupplier.create(vertex.rightChild));
         }
-
-
-        Vertex lastVertex = leafLevelVertices.get(leafLevelVertices.size() - 1);
-        initializationProductions.add(productionSupplier.create(lastVertex.leftChild));
-        initializationProductions.add(productionSupplier.create(lastVertex.middleChild));
-        initializationProductions.add(productionSupplier.create(lastVertex.rightChild));
 
         return initializationProductions;
     }

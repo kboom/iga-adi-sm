@@ -3,6 +3,7 @@ package edu.iga.adi.sm.problems.heat;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
@@ -39,7 +40,7 @@ public class HeatManager implements ProblemManager {
 
     @Override
     public SolutionFactory getSolutionFactory() {
-        return solution -> new HeatSolution(config.getMesh(), solution.getRhs(), solution.metadata);
+        return (solution, runInformation) -> new HeatSolution(config.getMesh(), solution.getRhs(), runInformation, solution.metadata);
     }
 
     @Override

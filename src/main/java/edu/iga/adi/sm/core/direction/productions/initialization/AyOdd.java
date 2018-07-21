@@ -31,7 +31,8 @@ public class AyOdd extends Production {
         }
     }
 
-    private void initializeCoefficientsMatrix(Vertex node) {
-        SampleCoefficients.useArbitraryCoefficients(node);
+    protected void initializeCoefficientsMatrix(Vertex node) {
+        SampleCoefficients.useOddCoefficients(node);
     }
+
 }

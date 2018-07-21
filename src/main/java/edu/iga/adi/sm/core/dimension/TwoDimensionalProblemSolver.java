@@ -68,7 +68,7 @@ public final class TwoDimensionalProblemSolver implements Solver {
         );
 
         Solution verticalSolution = verticalProblemSolver.solveProblem(rhs, runInformation);
-        return solutionFactory.createFinalSolution(verticalSolution);
+        return solutionFactory.createFinalSolution(verticalSolution, runInformation);
     }
 
 }

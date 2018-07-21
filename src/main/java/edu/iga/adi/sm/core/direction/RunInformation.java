@@ -1,6 +1,8 @@
 package edu.iga.adi.sm.core.direction;
 
-public class RunInformation {
+import java.io.Serializable;
+
+public class RunInformation implements Serializable {
 
     private final int runNumber;
 

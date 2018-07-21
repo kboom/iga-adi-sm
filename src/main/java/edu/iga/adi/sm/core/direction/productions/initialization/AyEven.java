@@ -9,4 +9,8 @@ public class AyEven extends AyOdd {
         super(node, solution, partition, idx, mesh);
     }
 
+    @Override
+    protected void initializeCoefficientsMatrix(Vertex node) {
+        SampleCoefficients.useEvenCoefficients(node);
+    }
 }

@@ -51,7 +51,7 @@ public class FloodManager implements ProblemManager {
 
     @Override
     public SolutionFactory getSolutionFactory() {
-        return solution -> new FloodSolution(config.getMesh(), solution.getRhs(), terrainSolution.getRhs(), solution.metadata);
+        return (solution, runInformation) -> new FloodSolution(config.getMesh(), solution.getRhs(), terrainSolution.getRhs(), solution.metadata);
     }
 
     @Override
@@ -278,7 +278,7 @@ public class FloodManager implements ProblemManager {
                 .build()
                 .terraform(config.getMesh());
 
-        Solver solver = solverFactory.createSolver(solution -> solution, productionExecutorFactory);
+        Solver solver = solverFactory.createSolver((solution, runInformation) -> solution, productionExecutorFactory);
         terrainSolution = solver.solveProblem(new TerrainProjectionProblem(outputTerrain), RunInformation.initialInformation());
     }
 

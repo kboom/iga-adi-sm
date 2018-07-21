@@ -24,7 +24,7 @@ public class GeneralProblemTest {
 
     private static final SolutionLogger DUMMY_SOLUTION_LOGGER = new NoopSolutionLogger();
     private static final TimeLogger DUMMY_TIME_LOGGER = new TimeLogger();
-    private static final SolutionFactory DUMMY_SOLUTION_FACTORY = solution -> solution;
+    private static final SolutionFactory DUMMY_SOLUTION_FACTORY = (solution, runInformation) -> solution;
     private static final int REQUIRED_PRECISION = 6;
     private static final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory(SolverConfiguration.builder().build());
     private static final int TEST_PROBLEM_SIZE = 12;

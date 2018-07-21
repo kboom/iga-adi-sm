@@ -29,8 +29,8 @@ public class AxOdd extends Production {
         return node;
     }
 
-    private void initializeCoefficientsMatrix(Vertex node) {
-        SampleCoefficients.useArbitraryCoefficients(node);
+    protected void initializeCoefficientsMatrix(Vertex node) {
+        SampleCoefficients.useOddCoefficients(node);
     }
 
     private void initializeRightHandSides(Vertex node) {

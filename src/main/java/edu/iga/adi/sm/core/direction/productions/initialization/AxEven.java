@@ -10,4 +10,9 @@ public class AxEven extends AxOdd {
         super(node, mesh, rhs);
     }
 
+    @Override
+    protected void initializeCoefficientsMatrix(Vertex node) {
+        SampleCoefficients.useEvenCoefficients(node);
+    }
+
 }

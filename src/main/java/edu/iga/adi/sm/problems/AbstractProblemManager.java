@@ -3,6 +3,7 @@ package edu.iga.adi.sm.problems;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.results.series.SolutionSeries;
 import lombok.AllArgsConstructor;
 
@@ -16,7 +17,7 @@ public abstract class AbstractProblemManager implements ProblemManager {
 
     @Override
     public SolutionFactory getSolutionFactory() {
-        return solution -> new IntermediateSolution(config.getMesh(), solution.getRhs());
+        return (solution, runInformation) -> new IntermediateSolution(config.getMesh(), solution.getRhs());
     }
 
     @Override
