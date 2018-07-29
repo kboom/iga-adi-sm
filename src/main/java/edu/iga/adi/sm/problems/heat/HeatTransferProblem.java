@@ -50,7 +50,7 @@ public final class HeatTransferProblem implements IterativeProblem {
         currentStep++;
         return currentStep < steps ? Optional.of((x, y) -> {
             double value = solution.getValue(x, y);
-            return value + delta * solution.getModifiedValue(x, y);
+                return value + delta * solution.getModifiedValue(x, y);
         }) : Optional.empty();
     }
 

@@ -6,9 +6,9 @@ import edu.iga.adi.sm.core.direction.productions.construction.P1;
 import edu.iga.adi.sm.core.direction.productions.construction.P2;
 import edu.iga.adi.sm.core.direction.productions.construction.P3;
 import edu.iga.adi.sm.core.direction.productions.solution.backsubstitution.*;
-import edu.iga.adi.sm.core.direction.productions.solution.factorization.A2_2;
-import edu.iga.adi.sm.core.direction.productions.solution.factorization.A2_2_H;
-import edu.iga.adi.sm.core.direction.productions.solution.factorization.A2_3;
+import edu.iga.adi.sm.core.direction.productions.solution.factorization.M2_2;
+import edu.iga.adi.sm.core.direction.productions.solution.factorization.M2_2_H;
+import edu.iga.adi.sm.core.direction.productions.solution.factorization.M2_3;
 import edu.iga.adi.sm.core.direction.productions.solution.factorization.Aroot;
 
 public class HorizontalProductionFactory implements ProductionFactory {
@@ -36,7 +36,7 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production mergeLeavesProduction(Vertex vertex) {
-        return new A2_3(vertex, mesh);
+        return new M2_3(vertex, mesh);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production mergeIntermediateProduction(Vertex vertex) {
-        return new A2_2(vertex, mesh);
+        return new M2_2(vertex, mesh);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production mergeUpProduction(Vertex vertex) {
-        return new A2_2_H(vertex, mesh);
+        return new M2_2_H(vertex, mesh);
     }
 
 }
