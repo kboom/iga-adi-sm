@@ -2,7 +2,7 @@ package edu.iga.adi.sm.productions.solution.factorization;
 
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
-import edu.iga.adi.sm.core.direction.productions.solution.factorization.A2_2;
+import edu.iga.adi.sm.core.direction.productions.solution.factorization.M2_2;
 import org.junit.Test;
 
 import static edu.iga.adi.sm.core.Mesh.aMesh;
@@ -10,7 +10,7 @@ import static edu.iga.adi.sm.core.direction.Vertex.aVertex;
 import static java.util.Arrays.deepToString;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class A2_2Test {
+public class M2_2Test {
 
     private static final int GRID_SIZE = 12;
 
@@ -30,7 +30,7 @@ public class A2_2Test {
         leftChild.m_a[2][2] = 1;
         rightChild.m_a[2][2] = 1;
 
-        A2_2 a = new A2_2(parent, DUMMY_MESH);
+        M2_2 a = new M2_2(parent, DUMMY_MESH);
         a.apply(parent);
         assertThat(deepToString(parent.m_a)).isEqualTo(
                 "[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], " +
@@ -52,7 +52,7 @@ public class A2_2Test {
         leftChild.m_b[3][3] = 1;
         rightChild.m_b[3][3] = 1;
 
-        A2_2 a = new A2_2(parent, DUMMY_MESH);
+        M2_2 a = new M2_2(parent, DUMMY_MESH);
         a.apply(parent);
         assertThat(deepToString(parent.m_b)).isEqualTo(
                 "[[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], " +
