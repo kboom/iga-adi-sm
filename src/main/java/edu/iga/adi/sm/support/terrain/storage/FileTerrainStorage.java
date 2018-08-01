@@ -9,7 +9,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 // todo try this out for performance: https://stackoverflow.com/questions/9093888/fastest-way-of-reading-relatively-huge-byte-files-in-java

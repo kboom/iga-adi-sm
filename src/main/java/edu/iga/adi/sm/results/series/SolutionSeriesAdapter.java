@@ -4,7 +4,6 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
 import lombok.AllArgsConstructor;
 
-import java.util.function.ToDoubleBiFunction;
 import java.util.stream.Stream;
 
 @AllArgsConstructor

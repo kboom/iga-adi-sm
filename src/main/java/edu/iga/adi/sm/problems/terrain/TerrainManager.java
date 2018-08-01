@@ -6,6 +6,7 @@ import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
@@ -15,9 +16,9 @@ import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
 import edu.iga.adi.sm.support.terrain.TerrainProjectionProblem;
-import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ChainedTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ToClosestTerrainProcessor;
+import edu.iga.adi.sm.support.terrain.processors.TranslationTerrainProcessor;
 import edu.iga.adi.sm.support.terrain.processors.ZeroWaterLevelProcessor;
 import edu.iga.adi.sm.support.terrain.storage.FileTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
@@ -36,7 +37,7 @@ public class TerrainManager implements ProblemManager {
 
     @Override
     public SolutionFactory getSolutionFactory() {
-        return solution -> new IntermediateSolution(config.getMesh(), solution.getRhs());
+        return (solution, runInformation) -> new IntermediateSolution(config.getMesh(), solution.getRhs());
     }
 
     @Override

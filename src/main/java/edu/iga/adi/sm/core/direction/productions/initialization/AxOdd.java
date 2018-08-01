@@ -10,7 +10,7 @@ import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.core.splines.Spline;
 
-public class A extends Production {
+public class AxOdd extends Production {
 
     private static final Spline spline1 = new BSpline1();
     private static final Spline spline2 = new BSpline2();
@@ -18,7 +18,7 @@ public class A extends Production {
 
     private final Problem rhs;
 
-    public A(Vertex node, Mesh mesh, Problem rhs) {
+    public AxOdd(Vertex node, Mesh mesh, Problem rhs) {
         super(node, mesh);
         this.rhs = rhs;
     }
@@ -29,8 +29,8 @@ public class A extends Production {
         return node;
     }
 
-    private void initializeCoefficientsMatrix(Vertex node) {
-        SampleCoefficients.useArbitraryCoefficients(node);
+    protected void initializeCoefficientsMatrix(Vertex node) {
+        SampleCoefficients.useOddCoefficients(node);
     }
 
     private void initializeRightHandSides(Vertex node) {

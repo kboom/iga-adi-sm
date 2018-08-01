@@ -6,6 +6,7 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.direction.DirectionSolver;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.SolutionLogger;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.core.direction.initialization.HorizontalLeafInitializer;
@@ -40,9 +41,9 @@ public final class TwoDimensionalProblemSolver implements Solver {
     }
 
     @Override
-    public Solution solveProblem(Problem rhs) {
-        ProductionFactory horizontalProductionFactory = new HorizontalProductionFactory(mesh);
-        LeafInitializer horizontalLeafInitializer = new HorizontalLeafInitializer(mesh, rhs);
+    public Solution solveProblem(Problem rhs, RunInformation runInformation) {
+        final ProductionFactory horizontalProductionFactory = new HorizontalProductionFactory(mesh);
+        final LeafInitializer horizontalLeafInitializer = new HorizontalLeafInitializer(mesh, rhs);
 
         DirectionSolver horizontalProblemSolver = new DirectionSolver(
                 horizontalProductionFactory,
@@ -52,7 +53,8 @@ public final class TwoDimensionalProblemSolver implements Solver {
                 solutionLogger,
                 timeLogger
         );
-        Solution horizontalSolution = horizontalProblemSolver.solveProblem(rhs);
+
+        final Solution horizontalSolution = horizontalProblemSolver.solveProblem(rhs, runInformation);
 
         ProductionFactory verticalProductionFactory = new VerticalProductionFactory(mesh);
         LeafInitializer verticalLeafInitializer = new VerticalLeafInitializer(mesh, horizontalSolution);
@@ -65,8 +67,8 @@ public final class TwoDimensionalProblemSolver implements Solver {
                 timeLogger
         );
 
-        Solution verticalSolution = verticalProblemSolver.solveProblem(rhs);
-        return solutionFactory.createFinalSolution(verticalSolution);
+        Solution verticalSolution = verticalProblemSolver.solveProblem(rhs, runInformation);
+        return solutionFactory.createFinalSolution(verticalSolution, runInformation);
     }
 
 }

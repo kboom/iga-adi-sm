@@ -8,7 +8,6 @@ import lombok.Builder;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 @Builder
 public class FlatSolutionDrawer extends JPanel implements SolutionDrawer {

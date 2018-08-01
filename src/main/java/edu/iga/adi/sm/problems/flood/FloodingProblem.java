@@ -37,7 +37,9 @@ public class FloodingProblem implements IterativeProblem {
     }
 
     private Problem getProblem(Solution solution) {
-        return (x, y) -> solution.getValue(x, y) + delta * solution.getModifiedValue(x, y) + rainF.getAddedValue(x, y, currentTime);
+        return (x, y) -> solution.getValue(x, y)
+                + delta * solution.getModifiedValue(x, y)
+                + rainF.getAddedValue(x, y, currentTime);
     }
 
 }

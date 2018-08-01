@@ -5,6 +5,7 @@ import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.SolutionGrid;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.dimension.TwoDimensionalProblemSolver;
+import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.SolutionLogger;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.loggers.NoopSolutionLogger;
@@ -23,7 +24,7 @@ public class GeneralProblemTest {
 
     private static final SolutionLogger DUMMY_SOLUTION_LOGGER = new NoopSolutionLogger();
     private static final TimeLogger DUMMY_TIME_LOGGER = new TimeLogger();
-    private static final SolutionFactory DUMMY_SOLUTION_FACTORY = solution -> solution;
+    private static final SolutionFactory DUMMY_SOLUTION_FACTORY = (solution, runInformation) -> solution;
     private static final int REQUIRED_PRECISION = 6;
     private static final ProductionExecutorFactory productionExecutorFactory = new ProductionExecutorFactory(SolverConfiguration.builder().build());
     private static final int TEST_PROBLEM_SIZE = 12;
@@ -71,7 +72,7 @@ public class GeneralProblemTest {
     private void canSolveProblemOfSize(BiFunction<Double, Double, Double> fn, int size) {
         final Mesh mesh = createRectangularMesh(size);
         TwoDimensionalProblemSolver problemSolver = createSolver(mesh);
-        Solution solution = problemSolver.solveProblem(fn::apply);
+        Solution solution = problemSolver.solveProblem(fn::apply, RunInformation.initialInformation());
         assertThat(solution.getSolutionGrid().withPrecisionTo(REQUIRED_PRECISION)).isEqualTo(
 
                 generateSolutionGridFor(mesh, fn)
