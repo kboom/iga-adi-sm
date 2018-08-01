@@ -1,11 +1,11 @@
 # Isogeometric Alternating Directions Implicit Shared Memory Solver (IGA-ADI-SM)
 
 This numerical solver can be used for solving a certain subset of problems
-in the field of Isogeometric Analysis.
+in the field of Isogeometric Analysis. Utilizes an implicit Euler scheme which removes the dependency of time step size and mesh size. In other words the time step can be arbitrarily long (it will never cause instability). This in turn allows to perform efficient analysis of behavior in dense meshes.
 
 ## Usage
 
-The program can be run by providing configuration properties all of which have default values. Utilizes an implicit Euler scheme which removes the dependency of time step size and mesh size. In other words the time step can be arbitrarily long (it will never cause instability). This in turn allows to perform efficient analysis of behavior in dense meshes.
+The program can be run by providing configuration properties all of which have default values. 
 
 ### Common configuration properties
 
