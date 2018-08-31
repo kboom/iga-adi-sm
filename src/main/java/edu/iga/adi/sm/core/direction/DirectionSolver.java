@@ -9,6 +9,7 @@ import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.core.direction.initialization.LeafInitializer;
 import edu.iga.adi.sm.core.direction.productions.Production;
 import edu.iga.adi.sm.core.direction.productions.ProductionFactory;
+import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,29 +20,32 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class DirectionSolver implements Solver {
+public final class DirectionSolver implements Solver {
 
     private static final int ROOT_LEVEL_HEIGHT = 1;
     private static final int LEAF_LEVEL_HEIGHT = 1;
     private final Mesh mesh;
+
+    private final ProductionExecutorFactory launcherFactory;
+
+    private final ProductionFactory productionFactory;
+
+    private final LeafInitializer leafInitializer;
+
+    private final SolutionLogger solutionLogger;
+
+    private final TimeLogger timeLogger;
+
     private List<Vertex> lastLevelVertices;
     private List<Vertex> leafLevelVertices;
-    private ProductionExecutorFactory launcherFactory;
 
-    private ProductionFactory productionFactory;
-
-    private LeafInitializer leafInitializer;
-
-    private SolutionLogger solutionLogger;
-
-    private TimeLogger timeLogger;
-
-    public DirectionSolver(ProductionFactory productionFactory,
-                           ProductionExecutorFactory launcherFactory,
-                           LeafInitializer leafInitializer,
-                           Mesh meshData,
-                           SolutionLogger solutionLogger,
-                           TimeLogger timeLogger) {
+    @Builder
+    private DirectionSolver(ProductionFactory productionFactory,
+                            ProductionExecutorFactory launcherFactory,
+                            LeafInitializer leafInitializer,
+                            Mesh meshData,
+                            SolutionLogger solutionLogger,
+                            TimeLogger timeLogger) {
         this.productionFactory = productionFactory;
         this.launcherFactory = launcherFactory;
         this.leafInitializer = leafInitializer;
@@ -57,7 +61,7 @@ public class DirectionSolver implements Solver {
         lastLevelVertices = buildIntermediateLevels(root);
         leafLevelVertices = buildLeaves();
         timeLogger.logInitialization();
-        initializeLeaves(runInformation);
+        initializeLeaves();
         timeLogger.logFactorization();
         mergeLeaves();
         eliminateLeaves();
@@ -70,9 +74,9 @@ public class DirectionSolver implements Solver {
         return new IntermediateSolution(mesh, getRhs());
     }
 
-    private void initializeLeaves(RunInformation runInformation) {
+    private void initializeLeaves() {
         launcherFactory
-                .createLauncherFor(leafInitializer.initializeLeaves(leafLevelVertices, runInformation))
+                .createLauncherFor(leafInitializer.initializeLeaves(leafLevelVertices))
                 .launchProductions();
 
         solutionLogger.logValuesOfChildren(leafLevelVertices, "Initializing leaves");
@@ -108,8 +112,7 @@ public class DirectionSolver implements Solver {
     private void backwardSubstituteLeaves() {
         launcherFactory
                 .createLauncherFor(
-                        leafLevelVertices.stream().map(vertex
-                                -> productionFactory.backwardSubstituteLeavesProduction(vertex))
+                        leafLevelVertices.stream().map(productionFactory::backwardSubstituteLeavesProduction)
                                 .collect(toList())
                 )
                 .launchProductions();
@@ -123,8 +126,7 @@ public class DirectionSolver implements Solver {
         for (int level = 1; level < getIntermediateLevelsCount(); level++) {
             launcherFactory
                     .createLauncherFor(
-                            verticesAtLevel.stream().map(vertex
-                                    -> productionFactory.backwardSubstituteUpProduction(vertex))
+                            verticesAtLevel.stream().map(productionFactory::backwardSubstituteUpProduction)
                                     .collect(toList())
                     )
                     .launchProductions();
@@ -136,8 +138,7 @@ public class DirectionSolver implements Solver {
 
         launcherFactory
                 .createLauncherFor(
-                        verticesAtLevel.stream().map(vertex
-                                -> productionFactory.backwardSubstituteIntermediateProduction(vertex))
+                        verticesAtLevel.stream().map(productionFactory::backwardSubstituteIntermediateProduction)
                                 .collect(toList())
                 )
                 .launchProductions();
@@ -175,8 +176,7 @@ public class DirectionSolver implements Solver {
 
         launcherFactory
                 .createLauncherFor(
-                        verticesAtLevel.stream().map(vertex
-                                -> productionFactory.mergeIntermediateProduction(vertex))
+                        verticesAtLevel.stream().map(productionFactory::mergeIntermediateProduction)
                                 .collect(toList())
                 )
                 .launchProductions();
@@ -185,8 +185,7 @@ public class DirectionSolver implements Solver {
 
         launcherFactory
                 .createLauncherFor(
-                        verticesAtLevel.stream().map(vertex
-                                -> productionFactory.eliminateIntermediateProduction(vertex))
+                        verticesAtLevel.stream().map(productionFactory::eliminateIntermediateProduction)
                                 .collect(toList())
                 )
                 .launchProductions();
@@ -199,8 +198,7 @@ public class DirectionSolver implements Solver {
         while (verticesAtLevel.size() > 1) {
             launcherFactory
                     .createLauncherFor(
-                            verticesAtLevel.stream().map(vertex
-                                    -> productionFactory.mergeUpProduction(vertex))
+                            verticesAtLevel.stream().map(productionFactory::mergeUpProduction)
                                     .collect(toList())
                     )
                     .launchProductions();
@@ -210,8 +208,7 @@ public class DirectionSolver implements Solver {
 
             launcherFactory
                     .createLauncherFor(
-                            verticesAtLevel.stream().map(vertex
-                                    -> productionFactory.eliminateIntermediateProduction(vertex)) // todo is this a bug? Should be the same?
+                            verticesAtLevel.stream().map(productionFactory::eliminateIntermediateProduction) // todo is this a bug? Should be the same?
                                     .collect(toList())
                     )
                     .launchProductions();
@@ -242,8 +239,7 @@ public class DirectionSolver implements Solver {
 
     private void mergeLeaves() {
         launcherFactory
-                .createLauncherFor(leafLevelVertices.stream().map(vertex
-                        -> productionFactory.mergeLeavesProduction(vertex))
+                .createLauncherFor(leafLevelVertices.stream().map(productionFactory::mergeLeavesProduction)
                         .collect(toList()))
                 .launchProductions();
 
@@ -252,8 +248,7 @@ public class DirectionSolver implements Solver {
 
     private void eliminateLeaves() {
         launcherFactory
-                .createLauncherFor(leafLevelVertices.stream().map(vertex
-                        -> productionFactory.eliminateLeavesProduction(vertex))
+                .createLauncherFor(leafLevelVertices.stream().map(productionFactory::eliminateLeavesProduction)
                         .collect(toList()))
                 .launchProductions();
 

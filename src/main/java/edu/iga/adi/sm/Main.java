@@ -12,6 +12,8 @@ import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 
 import java.io.File;
 
+import static java.lang.System.exit;
+
 public class Main {
 
     private static final TimeLogger timeLogger = new TimeLogger();
@@ -52,8 +54,8 @@ public class Main {
                 .build()
                 .launch();
 
-        if(!solverConfiguration.isPlotting()) {
-//            exit(0);
+        if (!solverConfiguration.isPlotting()) {
+            exit(0);
         }
     }
 

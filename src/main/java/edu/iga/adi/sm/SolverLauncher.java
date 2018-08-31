@@ -29,10 +29,11 @@ public final class SolverLauncher {
         problemManager.setUp();
         solutionStorage.setUp();
 
-        final Solver solver = solverFactory.createSolver(problemManager.getSolutionFactory(), productionExecutorFactory);
+        final Task task = problemManager.solverTask();
+        final Solver solver = solverFactory.crateSolverFor(task, productionExecutorFactory);
 
         SolutionSeries solutionSeries = !solverConfiguration.isRetrieve()
-                ? solve(problemManager, solver)
+                ? solve(solver, task)
                 : retrieve();
 
         productionExecutorFactory.joinAll();
@@ -45,13 +46,13 @@ public final class SolverLauncher {
         problemManager.tearDown();
     }
 
-    private SolutionSeries solve(ProblemManager problemManager, Solver solver) {
+    private SolutionSeries solve(Solver solver, Task task) {
         return IterativeSolver.builder()
                 .mesh(solverConfiguration.getMesh())
                 .solutionStorage(solverConfiguration.isStoring() ? solutionStorage : new InMemorySolutionStorage<>())
                 .solver(solver)
                 .build()
-                .solveIteratively(problemManager.getProblem());
+                .solveIteratively(task.getProblem());
     }
 
     private SolutionSeries retrieve() {

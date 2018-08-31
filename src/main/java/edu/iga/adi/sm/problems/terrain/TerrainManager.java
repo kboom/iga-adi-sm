@@ -3,6 +3,8 @@ package edu.iga.adi.sm.problems.terrain;
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
 import edu.iga.adi.sm.SolverConfiguration;
+import edu.iga.adi.sm.Task;
+import edu.iga.adi.sm.TimeMethodType;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
@@ -25,7 +27,7 @@ import edu.iga.adi.sm.support.terrain.storage.MapTerrainStorage;
 import edu.iga.adi.sm.support.terrain.storage.TerrainStorage;
 import edu.iga.adi.sm.support.terrain.support.Point2D;
 
-public class TerrainManager implements ProblemManager {
+public final class TerrainManager implements ProblemManager {
 
     private final MapTerrainStorage outputTerrain = new MapTerrainStorage();
     private final SolverConfiguration config;
@@ -33,16 +35,6 @@ public class TerrainManager implements ProblemManager {
 
     public TerrainManager(SolverConfiguration solverConfiguration) {
         this.config = solverConfiguration;
-    }
-
-    @Override
-    public SolutionFactory getSolutionFactory() {
-        return (solution, runInformation) -> new IntermediateSolution(config.getMesh(), solution.getRhs());
-    }
-
-    @Override
-    public IterativeProblem getProblem() {
-        return new TerrainProjectionProblem(outputTerrain);
     }
 
     @Override
@@ -97,6 +89,23 @@ public class TerrainManager implements ProblemManager {
 //        approxViewer.setVisible(true);
     }
 
+
+    @Override
+    public Task solverTask() {
+        return Task.builder()
+                .problem(problem())
+                .solutionFactory(solutionFactory())
+                .timeMethodType(TimeMethodType.EXPLICIT)
+                .build();
+    }
+
+    private IterativeProblem problem() {
+        return new TerrainProjectionProblem(outputTerrain);
+    }
+
+    private SolutionFactory solutionFactory() {
+        return (solution, runInformation) -> new IntermediateSolution(config.getMesh(), solution.getRhs());
+    }
 
     @Override
     public void setUp() {

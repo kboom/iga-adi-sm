@@ -1,12 +1,8 @@
 package edu.iga.adi.sm.problems;
 
-import edu.iga.adi.sm.SolverConfiguration;
-import edu.iga.adi.sm.SolverFactory;
-import edu.iga.adi.sm.SolverLauncher;
-import edu.iga.adi.sm.TimeLogger;
+import edu.iga.adi.sm.*;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
-import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.execution.ProductionExecutorFactory;
 import edu.iga.adi.sm.loggers.ConsoleSolutionLogger;
 import edu.iga.adi.sm.loggers.NoopSolutionLogger;
@@ -94,18 +90,8 @@ class AbstractProblemTest {
 
         private SolutionSeries results;
 
-        public ProblemManagerProxy(ProblemManager delegate) {
+        ProblemManagerProxy(ProblemManager delegate) {
             this.delegate = delegate;
-        }
-
-        @Override
-        public IterativeProblem getProblem() {
-            return delegate.getProblem();
-        }
-
-        @Override
-        public SolutionFactory getSolutionFactory() {
-            return delegate.getSolutionFactory();
         }
 
         @Override
@@ -114,12 +100,17 @@ class AbstractProblemTest {
             InMemorySolutionStorage<Solution> safeStorage = new InMemorySolutionStorage<>(
                     solutionSeries.getSubsequentSolutions()
                             .collect(Collectors.toList()));
-            
+
             results = FromStorageSolutionSeries.builder()
                     .mesh(solutionSeries.getMesh())
                     .solutionCount(solutionSeries.getTimeStepCount())
                     .solutionStorage(safeStorage)
                     .build();
+        }
+
+        @Override
+        public Task solverTask() {
+            return delegate.solverTask();
         }
 
         @Override

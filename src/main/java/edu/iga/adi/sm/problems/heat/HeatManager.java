@@ -1,6 +1,8 @@
 package edu.iga.adi.sm.problems.heat;
 
 import edu.iga.adi.sm.SolverConfiguration;
+import edu.iga.adi.sm.Task;
+import edu.iga.adi.sm.TimeMethodType;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.RunInformation;
@@ -24,12 +26,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 @AllArgsConstructor
-public class HeatManager implements ProblemManager {
+public final class HeatManager implements ProblemManager {
 
     private final SolverConfiguration config;
 
-    @Override
-    public IterativeProblem getProblem() {
+    private IterativeProblem problem() {
         return new HeatTransferProblem(
                 config.getDelta(),
                 config.getMesh(),
@@ -38,8 +39,7 @@ public class HeatManager implements ProblemManager {
         );
     }
 
-    @Override
-    public SolutionFactory getSolutionFactory() {
+    private SolutionFactory solutionFactory() {
         return (solution, runInformation) -> new HeatSolution(config.getMesh(), solution.getRhs(), runInformation, solution.metadata);
     }
 
@@ -120,6 +120,15 @@ public class HeatManager implements ProblemManager {
                         )
                         .build())
                 .build().display();
+    }
+
+    @Override
+    public Task solverTask() {
+        return Task.builder()
+                .solutionFactory(solutionFactory())
+                .problem(problem())
+                .timeMethodType(TimeMethodType.IMPLICIT)
+                .build();
     }
 
     @Override

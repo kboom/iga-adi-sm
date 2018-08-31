@@ -9,28 +9,28 @@ import edu.iga.adi.sm.core.splines.BSpline1;
 import edu.iga.adi.sm.core.splines.BSpline2;
 import edu.iga.adi.sm.core.splines.BSpline3;
 import edu.iga.adi.sm.core.splines.Spline;
+import lombok.Builder;
 
-public class AxOdd extends Production {
+public class Ax extends Production {
 
     private static final Spline spline1 = new BSpline1();
     private static final Spline spline2 = new BSpline2();
     private static final Spline spline3 = new BSpline3();
 
-    private final Problem rhs;
+    private final Problem problem;
+    private final MethodCoefficients coefficients;
 
-    public AxOdd(Vertex node, Mesh mesh, Problem rhs) {
+    @Builder
+    public Ax(MethodCoefficients coefficients, Vertex node, Mesh mesh, Problem problem) {
         super(node, mesh);
-        this.rhs = rhs;
+        this.coefficients = coefficients;
+        this.problem = problem;
     }
 
     public Vertex apply(Vertex node) {
-        initializeCoefficientsMatrix(node);
+        coefficients.bindMethodCoefficients(node);
         initializeRightHandSides(node);
         return node;
-    }
-
-    protected void initializeCoefficientsMatrix(Vertex node) {
-        SampleCoefficients.useOddCoefficients(node);
     }
 
     private void initializeRightHandSides(Vertex node) {
@@ -47,15 +47,15 @@ public class AxOdd extends Production {
             for (int l = 1; l <= GaussPoints.GAUSS_POINT_COUNT; l++) {
                 if (i > 2) {
                     double y = (GaussPoints.GAUSS_POINTS[l] + (i - 3)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline1.getValue(GaussPoints.GAUSS_POINTS[l]) * rhs.getValue(x, y);
+                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline1.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
                 }
                 if (i > 1 && (i - 2) < node.mesh.getElementsY()) {
                     double y = (GaussPoints.GAUSS_POINTS[l] + (i - 2)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline2.getValue(GaussPoints.GAUSS_POINTS[l]) * rhs.getValue(x, y);
+                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline2.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
                 }
                 if ((i - 1) < node.mesh.getElementsY()) {
                     double y = (GaussPoints.GAUSS_POINTS[l] + (i - 1)) * node.mesh.getDy();
-                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline3.getValue(GaussPoints.GAUSS_POINTS[l]) * rhs.getValue(x, y);
+                    node.m_b[r][i] += GaussPoints.GAUSS_POINT_WEIGHTS[k] * spline.getValue(GaussPoints.GAUSS_POINTS[k]) * GaussPoints.GAUSS_POINT_WEIGHTS[l] * spline3.getValue(GaussPoints.GAUSS_POINTS[l]) * problem.getValue(x, y);
                 }
             }
         }

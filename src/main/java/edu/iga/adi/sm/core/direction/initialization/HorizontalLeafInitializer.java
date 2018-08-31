@@ -1,60 +1,46 @@
 package edu.iga.adi.sm.core.direction.initialization;
 
+import com.sun.istack.internal.NotNull;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
-import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
-import edu.iga.adi.sm.core.direction.productions.initialization.AxEven;
-import edu.iga.adi.sm.core.direction.productions.initialization.AxOdd;
+import edu.iga.adi.sm.core.direction.productions.initialization.Ax;
+import edu.iga.adi.sm.core.direction.productions.initialization.MethodCoefficients;
+import lombok.Builder;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
+@Value
 public class HorizontalLeafInitializer implements LeafInitializer {
 
+    @NotNull
     private Mesh mesh;
 
-    private Problem rhs;
+    @NotNull
+    private Problem problem;
 
-    public HorizontalLeafInitializer(Mesh mesh, Problem rhs) {
-        this.mesh = mesh;
-        this.rhs = rhs;
-    }
+    @NotNull
+    private MethodCoefficients methodCoefficients;
 
     @Override
-    public List<Production> initializeLeaves(List<Vertex> leafLevelVertices, RunInformation runInformation) {
+    public List<Production> initializeLeaves(List<Vertex> leafLevelVertices) {
         List<Production> initializationProductions = new ArrayList<>(leafLevelVertices.size());
 
-        final ProductionSupplier productionSupplier = new ProductionSupplier(runInformation);
-
-        for (int i = 0; i < leafLevelVertices.size(); i++) {
-            Vertex vertex = leafLevelVertices.get(i);
-            initializationProductions.add(productionSupplier.create(vertex.leftChild));
-            initializationProductions.add(productionSupplier.create(vertex.middleChild));
-            initializationProductions.add(productionSupplier.create(vertex.rightChild));
+        for (Vertex vertex : leafLevelVertices) {
+            initializationProductions.add(initialize(vertex.leftChild));
+            initializationProductions.add(initialize(vertex.middleChild));
+            initializationProductions.add(initialize(vertex.rightChild));
         }
 
         return initializationProductions;
     }
 
-    private final class ProductionSupplier {
-
-        private final RunInformation runInformation;
-
-        private ProductionSupplier(RunInformation runInformation) {
-            this.runInformation = runInformation;
-        }
-
-        private Production create(Vertex vertex) {
-            if(runInformation.getRunNumber() % 2 == 0) {
-                return new AxEven(vertex, mesh, rhs);
-            } else {
-                return new AxOdd(vertex, mesh, rhs);
-            }
-        }
-
+    private Ax initialize(Vertex node) {
+        return Ax.builder().node(node).problem(problem).mesh(mesh).coefficients(methodCoefficients).build();
     }
-
 
 }

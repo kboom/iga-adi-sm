@@ -1,6 +1,7 @@
 package edu.iga.adi.sm;
 
 import edu.iga.adi.sm.core.Mesh;
+import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.SolutionGrid;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static edu.iga.adi.sm.core.SolutionGrid.solutionGrid;
+import static edu.iga.adi.sm.problems.OneStepProblem.justOne;
 import static edu.iga.adi.sm.problems.ProblemUtils.createRectangularMesh;
 import static edu.iga.adi.sm.support.Point.solutionPoint;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -71,7 +73,7 @@ public class GeneralProblemTest {
 
     private void canSolveProblemOfSize(BiFunction<Double, Double, Double> fn, int size) {
         final Mesh mesh = createRectangularMesh(size);
-        TwoDimensionalProblemSolver problemSolver = createSolver(mesh);
+        TwoDimensionalProblemSolver problemSolver = createSolver(fn::apply, mesh);
         Solution solution = problemSolver.solveProblem(fn::apply, RunInformation.initialInformation());
         assertThat(solution.getSolutionGrid().withPrecisionTo(REQUIRED_PRECISION)).isEqualTo(
 
@@ -80,14 +82,17 @@ public class GeneralProblemTest {
         );
     }
 
-    private TwoDimensionalProblemSolver createSolver(Mesh mesh) {
-        return new TwoDimensionalProblemSolver(
-                productionExecutorFactory,
-                mesh,
-                DUMMY_SOLUTION_FACTORY,
-                DUMMY_SOLUTION_LOGGER,
-                DUMMY_TIME_LOGGER
-        );
+    private TwoDimensionalProblemSolver createSolver(Problem problem, Mesh mesh) {
+        return TwoDimensionalProblemSolver.builder()
+                .task(Task.builder().timeMethodType(TimeMethodType.EXPLICIT)
+                        .solutionFactory(DUMMY_SOLUTION_FACTORY)
+                        .problem(justOne(problem)).build()
+                )
+                .timeLogger(DUMMY_TIME_LOGGER)
+                .solutionLogger(DUMMY_SOLUTION_LOGGER)
+                .mesh(mesh)
+                .launcherFactory(productionExecutorFactory)
+                .build();
     }
 
     private SolutionGrid generateSolutionGridFor(Mesh mesh, BiFunction<Double, Double, Double> fn) {

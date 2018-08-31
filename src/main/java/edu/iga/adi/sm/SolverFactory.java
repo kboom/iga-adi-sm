@@ -3,7 +3,6 @@ package edu.iga.adi.sm;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
-import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.dimension.TwoDimensionalProblemSolver;
 import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.SolutionLogger;
@@ -18,18 +17,14 @@ public class SolverFactory {
     private final SolutionLogger solutionLogger;
     private final TimeLogger timeLogger;
 
-    public Solver createSolver(
-            SolutionFactory solutionFactory,
-            ProductionExecutorFactory productionExecutorFactory
-    ) {
-
-        TwoDimensionalProblemSolver problemSolver = new TwoDimensionalProblemSolver(
-                productionExecutorFactory,
-                mesh,
-                solutionFactory,
-                solutionLogger,
-                timeLogger
-        );
+    public Solver crateSolverFor(Task task, ProductionExecutorFactory executorFactory) {
+        TwoDimensionalProblemSolver problemSolver = TwoDimensionalProblemSolver.builder()
+                .task(task)
+                .mesh(mesh)
+                .solutionLogger(solutionLogger)
+                .launcherFactory(executorFactory)
+                .timeLogger(timeLogger)
+                .build();
 
         return new SolverFacade(problemSolver) {
             /*

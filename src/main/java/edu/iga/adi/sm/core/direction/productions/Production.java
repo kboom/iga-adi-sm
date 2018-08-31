@@ -14,7 +14,6 @@ public abstract class Production {
         m_mesh = Mesh;
     }
 
-    // returns first vertex from the left
     public abstract Vertex apply(Vertex v);
 
     public void run() {

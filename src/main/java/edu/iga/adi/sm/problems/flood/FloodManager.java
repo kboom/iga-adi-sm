@@ -1,8 +1,6 @@
 package edu.iga.adi.sm.problems.flood;
 
-import edu.iga.adi.sm.Solver;
-import edu.iga.adi.sm.SolverConfiguration;
-import edu.iga.adi.sm.SolverFactory;
+import edu.iga.adi.sm.*;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
@@ -41,7 +39,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 @RequiredArgsConstructor
-public class FloodManager implements ProblemManager {
+public final class FloodManager implements ProblemManager {
 
     private final SolverFactory solverFactory;
     private final ProductionExecutorFactory productionExecutorFactory;
@@ -49,13 +47,11 @@ public class FloodManager implements ProblemManager {
 
     private Solution terrainSolution;
 
-    @Override
-    public SolutionFactory getSolutionFactory() {
+    private SolutionFactory solutionFactory() {
         return (solution, runInformation) -> new FloodSolution(config.getMesh(), solution.getRhs(), terrainSolution.getRhs(), solution.metadata);
     }
 
-    @Override
-    public IterativeProblem getProblem() {
+    private IterativeProblem problem() {
         final Mesh mesh = config.getMesh();
         return new FloodingProblem(config.getDelta(), terrainSolution, (x, y, time) ->
                 (double) (((x > mesh.getElementsX() - 32) && (x < mesh.getElementsX() - 16)
@@ -105,7 +101,6 @@ public class FloodManager implements ProblemManager {
 //                final int rainVolume = 0;
 //
 //                return (x, y) -> super.getInitialProblem().getValue(x, y) + (double) (border.apply(x,y) ? rainVolume : 0);
-
 
 
 //                return (x, y) -> super.getInitialProblem().getValue(x, y) +
@@ -259,6 +254,15 @@ public class FloodManager implements ProblemManager {
     }
 
     @Override
+    public Task solverTask() {
+        return Task.builder()
+                .timeMethodType(TimeMethodType.EXPLICIT)
+                .solutionFactory(solutionFactory())
+                .problem(problem())
+                .build();
+    }
+
+    @Override
     public void setUp() {
         TerrainStorage inputTerrain = createTerrainInput();
         MapTerrainStorage outputTerrain = new MapTerrainStorage();
@@ -278,8 +282,15 @@ public class FloodManager implements ProblemManager {
                 .build()
                 .terraform(config.getMesh());
 
-        Solver solver = solverFactory.createSolver((solution, runInformation) -> solution, productionExecutorFactory);
-        terrainSolution = solver.solveProblem(new TerrainProjectionProblem(outputTerrain), RunInformation.initialInformation());
+        TerrainProjectionProblem problem = new TerrainProjectionProblem(outputTerrain);
+        Task task = Task.builder()
+                .timeMethodType(TimeMethodType.EXPLICIT)
+                .problem(problem)
+                .solutionFactory((solution, runInformation) -> solution)
+                .build();
+
+        Solver solver = solverFactory.crateSolverFor(task, productionExecutorFactory);
+        terrainSolution = solver.solveProblem(problem, RunInformation.initialInformation());
     }
 
     @Override
@@ -295,7 +306,7 @@ public class FloodManager implements ProblemManager {
             return new MapTerrainStorage(FunctionTerrainBuilder.get()
                     .withMesh(mesh)
                     .withFunction((x, y) -> {
-                        if(x < mesh.getElementsX() / 4 & y < mesh.getElementsY() / 4) return 100d;
+                        if (x < mesh.getElementsX() / 4 & y < mesh.getElementsY() / 4) return 100d;
                         else return (double) (x + y);
                     })
                     .build());

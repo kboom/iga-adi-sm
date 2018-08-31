@@ -14,7 +14,7 @@ public class TranslationTerrainProcessorTest {
     @Test
     public void addsOffset() {
         final TranslationTerrainProcessor translationTerrainProcessor = TranslationTerrainProcessor
-                .builder().center(new Point2D(1, 1)).build();
+                .builder().center(new Point2D(1, 1)).scale(1).build();
 
         assertThat(translationTerrainProcessor.apply(Stream.of(
                 new TerrainPoint(0, 0, 0), new TerrainPoint(1, 3, 0)
@@ -26,7 +26,7 @@ public class TranslationTerrainProcessorTest {
     @Test
     public void scales() {
         final TranslationTerrainProcessor translationTerrainProcessor = TranslationTerrainProcessor
-                .builder().scale(2).build();
+                .builder().center(new Point2D<>(0, 0, 0d)).scale(2).build();
 
         assertThat(translationTerrainProcessor.apply(Stream.of(
                 new TerrainPoint(0, 0, 0), new TerrainPoint(5, 3, 0)
@@ -38,19 +38,19 @@ public class TranslationTerrainProcessorTest {
     @Test
     public void scalesFloats() {
         final TranslationTerrainProcessor translationTerrainProcessor = TranslationTerrainProcessor
-                .builder().scale(100).build();
+                .builder().center(new Point2D<>(0, 0, 0d)).scale(100).build();
 
         assertThat(translationTerrainProcessor.apply(Stream.of(
-                new TerrainPoint(0, 0, 0), new TerrainPoint(3.86, 4.81, 5)
+                new TerrainPoint(0, 0, 0), new TerrainPoint(3.86, 4.8, 5)
         )).collect(Collectors.toList())).containsExactlyInAnyOrder(
-                new TerrainPoint(0, 0, 0), new TerrainPoint(386, 481, 5)
+                new TerrainPoint(0, 0, 0), new TerrainPoint(386, 480, 5)
         );
     }
 
     @Test
     public void handlesNegativePointsWithPositiveOffset() {
         final TranslationTerrainProcessor translationTerrainProcessor = TranslationTerrainProcessor
-                .builder().center(new Point2D(7, 3)).build();
+                .builder().center(new Point2D(7, 3)).scale(1).build();
 
         assertThat(translationTerrainProcessor.apply(Stream.of(
                 new TerrainPoint(-7, -1, 10), new TerrainPoint(1, -3, 20)
