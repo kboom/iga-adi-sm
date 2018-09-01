@@ -24,6 +24,13 @@ jar {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -41,24 +48,8 @@ task packageToSource(type: Copy, dependsOn: ["shadowJar"]) {
     rename 'iga-adi-sm-all.jar', 'iga-adi-sm.jar'
 }
 
-task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+check.dependsOn jacocoTestReport
 
-    subprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        xml.enabled true
-        xml.destination "${buildDir}/reports/jacoco/report.xml"
-        html.enabled false
-        csv.enabled false
-    }
-}
-
-codeCoverageReport.dependsOn {
-    subprojects*.test
-}
 
 dependencies {
     compile 'org.jzy3d:jzy3d-api:1.0.1'
