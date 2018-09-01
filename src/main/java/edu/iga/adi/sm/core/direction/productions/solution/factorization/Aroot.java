@@ -1,13 +1,12 @@
 package edu.iga.adi.sm.core.direction.productions.solution.factorization;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 
 public class Aroot extends Production {
 
-    public Aroot(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+    public Aroot(Vertex mesh) {
+        super(mesh);
     }
 
     public Vertex apply(Vertex T) {

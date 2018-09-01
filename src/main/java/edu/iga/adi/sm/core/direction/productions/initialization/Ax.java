@@ -1,6 +1,5 @@
 package edu.iga.adi.sm.core.direction.productions.initialization;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.constants.GaussPoints;
@@ -21,8 +20,8 @@ public class Ax extends Production {
     private final MethodCoefficients coefficients;
 
     @Builder
-    public Ax(MethodCoefficients coefficients, Vertex node, Mesh mesh, Problem problem) {
-        super(node, mesh);
+    public Ax(MethodCoefficients coefficients, Vertex node, Problem problem) {
+        super(node);
         this.coefficients = coefficients;
         this.problem = problem;
     }

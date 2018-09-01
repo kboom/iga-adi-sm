@@ -4,12 +4,16 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 
 public class E2_1_5 extends PFEProduction {
-    public E2_1_5(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+
+    private final Mesh mesh;
+
+    public E2_1_5(Vertex node, Mesh mesh) {
+        super(node);
+        this.mesh = mesh;
     }
 
     public Vertex apply(Vertex T) {
-        T = partial_forward_elimination(T, 1, 5, m_mesh.getDofsY());
+        T = partial_forward_elimination(T, 1, 5, mesh.getDofsY());
         return T;
     }
 }

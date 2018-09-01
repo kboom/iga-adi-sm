@@ -19,13 +19,11 @@ import edu.iga.adi.sm.core.direction.productions.ProductionFactory;
 import edu.iga.adi.sm.core.direction.productions.VerticalProductionFactory;
 import edu.iga.adi.sm.core.direction.productions.initialization.MethodCoefficients;
 import lombok.Builder;
-import lombok.Value;
 
 import static edu.iga.adi.sm.core.direction.productions.initialization.ExplicitMethodCoefficients.EXPLICIT_METHOD_COEFFICIENTS;
 import static edu.iga.adi.sm.core.direction.productions.initialization.ImplicitMethodCoefficients.IMPLICIT_METHOD_COEFFICIENTS;
 
 @Builder
-@Value
 public final class TwoDimensionalProblemSolver implements Solver {
 
     @NotNull
@@ -89,9 +87,8 @@ public final class TwoDimensionalProblemSolver implements Solver {
                 return EXPLICIT_METHOD_COEFFICIENTS;
             case IMPLICIT:
                 return IMPLICIT_METHOD_COEFFICIENTS;
-            default:
-                throw new IllegalStateException("This should not happen");
         }
+        throw new IllegalStateException("This should not happen");
     }
 
 }

@@ -1,6 +1,5 @@
 package edu.iga.adi.sm.core.direction.productions.initialization;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 import lombok.Builder;
@@ -13,8 +12,8 @@ public class Ay extends Production {
     private final int idx;
 
     @Builder
-    public Ay(MethodCoefficients coefficients, Vertex node, double[][] solution, double[] partition, int idx, Mesh mesh) {
-        super(node, mesh);
+    public Ay(MethodCoefficients coefficients, Vertex node, double[][] solution, double[] partition, int idx) {
+        super(node);
         this.solution = solution;
         this.partition = partition;
         this.idx = idx;

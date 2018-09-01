@@ -1,44 +1,40 @@
 package edu.iga.adi.sm.core.direction.productions;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
-
 
 public abstract class Production {
 
-    public Vertex m_vertex;
-    public Mesh m_mesh;
+    public Vertex node;
 
-    public Production(Vertex Vert, Mesh Mesh) {
-        m_vertex = Vert;
-        m_mesh = Mesh;
+    public Production(Vertex node) {
+        this.node = node;
     }
 
-    public abstract Vertex apply(Vertex v);
+    protected abstract Vertex apply(Vertex v);
 
     public void run() {
-        m_vertex = apply(m_vertex);
+        node = apply(node);
     }
 
     protected void swapDofs(int a, int b, int size, int nrhs) {
         for (int i = 1; i <= size; i++) {
-            double temp = m_vertex.m_a[a][i];
-            m_vertex.m_a[a][i] = m_vertex.m_a[b][i];
-            m_vertex.m_a[b][i] = temp;
+            double temp = node.m_a[a][i];
+            node.m_a[a][i] = node.m_a[b][i];
+            node.m_a[b][i] = temp;
         }
         for (int i = 1; i <= size; i++) {
-            double temp = m_vertex.m_a[i][a];
-            m_vertex.m_a[i][a] = m_vertex.m_a[i][b];
-            m_vertex.m_a[i][b] = temp;
+            double temp = node.m_a[i][a];
+            node.m_a[i][a] = node.m_a[i][b];
+            node.m_a[i][b] = temp;
         }
         for (int i = 1; i <= nrhs; i++) {
-            double temp = m_vertex.m_b[a][i];
-            m_vertex.m_b[a][i] = m_vertex.m_b[b][i];
-            m_vertex.m_b[b][i] = temp;
+            double temp = node.m_b[a][i];
+            node.m_b[a][i] = node.m_b[b][i];
+            node.m_b[b][i] = temp;
 
-            temp = m_vertex.m_x[a][i];
-            m_vertex.m_x[a][i] = m_vertex.m_x[b][i];
-            m_vertex.m_x[b][i] = temp;
+            temp = node.m_x[a][i];
+            node.m_x[a][i] = node.m_x[b][i];
+            node.m_x[b][i] = temp;
         }
     }
 }

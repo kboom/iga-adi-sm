@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 
 public class Vertex {
 
+    public static final int ROWS_BOUND_TO_NODE = 7;
+    public static final int COLS_BOUND_TO_NODE = 7;
+
     public Vertex leftChild;
     public Vertex middleChild;
     public Vertex rightChild;
@@ -39,7 +42,7 @@ public class Vertex {
         this.rightChild = rightChild;
     }
 
-    public Vertex getParent() {
+    Vertex getParent() {
         return parent;
     }
 
@@ -56,7 +59,7 @@ public class Vertex {
 
         private Vertex vertex = new Vertex();
 
-        public VertexBuilder withBeggining(double beggining) {
+        public VertexBuilder withBeginning(double beggining) {
             vertex.beginning = beggining;
             return this;
         }
@@ -72,7 +75,7 @@ public class Vertex {
         }
 
         public Vertex build() {
-            vertex.m_a = new double[7][7];
+            vertex.m_a = new double[ROWS_BOUND_TO_NODE][COLS_BOUND_TO_NODE];
             vertex.m_b = new double[7][vertex.mesh.getElementsY() + vertex.mesh.getSplineOrder() + 1];
             vertex.m_x = new double[7][vertex.mesh.getElementsY() + vertex.mesh.getSplineOrder() + 1];
             return vertex;

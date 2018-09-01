@@ -5,8 +5,8 @@ import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 
 public class M2_3 extends Production {
-    public M2_3(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+    public M2_3(Vertex node) {
+        super(node);
     }
 
     public Vertex apply(Vertex T) {

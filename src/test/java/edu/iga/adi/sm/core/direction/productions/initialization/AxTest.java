@@ -1,16 +1,14 @@
-package edu.iga.adi.sm.productions.initialization;
+package edu.iga.adi.sm.core.direction.productions.initialization;
 
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
-import edu.iga.adi.sm.core.direction.productions.initialization.Ax;
-import edu.iga.adi.sm.core.direction.productions.initialization.ExplicitMethodCoefficients;
 import org.junit.Test;
 
 import static edu.iga.adi.sm.core.Mesh.aMesh;
 import static java.util.Arrays.deepToString;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ATest {
+public class AxTest {
 
     private static final int GRID_SIZE = 12;
 
@@ -29,7 +27,6 @@ public class ATest {
         Ax.builder()
                 .node(leafNode)
                 .problem((x, y) -> x + y)
-                .mesh(DUMMY_MESH)
                 .coefficients(ExplicitMethodCoefficients.EXPLICIT_METHOD_COEFFICIENTS)
                 .build()
                 .apply(leafNode);

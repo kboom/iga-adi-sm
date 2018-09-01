@@ -1,12 +1,12 @@
 package edu.iga.adi.sm.core.direction.productions.solution.factorization;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 
 public class M2_2 extends Production {
-    public M2_2(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+    
+    public M2_2(Vertex node) {
+        super(node);
     }
 
     public Vertex apply(Vertex T) {

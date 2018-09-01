@@ -1,6 +1,5 @@
 package edu.iga.adi.sm.core.direction.initialization;
 
-import com.sun.istack.internal.NotNull;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.direction.Vertex;
@@ -8,22 +7,21 @@ import edu.iga.adi.sm.core.direction.productions.Production;
 import edu.iga.adi.sm.core.direction.productions.initialization.Ax;
 import edu.iga.adi.sm.core.direction.productions.initialization.MethodCoefficients;
 import lombok.Builder;
-import lombok.Value;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Value
 public class HorizontalLeafInitializer implements LeafInitializer {
 
-    @NotNull
+    @NonNull
     private Mesh mesh;
 
-    @NotNull
+    @NonNull
     private Problem problem;
 
-    @NotNull
+    @NonNull
     private MethodCoefficients methodCoefficients;
 
     @Override
@@ -40,7 +38,7 @@ public class HorizontalLeafInitializer implements LeafInitializer {
     }
 
     private Ax initialize(Vertex node) {
-        return Ax.builder().node(node).problem(problem).mesh(mesh).coefficients(methodCoefficients).build();
+        return Ax.builder().node(node).problem(problem).coefficients(methodCoefficients).build();
     }
 
 }

@@ -1,21 +1,18 @@
 package edu.iga.adi.sm.core.direction.initialization;
 
-import com.sun.istack.internal.NotNull;
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Solution;
-import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 import edu.iga.adi.sm.core.direction.productions.initialization.Ay;
 import edu.iga.adi.sm.core.direction.productions.initialization.MethodCoefficients;
 import lombok.Builder;
-import lombok.Value;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Value
 public class VerticalLeafInitializer implements LeafInitializer {
 
     public static final double[] FIRST_PARTITION = {1, 1. / 2, 1. / 3};
@@ -30,14 +27,14 @@ public class VerticalLeafInitializer implements LeafInitializer {
     public static final double[] SECOND_TO_LAST_PARTITION = {1. / 3, 1. / 3, 1. / 2};
     public static final double[] LAST_PARTITION = {1. / 3, 1. / 2, 1};
 
-    @NotNull
-    private Solution horizontalSolution;
+    @NonNull
+    private final Solution horizontalSolution;
 
-    @NotNull
-    private Mesh mesh;
+    @NonNull
+    private final Mesh mesh;
 
-    @NotNull
-    private MethodCoefficients methodCoefficients;
+    @NonNull
+    private final MethodCoefficients methodCoefficients;
 
     @Override
     public List<Production> initializeLeaves(List<Vertex> leafLevelVertices) {
@@ -66,7 +63,7 @@ public class VerticalLeafInitializer implements LeafInitializer {
     }
 
     private Ay.AyBuilder initializeFrom(double[][] rhs) {
-        return Ay.builder().solution(rhs).mesh(mesh).coefficients(methodCoefficients);
+        return Ay.builder().solution(rhs).coefficients(methodCoefficients);
     }
 
 }

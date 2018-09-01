@@ -158,8 +158,8 @@ public final class DirectionSolver implements Solver {
     private Vertex createRoot() {
         Vertex rootVertex = aVertex()
                 .withMesh(mesh)
-                .withBeggining(0)
-                .withEnding(mesh.getResolutionX())
+                .withBeginning(0)
+                .withEnding(mesh.getElementsX())
                 .build();
 
 
@@ -296,11 +296,11 @@ public final class DirectionSolver implements Solver {
                 .createLauncherFor(leafInitializationProductions)
                 .launchProductions();
 
-        return leafInitializationProductions.stream().map(production -> production.m_vertex).collect(Collectors.toList());
+        return leafInitializationProductions.stream().map(production -> production.node).collect(Collectors.toList());
     }
 
     private int getIntermediateLevelsCount() {
-        return log2(2 * mesh.getElementsX() / 3) - ROOT_LEVEL_HEIGHT - LEAF_LEVEL_HEIGHT;
+        return log2(2 * mesh.getElementsX() / 3.0) - ROOT_LEVEL_HEIGHT - LEAF_LEVEL_HEIGHT;
     }
 
     private List<Vertex> collectParents(List<Vertex> verticesAtLevel) {

@@ -4,33 +4,37 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 
-public class P1 extends Production {
+import static edu.iga.adi.sm.core.direction.Vertex.aVertex;
 
-    public P1(Vertex node, Mesh mesh) {
-        super(node, mesh);
+abstract class P1 extends Production {
+
+    P1(Vertex node) {
+        super(node);
     }
 
-    public Vertex apply(Vertex node) {
+    protected abstract int getElementCount(Mesh mesh);
+
+    public final Vertex apply(Vertex node) {
         setLeftChild(node);
         setRightChild(node);
         return node;
     }
 
     private void setLeftChild(Vertex node) {
-        Vertex leftChild = Vertex.aVertex()
+        Vertex leftChild = aVertex()
                 .withMesh(node.mesh)
-                .withBeggining(0)
-                .withEnding(node.mesh.getElementsX() / 2)
+                .withBeginning(0)
+                .withEnding(getElementCount(node.mesh) / 2.0)
                 .build();
         node.setLeftChild(leftChild);
         leftChild.setParent(node);
     }
 
     private void setRightChild(Vertex node) {
-        Vertex rightChild = Vertex.aVertex()
+        Vertex rightChild = aVertex()
                 .withMesh(node.mesh)
-                .withBeggining(node.mesh.getElementsX() / 2)
-                .withEnding(node.mesh.getElementsX())
+                .withBeginning(getElementCount(node.mesh) / 2.0)
+                .withEnding(getElementCount(node.mesh))
                 .build();
         node.setRightChild(rightChild);
         rightChild.setParent(node);

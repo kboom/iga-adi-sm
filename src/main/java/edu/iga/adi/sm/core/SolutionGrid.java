@@ -17,11 +17,7 @@ public class SolutionGrid {
             return -1;
         } else if (o1.getY() > o2.getY()) {
             return 1;
-        } else if (o1.getX() < o2.getX()) {
-            return -1;
-        } else if (o1.getX() > o2.getX()) {
-            return 1;
-        } else return 0;
+        } else return Double.compare(o1.getX(), o2.getX());
     };
     private final Set<Point> points = new HashSet<>();
 

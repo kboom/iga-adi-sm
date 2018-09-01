@@ -1,20 +1,20 @@
-package edu.iga.adi.sm.productions.construction;
+package edu.iga.adi.sm.core.direction.productions.construction;
 
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
-import edu.iga.adi.sm.core.direction.productions.construction.P1;
 import org.junit.Test;
 
 import static edu.iga.adi.sm.core.Mesh.aMesh;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class P1Test {
+public class P1yTest {
 
-    private static final int GRID_SIZE = 12;
+    private static final int GRID_SIZE_X = 12;
+    private static final int GRID_SIZE_Y = 24;
 
     private Mesh DUMMY_MESH = aMesh()
-            .withElementsX(GRID_SIZE)
-            .withElementsY(GRID_SIZE)
+            .withElementsX(GRID_SIZE_X)
+            .withElementsY(GRID_SIZE_Y)
             .withResolutionX(12d)
             .withResolutionY(12d)
             .withOrder(2).build();
@@ -23,7 +23,7 @@ public class P1Test {
     @Test
     public void attachesLeftChild() {
         Vertex root = createRoot();
-        P1 p1 = new P1(root, DUMMY_MESH);
+        P1y p1 = new P1y(root);
         p1.apply(root);
         assertThat(root.leftChild).isNotNull();
     }
@@ -31,41 +31,41 @@ public class P1Test {
     @Test
     public void leftBoundaryOfLeftChildIsZero() {
         Vertex root = createRoot();
-        P1 p1 = new P1(root, DUMMY_MESH);
+        P1y p1 = new P1y(root);
         p1.apply(root);
         assertThat(root.leftChild.beginning).isZero();
     }
 
     @Test
-    public void rightBoundaryOfLeftChildIsHalfTheSizeOfGrid() {
+    public void rightBoundaryOfLeftChildIsHalfOfGridLengthAlongY() {
         Vertex root = createRoot();
-        P1 p1 = new P1(root, DUMMY_MESH);
+        P1y p1 = new P1y(root);
         p1.apply(root);
-        assertThat(root.leftChild.ending).isEqualTo(GRID_SIZE / 2);
+        assertThat(root.leftChild.ending).isEqualTo(GRID_SIZE_Y / 2.0);
     }
 
     @Test
     public void attachesRightChild() {
         Vertex root = createRoot();
-        P1 p1 = new P1(root, DUMMY_MESH);
+        P1y p1 = new P1y(root);
         p1.apply(root);
         assertThat(root.rightChild).isNotNull();
     }
 
     @Test
-    public void leftBoundaryOfRightChildIsHalfTheSizeOfGrid() {
+    public void leftBoundaryOfRightChildIsHalfTheGridLengthAlongY() {
         Vertex root = createRoot();
-        P1 p1 = new P1(root, DUMMY_MESH);
+        P1y p1 = new P1y(root);
         p1.apply(root);
-        assertThat(root.rightChild.beginning).isEqualTo(GRID_SIZE / 2);
+        assertThat(root.rightChild.beginning).isEqualTo(GRID_SIZE_Y / 2.0);
     }
 
     @Test
-    public void rightBoundaryOfLeftChildIsTheGridSize() {
+    public void rightBoundaryOfLeftChildIsTheGridLengthAlongY() {
         Vertex root = createRoot();
-        P1 p1 = new P1(root, DUMMY_MESH);
+        P1y p1 = new P1y(root);
         p1.apply(root);
-        assertThat(root.rightChild.ending).isEqualTo(GRID_SIZE);
+        assertThat(root.rightChild.ending).isEqualTo(GRID_SIZE_Y);
     }
 
     private Vertex createRoot() {

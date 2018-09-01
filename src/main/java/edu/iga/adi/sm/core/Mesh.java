@@ -9,6 +9,8 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class Mesh implements Serializable {
 
+    private static final long serialVersionUID = 4620414724589559355L;
+
     private double resolutionX;
 
     private double resolutionY;
@@ -42,10 +44,6 @@ public class Mesh implements Serializable {
         return resolutionY / elementsY;
     }
 
-    public double getResolutionY() {
-        return resolutionY;
-    }
-
     public int getElementsX() {
         return elementsX;
     }
@@ -64,14 +62,6 @@ public class Mesh implements Serializable {
 
     public int getDofsY() {
         return dofsY;
-    }
-
-    public int getCenterX() {
-        return elementsX / 2;
-    }
-
-    public int getCenterY() {
-        return elementsY / 2;
     }
 
     public static class MeshBuilder {

@@ -4,12 +4,16 @@ import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 
 public class BS_2_6 extends PFEProduction {
-    public BS_2_6(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+
+    private final Mesh mesh;
+
+    public BS_2_6(Vertex node, Mesh mesh) {
+        super(node);
+        this.mesh = mesh;
     }
 
     public Vertex apply(Vertex T) {
-        T = partial_backward_substitution(T, 2, 6, m_mesh.getDofsY());
+        T = partial_backward_substitution(T, 2, 6, mesh.getDofsY());
         swapDofs(1, 3, 6, T.mesh.getDofsY());
         swapDofs(2, 4, 6, T.mesh.getDofsY());
         for (int i = 1; i <= 4; i++) {

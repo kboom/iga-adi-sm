@@ -45,7 +45,7 @@ public class ProductionExecutor {
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
             production.run();
             return null;
         }

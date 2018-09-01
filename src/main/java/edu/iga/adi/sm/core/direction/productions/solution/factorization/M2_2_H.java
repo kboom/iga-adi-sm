@@ -1,14 +1,12 @@
 package edu.iga.adi.sm.core.direction.productions.solution.factorization;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 
-// apply M2_3, then M2_2 but then this one (M2_2_H) up to root (root -> Aroot)
 public class M2_2_H extends Production {
 
-    public M2_2_H(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+    public M2_2_H(Vertex node) {
+        super(node);
     }
 
     public Vertex apply(Vertex T) {

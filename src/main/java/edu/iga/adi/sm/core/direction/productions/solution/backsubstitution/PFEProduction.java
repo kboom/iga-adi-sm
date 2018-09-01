@@ -1,13 +1,12 @@
 package edu.iga.adi.sm.core.direction.productions.solution.backsubstitution;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
 import edu.iga.adi.sm.core.direction.productions.Production;
 
-public class PFEProduction extends Production {
+public abstract class PFEProduction extends Production {
 
-    PFEProduction(Vertex Vert, Mesh Mesh) {
-        super(Vert, Mesh);
+    PFEProduction(Vertex node) {
+        super(node);
     }
 
     Vertex partial_forward_elimination(Vertex T, int elim, int size, int nrhs) {

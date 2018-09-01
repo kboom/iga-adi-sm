@@ -2,7 +2,7 @@ package edu.iga.adi.sm.core.direction.productions;
 
 import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.direction.Vertex;
-import edu.iga.adi.sm.core.direction.productions.construction.P1;
+import edu.iga.adi.sm.core.direction.productions.construction.P1x;
 import edu.iga.adi.sm.core.direction.productions.construction.P2;
 import edu.iga.adi.sm.core.direction.productions.construction.P3;
 import edu.iga.adi.sm.core.direction.productions.solution.backsubstitution.*;
@@ -21,22 +21,22 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production createRootProduction(Vertex vertex) {
-        return new P1(vertex, mesh);
+        return new P1x(vertex);
     }
 
     @Override
     public Production createIntermediateProduction(Vertex vertex) {
-        return new P2(vertex, mesh);
+        return new P2(vertex);
     }
 
     @Override
     public Production createLeafProductions(Vertex vertex) {
-        return new P3(vertex, mesh);
+        return new P3(vertex);
     }
 
     @Override
     public Production mergeLeavesProduction(Vertex vertex) {
-        return new M2_3(vertex, mesh);
+        return new M2_3(vertex);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production mergeIntermediateProduction(Vertex vertex) {
-        return new M2_2(vertex, mesh);
+        return new M2_2(vertex);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production rootSolverProduction(Vertex vertex) {
-        return new Aroot(vertex, mesh);
+        return new Aroot(vertex);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class HorizontalProductionFactory implements ProductionFactory {
 
     @Override
     public Production mergeUpProduction(Vertex vertex) {
-        return new M2_2_H(vertex, mesh);
+        return new M2_2_H(vertex);
     }
 
 }
