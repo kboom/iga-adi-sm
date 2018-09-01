@@ -89,6 +89,19 @@ public class SolverConfiguration {
 
     /*
 
+        SURFACE-INITIAL-STATE-ENABLED PROBLEMS
+
+     */
+
+    @Parameter(names = {"--surface"})
+    @Builder.Default
+    private String initialSurface = "cone";
+
+    @Parameter(names = {"--surface-formula"})
+    private String initialSurfaceFormula;
+
+    /*
+
         TERRAIN CONFIGURATION PARAMETERS
 
      */

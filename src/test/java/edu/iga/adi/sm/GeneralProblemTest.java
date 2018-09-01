@@ -33,37 +33,57 @@ public class GeneralProblemTest {
     private static final int BIG_PROBLEM_SIZE = 24;
 
     @Test
-    public void solvesConstProblem() throws Exception {
+    public void solvesConstProblem() {
         canSolveProblem((x, y) -> 1d);
     }
 
     @Test
-    public void solvesXProblem() throws Exception {
+    public void solvesXProblem() {
         canSolveProblem((x, y) -> x);
     }
 
     @Test
-    public void solvesYProblem() throws Exception {
+    public void solvesYProblem() {
         canSolveProblem((x, y) -> y);
     }
 
     @Test
-    public void solvesXPlusYProblem() throws Exception {
+    public void solvesXPlusYProblem() {
         canSolveProblem((x, y) -> x + y);
     }
 
     @Test
-    public void solvesMinusXProblem() throws Exception {
+    public void solvesXMinusYProblem() {
+        canSolveProblem((x, y) -> x - y);
+    }
+
+    @Test
+    public void solvesYMinusXProblem() {
+        canSolveProblem((x, y) -> y - x);
+    }
+
+    @Test
+    public void solvesMinusXProblem() {
         canSolveProblem((x, y) -> -x);
     }
 
     @Test
-    public void solvesMinusYProblem() throws Exception {
+    public void solvesMinusYProblem() {
         canSolveProblem((x, y) -> -y);
     }
 
     @Test
-    public void solvesBigProblem() throws Exception {
+    public void solvesSumOfSquaresProblem() {
+        canSolveProblem((x, y) -> Math.pow(x, 2) + Math.pow(y, 2));
+    }
+
+    @Test
+    public void solvesDifferenceOfSquaresProblem() {
+        canSolveProblem((x, y) -> Math.pow(x, 2) - Math.pow(y, 2));
+    }
+
+    @Test
+    public void solvesBigProblem() {
         canSolveProblemOfSize((x, y) -> Math.pow(x, 2) + Math.pow(y, 2), BIG_PROBLEM_SIZE);
     }
 

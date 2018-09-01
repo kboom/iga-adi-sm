@@ -8,7 +8,7 @@ public abstract class Spline {
 
     private int upperDomainBound;
 
-    public Spline(int lowerDomainBound, int upperDomainBound) {
+    Spline(int lowerDomainBound, int upperDomainBound) {
         this.lowerDomainBound = lowerDomainBound;
         this.upperDomainBound = upperDomainBound;
     }
@@ -23,7 +23,7 @@ public abstract class Spline {
 
     public abstract double getSecondDerivativeValueAt(double x);
 
-    protected boolean belongsToDomain(double x) {
+    boolean belongsToDomain(double x) {
         return x >= lowerDomainBound && x <= upperDomainBound;
     }
 

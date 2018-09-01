@@ -1,13 +1,17 @@
 package edu.iga.adi.sm.problems.heat;
 
+import com.google.common.collect.ImmutableMap;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.Task;
 import edu.iga.adi.sm.TimeMethodType;
+import edu.iga.adi.sm.core.Mesh;
+import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
-import edu.iga.adi.sm.core.direction.RunInformation;
+import edu.iga.adi.sm.problems.FunctionParsingProblem;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
+import edu.iga.adi.sm.problems.SurfaceProjectionProblems;
 import edu.iga.adi.sm.results.CsvStringConverter;
 import edu.iga.adi.sm.results.ImageStorage;
 import edu.iga.adi.sm.results.SnapshotSaver;
@@ -21,22 +25,36 @@ import edu.iga.adi.sm.results.visualization.images.HeatImageFactory;
 import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.results.visualization.viewers.TimeLapseViewer;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Map;
+import java.util.function.Function;
 
 @AllArgsConstructor
 public final class HeatManager implements ProblemManager {
 
+    private static final Map<String, Function<Mesh, Problem>> initialSurfaceProblems = ImmutableMap.<String, Function<Mesh, Problem>>builder()
+            .put("cone", SurfaceProjectionProblems::coneInTheMiddle)
+            .build();
+
     private final SolverConfiguration config;
 
     private IterativeProblem problem() {
-        return new HeatTransferProblem(
-                config.getDelta(),
-                config.getMesh(),
-                config.getProblemSize(),
-                config.getSteps()
-        );
+        return HeatTransferProblem.builder()
+                .delta(config.getDelta())
+                .initialSurface(initialSurfaceFrom(config))
+                .steps(config.getSteps())
+                .build();
+    }
+
+    private Problem initialSurfaceFrom(SolverConfiguration config) {
+        if(StringUtils.isNotEmpty(config.getInitialSurface())) {
+            return initialSurfaceProblems.get(config.getInitialSurface()).apply(config.getMesh());
+        } else {
+            return new FunctionParsingProblem(config.getInitialSurfaceFormula());
+        }
     }
 
     private SolutionFactory solutionFactory() {

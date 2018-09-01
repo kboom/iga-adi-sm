@@ -1,48 +1,36 @@
 package edu.iga.adi.sm.problems.heat;
 
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.problems.IterativeProblem;
+import lombok.Builder;
+import lombok.NonNull;
 
 import java.util.Optional;
 
 public final class HeatTransferProblem implements IterativeProblem {
 
-    private final Mesh mesh;
-    private final int problemSize;
+    @NonNull
     private final double delta;
+
+    @NonNull
     private final int steps;
+
+    @NonNull
+    private Problem initialSurface;
 
     private int currentStep = 0;
 
-    HeatTransferProblem(double delta, Mesh mesh, int problemSize, int steps) {
-        this.mesh = mesh;
+    @Builder
+    HeatTransferProblem(Problem initialSurface, double delta, int steps) {
+        this.initialSurface = initialSurface;
         this.delta = delta;
-        this.problemSize = problemSize;
         this.steps = steps;
     }
 
     @Override
     public Problem getInitialProblem() {
-        return (x, y) -> {
-            int heat = 1;
-            int radius = Double.valueOf(Math.pow(mesh.getElementsX() / 4, 2)).intValue();
-
-            int aX = mesh.getElementsX() - mesh.getElementsX() / 2;
-            int aY = mesh.getElementsY() - mesh.getElementsY() / 2;
-
-            double distA = Math.pow(x - aX, 2) + Math.pow(y - aY, 2);
-            if(distA < radius) return heat;
-
-//            int bX = diameterB;
-//            int bY = diameterB;
-//
-//            double distB = Math.pow(x - bX, 2) + Math.pow(y - bY, 2);
-//            if(distB < radius) return heat;
-
-            return 0;
-        };
+        return initialSurface;
     }
 
     @Override
