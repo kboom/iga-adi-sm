@@ -1,7 +1,9 @@
 package edu.iga.adi.sm.problems;
 
+import edu.iga.adi.sm.AcceptanceTest;
 import edu.iga.adi.sm.SolverConfiguration;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

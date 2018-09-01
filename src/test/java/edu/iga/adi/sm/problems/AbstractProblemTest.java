@@ -12,6 +12,7 @@ import edu.iga.adi.sm.results.series.SolutionSeries;
 import edu.iga.adi.sm.results.storage.CompressResultsStorageProcessor;
 import edu.iga.adi.sm.results.storage.FileSolutionStorage;
 import edu.iga.adi.sm.results.storage.InMemorySolutionStorage;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Category(AcceptanceTest.class)
 class AbstractProblemTest {
 
     ProblemManagerTestResults launchSolver(SolverConfiguration solverConfiguration) {

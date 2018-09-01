@@ -1,9 +1,11 @@
 package edu.iga.adi.sm.problems;
 
+import edu.iga.adi.sm.AcceptanceTest;
 import edu.iga.adi.sm.SolverConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
@@ -11,7 +13,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-
 
 public class FloodProblemTest extends AbstractProblemTest {
 
