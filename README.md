@@ -1,4 +1,18 @@
 # Isogeometric Alternating Directions Implicit Shared Memory Solver (IGA-ADI-SM)
+![Travis](https://travis-ci.org/kboom/iga-adi-sm.svg?branch=master)
+![Coverage](https://codecov.io/gh/kboom/iga-adi-sm/branch/master/graph/badge.svg)
+
+## TL;DR;
+
+This solver describes a novel computational method which allows to perform certain IGA-FEM computations 1000x faster, with absolute stability guarantee with configurable error margin.
+ 
+
+## Sunburst coverage
+
+As percentage-based code coverage alone is a bit misleading for solvers such as this,
+the great majority of the tests relates to the core of the solver rather than to secondary functionality like results visualisation etc.
+
+![](https://codecov.io/gh/kboom/iga-adi-sm/commit/fb59eb31a2f0808c4caf9e19a6fbdeca3fc6ca60/graphs/sunburst.svg)
 
 This numerical solver can be used for solving a certain subset of problems
 in the field of Isogeometric Analysis. Utilizes an implicit Euler scheme which removes the dependency of time step size and mesh size. In other words the time step can be arbitrarily long (it will never cause instability). This in turn allows to perform efficient analysis of behavior in dense meshes.
