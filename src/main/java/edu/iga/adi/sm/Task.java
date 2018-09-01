@@ -1,22 +1,22 @@
 package edu.iga.adi.sm;
 
-import com.sun.istack.internal.NotNull;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 @Builder
 @Data
 public class Task {
 
-    @NotNull
+    @NonNull
     TimeMethodType timeMethodType;
 
-    @NotNull
+    @NonNull
     SolutionFactory solutionFactory;
 
-    @NotNull
+    @NonNull
     IterativeProblem problem;
 
 }

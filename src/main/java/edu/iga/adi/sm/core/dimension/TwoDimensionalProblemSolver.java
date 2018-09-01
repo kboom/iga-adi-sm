@@ -1,6 +1,5 @@
 package edu.iga.adi.sm.core.dimension;
 
-import com.sun.istack.internal.NotNull;
 import edu.iga.adi.sm.Solver;
 import edu.iga.adi.sm.Task;
 import edu.iga.adi.sm.TimeLogger;
@@ -19,6 +18,7 @@ import edu.iga.adi.sm.core.direction.productions.ProductionFactory;
 import edu.iga.adi.sm.core.direction.productions.VerticalProductionFactory;
 import edu.iga.adi.sm.core.direction.productions.initialization.MethodCoefficients;
 import lombok.Builder;
+import lombok.NonNull;
 
 import static edu.iga.adi.sm.core.direction.productions.initialization.ExplicitMethodCoefficients.EXPLICIT_METHOD_COEFFICIENTS;
 import static edu.iga.adi.sm.core.direction.productions.initialization.ImplicitMethodCoefficients.IMPLICIT_METHOD_COEFFICIENTS;
@@ -26,19 +26,19 @@ import static edu.iga.adi.sm.core.direction.productions.initialization.ImplicitM
 @Builder
 public final class TwoDimensionalProblemSolver implements Solver {
 
-    @NotNull
+    @NonNull
     private Task task;
 
-    @NotNull
+    @NonNull
     private Mesh mesh;
 
-    @NotNull
+    @NonNull
     private ProductionExecutorFactory launcherFactory;
 
-    @NotNull
+    @NonNull
     private SolutionLogger solutionLogger;
 
-    @NotNull
+    @NonNull
     private TimeLogger timeLogger;
 
     @Override
