@@ -79,7 +79,7 @@ A ball of heat is put into the center of the plane gradually heating the surface
 The grid size is 24x24 though it can be any value.
 
 Additional configuration properties are:
-- **--delta** / **-d** => time step (**0.001** by default)
+- **--delta** / **-d** => time step (**0.1** by default - beware of bigger error)
 - **--steps** / **-o** => number of time steps to run simulation for (**100** by default)
 
 ![Heat transfer simulation](docs/heat.gif)
