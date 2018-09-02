@@ -43,7 +43,7 @@ java -jar iga-adi-sm-<version>.jar <arguments>
 
 Where the java archive can be downloaded directly from releases page. For example, the heat transfer simulations with 100 steps with a plot would be run after issuing the following command:
 ```bash
-java -jar build/libs/iga-adi-sm-all.jar --problem heat --steps 100 --plot
+java -jar iga-adi-sm-1.0.0.jar --problem heat --steps 100 --plot
 ```
 Make sure *JRE* (1.8+) is installed on the system and available on the *PATH*.
 The program can be run by providing configuration properties all of which have default values. 
