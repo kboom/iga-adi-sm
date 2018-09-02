@@ -20,8 +20,6 @@ This in turn allows to perform efficient analysis of behavior in dense meshes.
             - [Projection problem](#projection-problem)
             - [Heat transfer problem](#heat-transfer-problem)
             - [Terrain mapping](#terrain-mapping)
-        - [Running from sources](#running-from-sources)
-        - [Running from binaries](#running-from-binaries)
         - [Solving different problem](#solving-different-problem)
         - [Want to contribute?](#want-to-contribute)
         - [Terrain maps](#terrain-maps)
@@ -37,6 +35,17 @@ the great majority of the tests relate to the core of the solver rather than to 
 
 ## Usage
 
+To run the solver just issue
+
+```bash
+java -jar iga-adi-sm-<version>.jar <arguments>
+```
+
+Where the java archive can be downloaded directly from releases page. For example, the heat transfer simulations with 100 steps with a plot would be run after issuing the following command:
+```bash
+java -jar build/libs/iga-adi-sm-all.jar --problem heat --steps 100 --plot
+```
+Make sure *JRE* (1.8+) is installed on the system and available on the *PATH*.
 The program can be run by providing configuration properties all of which have default values. 
 
 ### Common configuration properties
@@ -100,18 +109,6 @@ Additional configuration properties are:
 
 ![Terrain2D](docs/terrain2d.png)
 ![Terrain3D](docs/terrain3d.png)
-
-### Running from sources
-
-The solver can easily be run from sources by launching the *Main* class with proper arguments.
-Self-contained *Gradle* distribution contains all necessary dependencies and building steps.
-
-### Running from binaries
-
-Binaries can be downloaded from [here](https://github.com/kboom/iga-adi-sm/tree/master/dist).
-Extract and run proper executable file from the *bin* directory.
-Make sure *JRE* (1.8+) is installed on the system and available on the *PATH*.
-
 
 ### Solving different problem
 
