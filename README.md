@@ -9,12 +9,30 @@ in the field of Isogeometric Analysis. Utilizes an implicit Euler scheme which r
 In other words the time step can be arbitrarily long (it will never cause instability).
 This in turn allows to perform efficient analysis of behavior in dense meshes.
 
-## Sunburst coverage
+## Table of contents
+- [Isogeometric Alternating Directions Implicit Shared Memory Solver (IGA-ADI-SM)](#isogeometric-alternating-directions-implicit-shared-memory-solver-iga-adi-sm)
+    - [TL;DR;](#tldr)
+    - [Table of contents](#table-of-contents)
+    - [Code coverage](#code-coverage)
+    - [Usage](#usage)
+        - [Common configuration properties](#common-configuration-properties)
+        - [Example problems](#example-problems)
+            - [Projection problem](#projection-problem)
+            - [Heat transfer problem](#heat-transfer-problem)
+            - [Terrain mapping](#terrain-mapping)
+        - [Running from sources](#running-from-sources)
+        - [Running from binaries](#running-from-binaries)
+        - [Solving different problem](#solving-different-problem)
+        - [Want to contribute?](#want-to-contribute)
+        - [Terrain maps](#terrain-maps)
+        - [Contact & More information](#contact--more-information)
+
+## Code coverage
 
 As percentage-based code coverage alone is a bit misleading for solvers such as this,
-the great majority of the tests relates to the core of the solver rather than to secondary functionality like results visualisation etc.
+the great majority of the tests relate to the core of the solver rather than to secondary functionality like results visualisation etc. For detailed results see [codecov dashboard](https://codecov.io/gh/kboom/iga-adi-sm/branch/master/).
 
-![](https://codecov.io/gh/kboom/iga-adi-sm/commit/fb59eb31a2f0808c4caf9e19a6fbdeca3fc6ca60/graphs/sunburst.svg)
+![sunburst coverage](https://codecov.io/gh/kboom/iga-adi-sm/commit/fb59eb31a2f0808c4caf9e19a6fbdeca3fc6ca60/graphs/sunburst.svg)
 
 
 ## Usage
@@ -37,8 +55,8 @@ there is a subset common to every problem. Those are:
 This software comes with several exemplary problems pre-implemented.
 Those are:
 - Projection problem (**projection**)
-- Terrain mapping incl. SVD approximation (**terrain-svd**)
 - Heat Transfer simulation (**heat**)
+- Terrain mapping incl. SVD approximation (**terrain-svd**)
 - Flood simulation (**flood**)
 
 The type of problem is selected by a configuration parameter **--problem**
@@ -135,34 +153,19 @@ Feel free to contribute to this project. Merge requests will be reviewed and acc
 
 ### Terrain maps
 
-[Geospatial selection](http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp)
-
-https://catalog.data.gov/dataset?tags=terrain
-https://coast.noaa.gov/dataviewer/#/lidar/search/where:ID=1124
-https://catalog.data.gov/dataset/new-orleans-louisiana-coastal-digital-elevation-model
-[1 meter elevation map resources](https://thor-f5.er.usgs.gov/ngtoc/metadata/waf/elevation/1_meter/img/)
-[Google elevation API](https://developers.google.com/maps/documentation/elevation/start)
-[CSV elevation maps](https://catalog.data.gov/dataset?tags=elevation&res_format=CSV)
-
-
-[San Francisco 5ft](https://data.sfgov.org/api/views/mi5i-wqjv/rows.csv?accessType=DOWNLOAD)
-
-
-[Free GIS resources](https://freegisdata.rtwilson.com/)
-[Global elevation](http://srtm.csi.cgiar.org/)
-
-[Maps](http://www.naturalearthdata.com/downloads/)
-[Small scale maps](https://nationalmap.gov/small_scale/atlasftp.html)
-
-
-[Direct links to elevation maps](https://nationalmap.gov/small_scale/atlasftp.html#elevhii)
-
-
-
-[TIF files](http://www.cgiar-csi.org/data/srtm-90m-digital-elevation-database-v4-1#download)
-[QGis](https://qgis.org/pl/site/)
-
-[Poland NMT](http://www.codgik.gov.pl/index.php/darmowe-dane/nmt-100.html)
+* [Geospatial selection](http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp)
+* [1 meter elevation map resources](https://thor-f5.er.usgs.gov/ngtoc/metadata/waf/elevation/1_meter/img/)
+* [Google elevation API](https://developers.google.com/maps/documentation/elevation/start)
+* [CSV elevation maps](https://catalog.data.gov/dataset?tags=elevation&res_format=CSV)
+* [San Francisco 5ft](https://data.sfgov.org/api/views/mi5i-wqjv/rows.csv?accessType=DOWNLOAD)
+* [Free GIS resources](https://freegisdata.rtwilson.com/)
+* [Global elevation](http://srtm.csi.cgiar.org/)
+* [Maps](http://www.naturalearthdata.com/downloads/)
+* [Small scale maps](https://nationalmap.gov/small_scale/atlasftp.html)
+* [Direct links to elevation maps](https://nationalmap.gov/small_scale/atlasftp.html#elevhii)
+* [TIF files](http://www.cgiar-csi.org/data/srtm-90m-digital-elevation-database-v4-1#download)
+* [QGis](https://qgis.org/pl/site/)
+* [Poland NMT](http://www.codgik.gov.pl/index.php/darmowe-dane/nmt-100.html)
 
 
 ### Contact & More information
