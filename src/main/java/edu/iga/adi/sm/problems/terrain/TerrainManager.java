@@ -8,12 +8,13 @@ import edu.iga.adi.sm.TimeMethodType;
 import edu.iga.adi.sm.core.Solution;
 import edu.iga.adi.sm.core.dimension.SolutionFactory;
 import edu.iga.adi.sm.core.direction.IntermediateSolution;
-import edu.iga.adi.sm.core.direction.RunInformation;
 import edu.iga.adi.sm.problems.IterativeProblem;
 import edu.iga.adi.sm.problems.ProblemManager;
 import edu.iga.adi.sm.results.CsvStringConverter;
 import edu.iga.adi.sm.results.series.SolutionSeries;
-import edu.iga.adi.sm.results.visualization.drawers.BitmapFrame;
+import edu.iga.adi.sm.results.visualization.drawers.FlatSolutionDrawer;
+import edu.iga.adi.sm.results.visualization.images.TerrainImageFactory;
+import edu.iga.adi.sm.results.visualization.viewers.StaticViewer;
 import edu.iga.adi.sm.support.MatrixUtils;
 import edu.iga.adi.sm.support.terrain.FunctionTerrainBuilder;
 import edu.iga.adi.sm.support.terrain.Terraformer;
@@ -59,36 +60,37 @@ public final class TerrainManager implements ProblemManager {
         displayOriginalSolution(finalSolution);
         displayOriginalSolutionBitmap(finalSolution);
         displayRankApproximationsBitmaps(finalSolution);
-        displayMaxRankApproximation(finalSolution);
     }
 
     private void displayOriginalSolution(Solution terrainSolution) {
-//        StaticViewer terrainView = new StaticViewer("Original solution", terrainSolution);
-//        terrainView.setVisible(true);
+        StaticViewer.builder()
+                .name("Original solution")
+                .solution(terrainSolution)
+                .solutionDrawer(FlatSolutionDrawer.builder()
+                        .imageFactory(TerrainImageFactory.builder().build())
+                        .build())
+                .build().display();
     }
 
     private void displayOriginalSolutionBitmap(Solution terrainSolution) {
-        BitmapFrame modelBitmap = new BitmapFrame("Original model solution", terrainSolution);
-        modelBitmap.setVisible(true);
+        StaticViewer.builder()
+                .name("Original solution bitmap")
+                .solution(terrainSolution)
+                .solutionDrawer(FlatSolutionDrawer.builder().build())
+                .build().display();
     }
 
     private void displayRankApproximationsBitmaps(Solution terrainSolution) {
         config.getRanks().forEach(rank -> {
             final Solution svdApproximation = getSvdRankedSolution(rank);
             final double error = svdApproximation.squaredDifference(terrainSolution);
-            BitmapFrame svdBitmap = new BitmapFrame(String.format("SVD rank %d approximation. Error: %s", rank, error), svdApproximation);
-            svdBitmap.setVisible(true);
+            StaticViewer.builder()
+                    .name(String.format("SVD %d solution (error %.5f)", rank, error))
+                    .solution(terrainSolution)
+                    .solutionDrawer(FlatSolutionDrawer.builder().build())
+                    .build().display();
         });
     }
-
-    private void displayMaxRankApproximation(Solution terrainSolution) {
-        final int maxRank = config.getRanks().stream().mapToInt(x -> x).max().getAsInt();
-        final Solution maxRankApproximation = getSvdRankedSolution(maxRank);
-        final double error = maxRankApproximation.squaredDifference(terrainSolution);
-//        StaticViewer approxViewer = new StaticViewer(String.format("SVD rank %d approximation. Error: %s", maxRank, error), maxRankApproximation);
-//        approxViewer.setVisible(true);
-    }
-
 
     @Override
     public Task solverTask() {
