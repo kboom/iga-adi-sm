@@ -23,7 +23,6 @@
 .idea/*
 gradle/wrapper@
 !gradle/wrapper/*.jar
-!.idea/runConfigurations
 *.iml
 
 /terrain

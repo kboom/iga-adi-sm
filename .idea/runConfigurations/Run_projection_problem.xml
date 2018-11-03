@@ -2,7 +2,7 @@
   <configuration default="false" name="Run projection problem" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="edu.iga.adi.sm.Main" />
     <module name="iga-adi-sm_main" />
-    <option name="PROGRAM_PARAMETERS" value="--problem-size 96 --steps 100 --delta 0.1 --problem projection --plot" />
+    <option name="PROGRAM_PARAMETERS" value="--problem-size 96 --steps 100 --delta 0.000000001 --problem projection --plot" />
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <ENTRIES />
