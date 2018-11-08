@@ -3,7 +3,6 @@ package edu.iga.adi.sm.problems.projection;
 import edu.iga.adi.sm.SolverConfiguration;
 import edu.iga.adi.sm.Task;
 import edu.iga.adi.sm.TimeMethodType;
-import edu.iga.adi.sm.core.Mesh;
 import edu.iga.adi.sm.core.Problem;
 import edu.iga.adi.sm.problems.AbstractProblemManager;
 import edu.iga.adi.sm.problems.IterativeProblem;
@@ -26,7 +25,9 @@ public final class ProjectionProblemManager extends AbstractProblemManager {
 
     @Override
     public void processResults(SolutionSeries solutionSeries) {
-        drawImages(solutionSeries);
+        if(config.isPlotting()) {
+            drawImages(solutionSeries);
+        }
     }
 
     private void drawImages(SolutionSeries solutionSeries) {
