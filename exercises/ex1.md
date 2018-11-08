@@ -15,6 +15,11 @@ Java(TM) SE Runtime Environment (build 1.8.0_172-b11)
 Java HotSpot(TM) 64-Bit Server VM (build 25.172-b11, mixed mode)
 ```
 
+If you choose to browse the codebase in an editor,
+make sure you have *Lombok* plugin installed and
+that *annotation processing* is on. If in doubt,
+ask you colleague first.
+
 ## Configuration options
 
 Examine the contents of the following type 
