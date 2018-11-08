@@ -135,7 +135,7 @@ public class SolverConfiguration {
     }
 
     private static String getTimestamp() {
-        return new SimpleDateFormat("yyyy-MM-dd-HH:mm").format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd-HH-mm").format(new Date());
     }
 
     private static String getTemporaryDir(String name) {
