@@ -23,11 +23,11 @@ public class ConsoleSolutionLogger implements SolutionLogger {
             }
             System.out.printf("  |  ");
             for (int j = 1; j <= nrhs; ++j) {
-                System.out.printf("%6.3f ", v.m_b[i][j]);
+                System.out.printf("%6.3f ", v.m_x[i][j]);
             }
             System.out.printf("  |  ");
             for (int j = 1; j <= nrhs; ++j) {
-                System.out.printf("%6.3f ", v.m_x[i][j]);
+                System.out.printf("%6.3f ", v.m_b[i][j]);
             }
             System.out.println();
         }
