@@ -170,5 +170,9 @@ Feel free to contribute to this project. Merge requests will be reviewed and acc
 * [http://home.agh.edu.pl/~paszynsk/](http://home.agh.edu.pl/~paszynsk/)
 * [http://home.agh.edu.pl/~kbhit/](http://home.agh.edu.pl/~kbhit/)
 
+### Credits
+
+This project uses a great OpenGL® Java API library [JOGL](http://jogamp.org/jogl/www/).
+
 
 
