@@ -10,10 +10,8 @@ import java.util.Optional;
 
 public final class HeatTransferProblem implements IterativeProblem {
 
-    @NonNull
     private final double delta;
 
-    @NonNull
     private final int steps;
 
     @NonNull

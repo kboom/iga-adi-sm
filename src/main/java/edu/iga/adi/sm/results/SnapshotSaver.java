@@ -14,9 +14,10 @@ public class SnapshotSaver {
 
     @NonNull
     private final ImageStorage imageStorage;
+
     @NonNull
     private final ImageFactory imageFactory;
-    @NonNull
+
     private final int frequencyPercentage;
 
     @Builder.Default

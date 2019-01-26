@@ -16,11 +16,9 @@ public class TimeLapseViewer extends JFrame {
     private final SolutionSeries solutionSeries;
     private final SolutionDrawer solutionDrawer;
 
-    @Builder.Default
-    private String name = "Transient solution";
+    private String name;
 
-    @Builder.Default
-    private int downSampleRatio = 1;
+    private int downSampleRatio;
 
     private JSlider frameSlider;
     private JPanel framePanel;

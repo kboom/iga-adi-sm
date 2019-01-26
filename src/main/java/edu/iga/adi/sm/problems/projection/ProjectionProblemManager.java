@@ -45,7 +45,7 @@ public final class ProjectionProblemManager extends AbstractProblemManager {
 
             @Override
             protected Problem getProblem() {
-                return (x, y) -> 1;
+                return (x, y) -> x + y;
             }
 
         };
